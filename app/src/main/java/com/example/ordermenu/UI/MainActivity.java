@@ -1,8 +1,10 @@
-package com.example.ordermenu;
+package com.example.ordermenu.UI;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.example.ordermenu.R;
 
 public class MainActivity extends AppCompatActivity {
 
