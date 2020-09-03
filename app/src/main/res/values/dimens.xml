@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="margin_small">10dp</dimen>
-    <dimen name="margin_medium">15dp</dimen>
-    <dimen name="margin_large">20dp</dimen>
-    <dimen name="margin_extralarge">50dp</dimen>
-    <dimen name="margin_extrasmall">4dp</dimen>
+    <dimen name="size_small">10dp</dimen>
+    <dimen name="size_medium">15dp</dimen>
+    <dimen name="size_large">20dp</dimen>
+    <dimen name="size_extralarge">50dp</dimen>
+    <dimen name="size_extrasmall">4dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 </resources>

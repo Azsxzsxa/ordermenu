@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ordermenu</string>
+    <string name="title_activity_menu_order">MenuOrder</string>
 </resources>
