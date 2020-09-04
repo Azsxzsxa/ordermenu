@@ -3,7 +3,6 @@ package com.example.ordermenu.UI;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
@@ -13,22 +12,31 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.ordermenu.Models.RVTableAdapter;
+import com.example.ordermenu.Models.Restaurant;
+import com.example.ordermenu.Models.Section;
 import com.example.ordermenu.R;
+import com.example.ordermenu.Utils.Database;
 import com.example.ordermenu.Utils.Logger;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Objects;
+import java.util.Date;
 
 public class TableChoice extends AppCompatActivity implements RVTableAdapter.ItemClickListener {
     private static final String TAG = "TableChoice";
+    private final static String RESTAURANTS = "Restaurants";
+    private final static String CURRENT = "Current";
 
 
-    private RVTableAdapter rvTableAdapter;
+    private RVTableAdapter _rvTableAdapter;
+    private Restaurant _restaurant;
+    private String _restaurantId;
+    private ArrayList<Section> _sections = new ArrayList<>();
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -37,51 +45,78 @@ public class TableChoice extends AppCompatActivity implements RVTableAdapter.Ite
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         setupFirebaseAuth();
 
-        initViews();
+        getRestaurant();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-
         FirebaseAuth.getInstance().addAuthStateListener(mAuthListener);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-
         if (mAuthListener != null)
             FirebaseAuth.getInstance().removeAuthStateListener(mAuthListener);
     }
 
-    private void initViews() {
-        initTablesRV();
+    private void getRestaurant() {
+        Database.getInstance().restRef.whereArrayContains("employees", Database.getInstance().userUid)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                            _restaurant = doc.toObject(Restaurant.class);
+                            _restaurantId = doc.getId();
+                            getSections();
+                        }
+                        if (_restaurant == null) {
+                            setCreateRestaurant();
+                        }
+                    }
+
+                });
     }
 
-    public void initTablesRV() {
+    private void setCreateRestaurant(){
+        //TODO Add restaurant name, create employees, create sections, create menu
+    }
+
+    private void getSections(){
+        Database.getInstance().restRef.document(_restaurantId).collection(CURRENT).get().
+                addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                    Section section = doc.toObject(Section.class);
+                    _sections.add(section);
+                }
+                //TODO init the sections
+            }
+        });
+    }
+
+    public void initTablesRV(int tableCount) {
         ArrayList<String> tableNumbers = new ArrayList<>();
-        tableNumbers.add("1");
-        tableNumbers.add("2");
-        tableNumbers.add("3");
-        tableNumbers.add("4");
-        tableNumbers.add("5");
+        for (int i = 1; i < tableCount; i++) {
+            tableNumbers.add(String.valueOf(i));
+        }
 
         // set up the RecyclerView
         RecyclerView recyclerView = findViewById(R.id.RV_tables);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
-        rvTableAdapter = new RVTableAdapter(this, tableNumbers);
-        rvTableAdapter.setClickListener(this);
-        recyclerView.setAdapter(rvTableAdapter);
+        _rvTableAdapter = new RVTableAdapter(this, tableNumbers);
+        _rvTableAdapter.setClickListener(this);
+        recyclerView.setAdapter(_rvTableAdapter);
     }
 
     @Override
     public void onTableClick(View view, int position) {
         Logger.debug("Item clicked " + position);
-
         Intent mIntent = new Intent(this, MenuOrder.class);
         Bundle mBundle = new Bundle();
         mBundle.putString("table position", String.valueOf(position));
