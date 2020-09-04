@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">ordermenu</string>
     <string name="title_activity_menu_order">MenuOrder</string>
+    <string name="login_hint_password">Password</string>
+    <string name="login_hint_email">Email</string>
+    <string name="login_btn_text">Log in</string>
+    <string name="login_welcome_text">Welcome to ordermenu</string>
+    <string name="login_please_log_in_text">Please log in to continue</string>
+    <string name="login_register">Register</string>
+    <string name="login_not_filled">You didn\'t fill in all the fields</string>
 </resources>

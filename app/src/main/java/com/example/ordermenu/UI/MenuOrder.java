@@ -12,10 +12,13 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 
 import com.example.ordermenu.R;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Objects;
 
 public class MenuOrder extends AppCompatActivity {
+
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

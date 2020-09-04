@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "710869038095",
+    "firebase_url": "https://ordermenu-697f4.firebaseio.com",
+    "project_id": "ordermenu-697f4",
+    "storage_bucket": "ordermenu-697f4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:710869038095:android:9a24d4871c19b847181f7a",
+        "android_client_info": {
+          "package_name": "com.example.ordermenu"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "710869038095-1s2cl9b04b1bueil4u8jj7904o328a72.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB4TXawdYGRV9q4srrGNLu7vI-Bk4-ntiE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "710869038095-1s2cl9b04b1bueil4u8jj7904o328a72.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
