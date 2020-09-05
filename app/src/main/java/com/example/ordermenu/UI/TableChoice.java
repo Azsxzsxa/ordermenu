@@ -2,17 +2,12 @@ package com.example.ordermenu.UI;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
-import com.example.ordermenu.Models.RVTableAdapter;
 import com.example.ordermenu.Models.Restaurant;
 import com.example.ordermenu.Models.Section;
 import com.example.ordermenu.Models.TabAdapter;
@@ -25,11 +20,9 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 public class TableChoice extends AppCompatActivity {
     private ArrayList<Section> _sections = new ArrayList<>();
@@ -37,6 +30,7 @@ public class TableChoice extends AppCompatActivity {
     private TabAdapter adapter;
     private TabLayout tab;
     private ViewPager viewPager;
+    private Restaurant _restaurant = null;
 
     private FirebaseAuth.AuthStateListener mAuthListener;
 
@@ -45,8 +39,6 @@ public class TableChoice extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setupFirebaseAuth();
-
-        getRestaurant();
     }
 
     @Override
@@ -68,13 +60,12 @@ public class TableChoice extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        Restaurant restaurant = null;
                         for (DocumentSnapshot doc : queryDocumentSnapshots) {
-                            restaurant = doc.toObject(Restaurant.class);
+                            _restaurant = doc.toObject(Restaurant.class);
                             Database.getInstance().setRestaurantId(doc.getId());
                             getSections();
                         }
-                        if (restaurant == null) {
+                        if (_restaurant == null) {
                             setCreateRestaurant();
                         }
                     }
@@ -141,7 +132,9 @@ public class TableChoice extends AppCompatActivity {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
 
-                    //TODO Start query here
+                    if(_restaurant ==null) {
+                        getRestaurant();
+                    }
 
                     /*
                     //check if email is verified
