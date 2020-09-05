@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,10 +15,13 @@ import android.widget.Toast;
 import com.example.ordermenu.Models.RVTableAdapter;
 import com.example.ordermenu.Models.Restaurant;
 import com.example.ordermenu.Models.Section;
+import com.example.ordermenu.Models.TabAdapter;
 import com.example.ordermenu.R;
 import com.example.ordermenu.Utils.Database;
 import com.example.ordermenu.Utils.Logger;
+import com.example.ordermenu.Utils.StrUtil;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -27,18 +31,13 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class TableChoice extends AppCompatActivity implements RVTableAdapter.ItemClickListener {
-    private static final String TAG = "TableChoice";
-    private final static String RESTAURANTS = "Restaurants";
-    private final static String CURRENT = "Current";
-
-
-    private RVTableAdapter _rvTableAdapter;
-    private Restaurant _restaurant;
-    private String _restaurantId;
+public class TableChoice extends AppCompatActivity {
     private ArrayList<Section> _sections = new ArrayList<>();
 
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private TabAdapter adapter;
+    private TabLayout tab;
+    private ViewPager viewPager;
+
     private FirebaseAuth.AuthStateListener mAuthListener;
 
     @Override
@@ -69,16 +68,16 @@ public class TableChoice extends AppCompatActivity implements RVTableAdapter.Ite
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        Restaurant restaurant = null;
                         for (DocumentSnapshot doc : queryDocumentSnapshots) {
-                            _restaurant = doc.toObject(Restaurant.class);
-                            _restaurantId = doc.getId();
+                            restaurant = doc.toObject(Restaurant.class);
+                            Database.getInstance().setRestaurantId(doc.getId());
                             getSections();
                         }
-                        if (_restaurant == null) {
+                        if (restaurant == null) {
                             setCreateRestaurant();
                         }
                     }
-
                 });
     }
 
@@ -87,7 +86,7 @@ public class TableChoice extends AppCompatActivity implements RVTableAdapter.Ite
     }
 
     private void getSections(){
-        Database.getInstance().restRef.document(_restaurantId).collection(CURRENT).get().
+        Database.getInstance().restRef.document(Database.getInstance().getRestaurantId()).collection(StrUtil.CURRENT).get().
                 addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -95,33 +94,38 @@ public class TableChoice extends AppCompatActivity implements RVTableAdapter.Ite
                     Section section = doc.toObject(Section.class);
                     _sections.add(section);
                 }
-                //TODO init the sections
+                viewPager =  findViewById(R.id.viewPager);
+                tab = findViewById(R.id.tabLayout);
+
+
+                for (Section section : _sections) {
+                    tab.addTab(tab.newTab().setText(section.getName()));
+                }
+
+                adapter = new TabAdapter
+                        (getSupportFragmentManager(), _sections);
+                viewPager.setAdapter(adapter);
+                viewPager.setOffscreenPageLimit(1);
+//                viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tab));
+                viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                    @Override
+                    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+                    }
+
+                    @Override
+                    public void onPageSelected(int position) {
+                        Logger.debug(""+_sections.get(position).getName());
+                        //TODO reset fragment?
+                    }
+
+                    @Override
+                    public void onPageScrollStateChanged(int state) {
+
+                    }
+                });
             }
         });
-    }
-
-    public void initTablesRV(int tableCount) {
-        ArrayList<String> tableNumbers = new ArrayList<>();
-        for (int i = 1; i < tableCount; i++) {
-            tableNumbers.add(String.valueOf(i));
-        }
-
-        // set up the RecyclerView
-        RecyclerView recyclerView = findViewById(R.id.RV_tables);
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
-        _rvTableAdapter = new RVTableAdapter(this, tableNumbers);
-        _rvTableAdapter.setClickListener(this);
-        recyclerView.setAdapter(_rvTableAdapter);
-    }
-
-    @Override
-    public void onTableClick(View view, int position) {
-        Logger.debug("Item clicked " + position);
-        Intent mIntent = new Intent(this, MenuOrder.class);
-        Bundle mBundle = new Bundle();
-        mBundle.putString("table position", String.valueOf(position));
-        mIntent.putExtras(mBundle);
-        startActivity(mIntent);
     }
 
 
@@ -152,7 +156,7 @@ public class TableChoice extends AppCompatActivity implements RVTableAdapter.Ite
 
                 } else {
                     // User is signed out
-                    Log.d(TAG, "onAuthStateChanged: signed_out");
+                    Logger.debug("onAuthStateChanged: signed_out");
                     Toast.makeText(TableChoice.this, "Not logged in", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(TableChoice.this, LoginActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
