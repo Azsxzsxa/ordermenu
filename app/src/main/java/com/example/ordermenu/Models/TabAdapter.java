@@ -20,7 +20,7 @@ public class TabAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return DynamicSection.addfrag(mSections.get(position).getName());
+        return DynamicSection.addfrag(mSections.get(position));
     }
 
     @Override

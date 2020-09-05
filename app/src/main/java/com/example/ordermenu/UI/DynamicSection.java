@@ -32,6 +32,7 @@ public class DynamicSection extends Fragment implements RVTableAdapter.ItemClick
 
     private View view;
     private String _sectionName;
+    private int _tableCount;
     private RVTableAdapter _rvTableAdapter;
 
     @Nullable
@@ -39,6 +40,7 @@ public class DynamicSection extends Fragment implements RVTableAdapter.ItemClick
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_dynamic_section, container, false);
         _sectionName = getArguments().getString(StrUtil.SECTION_NAME, "");
+        _tableCount = getArguments().getInt(StrUtil.SECTION_TABLE_COUNT, 0);
         Logger.error(_sectionName);
         return view;
     }
@@ -46,31 +48,21 @@ public class DynamicSection extends Fragment implements RVTableAdapter.ItemClick
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getTables();
+        initTablesRV(_tableCount);
     }
 
-    public static DynamicSection addfrag(String sectionName) {
+    public static DynamicSection addfrag(Section section) {
         DynamicSection fragment = new DynamicSection();
         Bundle args = new Bundle();
-        args.putString(StrUtil.SECTION_NAME,sectionName);
+        args.putString(StrUtil.SECTION_NAME,section.getName());
+        args.putInt(StrUtil.SECTION_TABLE_COUNT,section.getTableCount());
         fragment.setArguments(args);
         return fragment;
     }
 
-    private void getTables(){
-        Database.getInstance().restRef.document(Database.getInstance().getRestaurantId()).collection(StrUtil.CURRENT).whereEqualTo(StrUtil.NAME,
-                _sectionName).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                for(DocumentSnapshot doc : queryDocumentSnapshots){
-                    Section section = doc.toObject(Section.class);
-                    initTablesRV(section.getTableCount());
-                }
-            }
-        });
-    }
 
     public void initTablesRV(int tableCount) {
+        Logger.error(""+tableCount);
         ArrayList<String> tableNumbers = new ArrayList<>();
         for (int i = 1; i <= tableCount; i++) {
             tableNumbers.add(String.valueOf(i));
