@@ -16,6 +16,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Objects;
 
+import static com.example.ordermenu.Utils.StrUtil.TABLE_POSITION;
+
 public class MenuOrder extends AppCompatActivity {
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -36,7 +38,7 @@ public class MenuOrder extends AppCompatActivity {
             }
         });
 
-        String tablePosition = Objects.requireNonNull(getIntent().getExtras()).getString("table position");
+        String tablePosition = Objects.requireNonNull(getIntent().getExtras()).getString(TABLE_POSITION);
         Logger.debug("Order for table "+ tablePosition);
 
     }

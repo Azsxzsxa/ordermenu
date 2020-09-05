@@ -24,6 +24,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
+import static com.example.ordermenu.Utils.StrUtil.CURRENT;
+
 public class TableChoice extends AppCompatActivity {
     private ArrayList<Section> _sections = new ArrayList<>();
 
@@ -77,7 +79,7 @@ public class TableChoice extends AppCompatActivity {
     }
 
     private void getSections(){
-        Database.getInstance().restRef.document(Database.getInstance().getRestaurantId()).collection(StrUtil.CURRENT).get().
+        Database.getInstance().restRef.document(Database.getInstance().getRestaurantId()).collection(CURRENT).get().
                 addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -87,8 +89,6 @@ public class TableChoice extends AppCompatActivity {
                 }
                 viewPager =  findViewById(R.id.viewPager);
                 tab = findViewById(R.id.tabLayout);
-
-
                 for (Section section : _sections) {
                     tab.addTab(tab.newTab().setText(section.getName()));
                 }
@@ -97,24 +97,7 @@ public class TableChoice extends AppCompatActivity {
                         (getSupportFragmentManager(), _sections);
                 viewPager.setAdapter(adapter);
                 viewPager.setOffscreenPageLimit(1);
-//                viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tab));
-                viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                    @Override
-                    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-                    }
-
-                    @Override
-                    public void onPageSelected(int position) {
-                        Logger.debug(""+_sections.get(position).getName());
-                        //TODO reset fragment?
-                    }
-
-                    @Override
-                    public void onPageScrollStateChanged(int state) {
-
-                    }
-                });
+                viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tab));
             }
         });
     }

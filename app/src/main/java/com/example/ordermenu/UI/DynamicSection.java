@@ -27,6 +27,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
+import static com.example.ordermenu.Utils.StrUtil.TABLE_POSITION;
+
 
 public class DynamicSection extends Fragment implements RVTableAdapter.ItemClickListener{
 
@@ -41,7 +43,6 @@ public class DynamicSection extends Fragment implements RVTableAdapter.ItemClick
         view = inflater.inflate(R.layout.fragment_dynamic_section, container, false);
         _sectionName = getArguments().getString(StrUtil.SECTION_NAME, "");
         _tableCount = getArguments().getInt(StrUtil.SECTION_TABLE_COUNT, 0);
-        Logger.error(_sectionName);
         return view;
     }
 
@@ -62,7 +63,6 @@ public class DynamicSection extends Fragment implements RVTableAdapter.ItemClick
 
 
     public void initTablesRV(int tableCount) {
-        Logger.error(""+tableCount);
         ArrayList<String> tableNumbers = new ArrayList<>();
         for (int i = 1; i <= tableCount; i++) {
             tableNumbers.add(String.valueOf(i));
@@ -77,11 +77,12 @@ public class DynamicSection extends Fragment implements RVTableAdapter.ItemClick
     }
 
     @Override
-    public void onTableClick(View view, int position) {
-        Logger.debug("Item clicked " + position);
+    public void onTableClick(View view, int arrPosition) {
+        int tablePosition = arrPosition+1;
+        Logger.debug("Item clicked " + tablePosition);
         Intent mIntent = new Intent(getActivity(), MenuOrder.class);
         Bundle mBundle = new Bundle();
-        mBundle.putString("table position", String.valueOf(position));
+        mBundle.putString(TABLE_POSITION, String.valueOf(tablePosition));
         mIntent.putExtras(mBundle);
         startActivity(mIntent);
     }
