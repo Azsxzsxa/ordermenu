@@ -4,6 +4,7 @@ public class MenuItem {
     String cathegory;
     String name;
     int price;
+    int quantity = 0;
 
     public MenuItem(String cathegory, String name, int price) {
         this.cathegory = cathegory;
@@ -35,5 +36,13 @@ public class MenuItem {
 
     public void setPrice(int price) {
         this.price = price;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 }

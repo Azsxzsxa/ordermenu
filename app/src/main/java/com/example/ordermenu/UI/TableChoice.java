@@ -95,7 +95,7 @@ public class TableChoice extends AppCompatActivity {
                 adapter = new TabSectionAdapter
                         (getSupportFragmentManager(), _sections);
                 viewPager.setAdapter(adapter);
-                viewPager.setOffscreenPageLimit(1);
+                viewPager.setOffscreenPageLimit(10);
                 viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tab));
             }
         });
