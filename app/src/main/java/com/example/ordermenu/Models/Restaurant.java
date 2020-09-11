@@ -7,11 +7,13 @@ public class Restaurant {
     private String name;
     private Date joinDate;
     private ArrayList<String> employees=new ArrayList<>();
+    private ArrayList<String> menuCathegories=new ArrayList<>();
 
-    public Restaurant(String name, Date joinDate, ArrayList<String> employees) {
+    public Restaurant(String name, Date joinDate, ArrayList<String> employees, ArrayList<String> menuCathegories) {
         this.name = name;
         this.joinDate = joinDate;
         this.employees = employees;
+        this.menuCathegories = menuCathegories;
     }
 
     public Restaurant() {
@@ -29,6 +31,10 @@ public class Restaurant {
         return employees;
     }
 
+    public ArrayList<String> getMenuCathegories() {
+        return menuCathegories;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -39,5 +45,9 @@ public class Restaurant {
 
     public void setEmployees(ArrayList<String> employees) {
         this.employees = employees;
+    }
+
+    public void setMenuCathegories(ArrayList<String> menuCathegories) {
+        this.menuCathegories = menuCathegories;
     }
 }

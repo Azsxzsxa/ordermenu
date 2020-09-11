@@ -28,6 +28,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 
 import static com.example.ordermenu.Utils.StrUtil.TABLE_POSITION;
+import static com.example.ordermenu.Utils.StrUtil.TABLE_SECTION;
 
 
 public class DynamicSection extends Fragment implements RVTableAdapter.ItemClickListener{
@@ -83,6 +84,7 @@ public class DynamicSection extends Fragment implements RVTableAdapter.ItemClick
         Intent mIntent = new Intent(getActivity(), MenuOrder.class);
         Bundle mBundle = new Bundle();
         mBundle.putString(TABLE_POSITION, String.valueOf(tablePosition));
+        mBundle.putString(TABLE_SECTION, _sectionName);
         mIntent.putExtras(mBundle);
         startActivity(mIntent);
     }

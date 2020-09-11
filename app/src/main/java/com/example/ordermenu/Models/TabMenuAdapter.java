@@ -4,34 +4,34 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
+
+import com.example.ordermenu.UI.DynamicMenu;
 import com.example.ordermenu.UI.DynamicSection;
 
 import java.util.ArrayList;
 
-public class TabAdapter extends FragmentStatePagerAdapter {
+public class TabMenuAdapter extends FragmentStatePagerAdapter {
 
-    int mNumOfTabs;
-    ArrayList<Section> mSections;
+    ArrayList<String> mManuCathegories;
 
-    public TabAdapter(FragmentManager fm, ArrayList<Section> sections) {
+    public TabMenuAdapter(FragmentManager fm, ArrayList<String> menuCathegories) {
         super(fm,BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
-        this.mNumOfTabs = sections.size();
-        this.mSections=sections;
+        this.mManuCathegories=menuCathegories;
     }
 
     @Override
     public Fragment getItem(int position) {
-        return DynamicSection.addfrag(mSections.get(position));
+        return DynamicMenu.addfrag(mManuCathegories.get(position));
     }
 
     @Override
     public int getCount() {
-        return mNumOfTabs;
+        return mManuCathegories.size();
     }
 
     @Nullable
     @Override
     public CharSequence getPageTitle(int position) {
-        return mSections.get(position).getName();
+        return mManuCathegories.get(position);
     }
 }

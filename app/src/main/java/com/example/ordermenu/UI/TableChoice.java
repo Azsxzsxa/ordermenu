@@ -10,11 +10,10 @@ import android.widget.Toast;
 
 import com.example.ordermenu.Models.Restaurant;
 import com.example.ordermenu.Models.Section;
-import com.example.ordermenu.Models.TabAdapter;
+import com.example.ordermenu.Models.TabSectionAdapter;
 import com.example.ordermenu.R;
 import com.example.ordermenu.Utils.Database;
 import com.example.ordermenu.Utils.Logger;
-import com.example.ordermenu.Utils.StrUtil;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,7 +28,7 @@ import static com.example.ordermenu.Utils.StrUtil.CURRENT;
 public class TableChoice extends AppCompatActivity {
     private ArrayList<Section> _sections = new ArrayList<>();
 
-    private TabAdapter adapter;
+    private TabSectionAdapter adapter;
     private TabLayout tab;
     private ViewPager viewPager;
     private Restaurant _restaurant = null;
@@ -93,7 +92,7 @@ public class TableChoice extends AppCompatActivity {
                     tab.addTab(tab.newTab().setText(section.getName()));
                 }
 
-                adapter = new TabAdapter
+                adapter = new TabSectionAdapter
                         (getSupportFragmentManager(), _sections);
                 viewPager.setAdapter(adapter);
                 viewPager.setOffscreenPageLimit(1);
