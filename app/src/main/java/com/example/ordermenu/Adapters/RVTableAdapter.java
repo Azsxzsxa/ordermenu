@@ -1,4 +1,4 @@
-package com.example.ordermenu.Models;
+package com.example.ordermenu.Adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;

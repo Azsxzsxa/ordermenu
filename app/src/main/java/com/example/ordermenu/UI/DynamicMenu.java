@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.ordermenu.Models.MenuItem;
-import com.example.ordermenu.Models.RVMenuAdapter;
+import com.example.ordermenu.Adapters.RVMenuAdapter;
 import com.example.ordermenu.R;
 import com.example.ordermenu.Utils.Database;
 import com.example.ordermenu.Utils.StrUtil;
@@ -24,12 +24,12 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-public class DynamicMenu extends Fragment{
+public class DynamicMenu extends Fragment implements RVMenuAdapter.ItemClickListener {
 
     private View view;
-    private String _menuCathegory;
+    private String _menuCategory;
     private ArrayList<MenuItem> _menuItems = new ArrayList<>();
-    ArrayList<MenuItem> _cathegoryItems = new ArrayList<>();
+    ArrayList<MenuItem> _categoryItems = new ArrayList<>();
     private RVMenuAdapter _rvMenuAdapter;
 
     public DynamicMenu() {
@@ -41,10 +41,10 @@ public class DynamicMenu extends Fragment{
         super.onCreate(savedInstanceState);
     }
 
-    public static DynamicMenu addfrag(String cathegory) {
+    public static DynamicMenu addFragment(String category) {
         DynamicMenu fragment = new DynamicMenu();
         Bundle args = new Bundle();
-        args.putString(StrUtil.MENU_CATHEGORY,cathegory);
+        args.putString(StrUtil.MENU_CATHEGORY, category);
         fragment.setArguments(args);
         return fragment;
     }
@@ -53,9 +53,9 @@ public class DynamicMenu extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view =  inflater.inflate(R.layout.fragment_dynamic_menu, container, false);
+        view = inflater.inflate(R.layout.fragment_dynamic_menu, container, false);
         assert getArguments() != null;
-        _menuCathegory = getArguments().getString(StrUtil.MENU_CATHEGORY, "");
+        _menuCategory = getArguments().getString(StrUtil.MENU_CATHEGORY, "");
         return view;
     }
 
@@ -63,7 +63,7 @@ public class DynamicMenu extends Fragment{
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         TextView testMenu = view.findViewById(R.id.test_menu);
-        testMenu.setText(_menuCathegory);
+        testMenu.setText(_menuCategory);
 
         getMenuItems();
     }
@@ -78,38 +78,30 @@ public class DynamicMenu extends Fragment{
                 }
 
                 for (MenuItem menuItem : _menuItems) {
-                    if (menuItem.getCathegory().contains(_menuCathegory)) {
-                        _cathegoryItems.add(menuItem);
+                    if (menuItem.getCategory().contains(_menuCategory)) {
+                        _categoryItems.add(menuItem);
                     }
                 }
 
                 // set up the RecyclerView
                 RecyclerView recyclerView = view.findViewById(R.id.RV_tables);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                _rvMenuAdapter = new RVMenuAdapter(getContext(), _cathegoryItems);
-                _rvMenuAdapter.setClickListener(new RVMenuAdapter.ItemClickListener() {
-                    @Override
-                    public void onPlusClick(View view, int position) {
-                        plusClick(position);
-                    }
-
-                    @Override
-                    public void onMinusClick(View view, int position) {
-                        minusClick(position);
-                    }
-                });
+                _rvMenuAdapter = new RVMenuAdapter(getContext(), _categoryItems);
+                _rvMenuAdapter.setClickListener(DynamicMenu.this);
                 recyclerView.setAdapter(_rvMenuAdapter);
             }
         });
     }
 
-    private void plusClick (int position) {
-        _cathegoryItems.get(position).setQuantity(_cathegoryItems.get(position).getQuantity()+1);
-        _rvMenuAdapter.notifyItemChanged(position);
-    }
-    private void minusClick(int position){
-        _cathegoryItems.get(position).setQuantity(_cathegoryItems.get(position).getQuantity()-1);
+    @Override
+    public void onPlusClick(View view, int position) {
+        _categoryItems.get(position).setQuantity(_categoryItems.get(position).getQuantity() + 1);
         _rvMenuAdapter.notifyItemChanged(position);
     }
 
+    @Override
+    public void onMinusClick(View view, int position) {
+        _categoryItems.get(position).setQuantity(_categoryItems.get(position).getQuantity() - 1);
+        _rvMenuAdapter.notifyItemChanged(position);
+    }
 }

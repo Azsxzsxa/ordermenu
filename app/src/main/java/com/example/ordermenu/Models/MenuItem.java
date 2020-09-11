@@ -1,21 +1,22 @@
 package com.example.ordermenu.Models;
 
 public class MenuItem {
-    String cathegory;
+    String category;
     String name;
     int price;
     int quantity = 0;
 
-    public MenuItem(String cathegory, String name, int price) {
-        this.cathegory = cathegory;
+    public MenuItem(String category, String name, int price) {
+        this.category = category;
         this.name = name;
         this.price = price;
     }
+
     public MenuItem() {
     }
 
-    public String getCathegory() {
-        return cathegory;
+    public String getCategory() {
+        return category;
     }
 
     public String getName() {
@@ -26,8 +27,8 @@ public class MenuItem {
         return price;
     }
 
-    public void setCathegory(String cathegory) {
-        this.cathegory = cathegory;
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public void setName(String name) {

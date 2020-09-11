@@ -6,14 +6,14 @@ import java.util.Date;
 public class Restaurant {
     private String name;
     private Date joinDate;
-    private ArrayList<String> employees=new ArrayList<>();
-    private ArrayList<String> menuCathegories=new ArrayList<>();
+    private ArrayList<String> employees = new ArrayList<>();
+    private ArrayList<String> menuCategories = new ArrayList<>();
 
     public Restaurant(String name, Date joinDate, ArrayList<String> employees, ArrayList<String> menuCathegories) {
         this.name = name;
         this.joinDate = joinDate;
         this.employees = employees;
-        this.menuCathegories = menuCathegories;
+        this.menuCategories = menuCathegories;
     }
 
     public Restaurant() {
@@ -31,8 +31,8 @@ public class Restaurant {
         return employees;
     }
 
-    public ArrayList<String> getMenuCathegories() {
-        return menuCathegories;
+    public ArrayList<String> getMenuCategories() {
+        return menuCategories;
     }
 
     public void setName(String name) {
@@ -47,7 +47,7 @@ public class Restaurant {
         this.employees = employees;
     }
 
-    public void setMenuCathegories(ArrayList<String> menuCathegories) {
-        this.menuCathegories = menuCathegories;
+    public void setMenuCategories(ArrayList<String> menuCategories) {
+        this.menuCategories = menuCategories;
     }
 }

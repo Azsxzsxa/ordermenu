@@ -3,9 +3,7 @@ package com.example.ordermenu.UI;
 import android.os.Bundle;
 
 import com.example.ordermenu.Models.Restaurant;
-import com.example.ordermenu.Models.Section;
-import com.example.ordermenu.Models.TabMenuAdapter;
-import com.example.ordermenu.Models.TabSectionAdapter;
+import com.example.ordermenu.Adapters.TabMenuAdapter;
 import com.example.ordermenu.Utils.Database;
 import com.example.ordermenu.Utils.Logger;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -21,7 +19,6 @@ import android.view.View;
 import com.example.ordermenu.R;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -53,7 +50,7 @@ public class MenuOrder extends AppCompatActivity {
 
         String tablePosition = Objects.requireNonNull(getIntent().getExtras()).getString(TABLE_POSITION);
         String tableSection = Objects.requireNonNull(getIntent().getExtras()).getString(TABLE_SECTION);
-        Logger.debug("Order for table "+ tablePosition + " from " +tableSection);
+        Logger.debug("Order for table " + tablePosition + " from " + tableSection);
 
         getMenuSections();
 
@@ -63,21 +60,21 @@ public class MenuOrder extends AppCompatActivity {
     private void getMenuSections() {
         Database.getInstance().restRef.document(Database.getInstance().getRestaurantId()).get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                Restaurant restaurant = documentSnapshot.toObject(Restaurant.class);
-                assert restaurant != null;
-                ArrayList<String> menuCathegories = restaurant.getMenuCathegories();
-                viewPager =  findViewById(R.id.viewPager);
-                tab = findViewById(R.id.tabLayout);
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        Restaurant restaurant = documentSnapshot.toObject(Restaurant.class);
+                        assert restaurant != null;
+                        ArrayList<String> menuCategories = restaurant.getMenuCategories();
+                        viewPager = findViewById(R.id.viewPager);
+                        tab = findViewById(R.id.tabLayout);
 
-                adapter = new TabMenuAdapter
-                        (getSupportFragmentManager(), menuCathegories);
-                viewPager.setAdapter(adapter);
-                viewPager.setOffscreenPageLimit(10);
-                viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tab));
-            }
-        });
+                        adapter = new TabMenuAdapter
+                                (getSupportFragmentManager(), menuCategories);
+                        viewPager.setAdapter(adapter);
+                        viewPager.setOffscreenPageLimit(10);
+                        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tab));
+                    }
+                });
     }
 
 }

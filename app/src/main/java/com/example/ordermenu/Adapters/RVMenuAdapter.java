@@ -1,4 +1,4 @@
-package com.example.ordermenu.Models;
+package com.example.ordermenu.Adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,13 +7,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.ordermenu.Models.MenuItem;
 import com.example.ordermenu.R;
 
 import java.util.ArrayList;
 
-public class RVMenuAdapter extends RecyclerView.Adapter<RVMenuAdapter.ViewHolder>{
+public class RVMenuAdapter extends RecyclerView.Adapter<RVMenuAdapter.ViewHolder> {
     private ArrayList<MenuItem> mData;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
@@ -25,8 +27,9 @@ public class RVMenuAdapter extends RecyclerView.Adapter<RVMenuAdapter.ViewHolder
     }
 
     // inflates the row layout from xml when needed
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.rv_menuitem_row, parent, false);
         return new ViewHolder(view);
     }
@@ -63,13 +66,13 @@ public class RVMenuAdapter extends RecyclerView.Adapter<RVMenuAdapter.ViewHolder
             itemMinusBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mClickListener.onMinusClick(v,getAdapterPosition());
+                    mClickListener.onMinusClick(v, getAdapterPosition());
                 }
             });
             itemPlusBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mClickListener.onPlusClick(v,getAdapterPosition());
+                    mClickListener.onPlusClick(v, getAdapterPosition());
                 }
             });
 
@@ -78,7 +81,6 @@ public class RVMenuAdapter extends RecyclerView.Adapter<RVMenuAdapter.ViewHolder
 
         @Override
         public void onClick(View v) {
-
         }
     }
 
@@ -95,6 +97,7 @@ public class RVMenuAdapter extends RecyclerView.Adapter<RVMenuAdapter.ViewHolder
     // parent activity will implement this method to respond to click events
     public interface ItemClickListener {
         void onPlusClick(View view, int position);
+
         void onMinusClick(View view, int position);
     }
 }

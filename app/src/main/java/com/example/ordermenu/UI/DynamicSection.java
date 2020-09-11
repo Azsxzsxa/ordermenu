@@ -9,21 +9,15 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import com.example.ordermenu.Models.RVTableAdapter;
+import com.example.ordermenu.Adapters.RVTableAdapter;
 import com.example.ordermenu.Models.Section;
 import com.example.ordermenu.R;
-import com.example.ordermenu.Utils.Database;
 import com.example.ordermenu.Utils.Logger;
 import com.example.ordermenu.Utils.StrUtil;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
@@ -31,7 +25,7 @@ import static com.example.ordermenu.Utils.StrUtil.TABLE_POSITION;
 import static com.example.ordermenu.Utils.StrUtil.TABLE_SECTION;
 
 
-public class DynamicSection extends Fragment implements RVTableAdapter.ItemClickListener{
+public class DynamicSection extends Fragment implements RVTableAdapter.ItemClickListener {
 
     private View view;
     private String _sectionName;
@@ -53,11 +47,11 @@ public class DynamicSection extends Fragment implements RVTableAdapter.ItemClick
         initTablesRV(_tableCount);
     }
 
-    public static DynamicSection addfrag(Section section) {
+    public static DynamicSection addFragment(Section section) {
         DynamicSection fragment = new DynamicSection();
         Bundle args = new Bundle();
-        args.putString(StrUtil.SECTION_NAME,section.getName());
-        args.putInt(StrUtil.SECTION_TABLE_COUNT,section.getTableCount());
+        args.putString(StrUtil.SECTION_NAME, section.getName());
+        args.putInt(StrUtil.SECTION_TABLE_COUNT, section.getTableCount());
         fragment.setArguments(args);
         return fragment;
     }
@@ -79,7 +73,7 @@ public class DynamicSection extends Fragment implements RVTableAdapter.ItemClick
 
     @Override
     public void onTableClick(View view, int arrPosition) {
-        int tablePosition = arrPosition+1;
+        int tablePosition = arrPosition + 1;
         Logger.debug("Item clicked " + tablePosition);
         Intent mIntent = new Intent(getActivity(), MenuOrder.class);
         Bundle mBundle = new Bundle();

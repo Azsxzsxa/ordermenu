@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 import com.example.ordermenu.Models.Restaurant;
 import com.example.ordermenu.Models.Section;
-import com.example.ordermenu.Models.TabSectionAdapter;
+import com.example.ordermenu.Adapters.TabSectionAdapter;
 import com.example.ordermenu.R;
 import com.example.ordermenu.Utils.Database;
 import com.example.ordermenu.Utils.Logger;
@@ -73,32 +73,32 @@ public class TableChoice extends AppCompatActivity {
                 });
     }
 
-    private void setCreateRestaurant(){
+    private void setCreateRestaurant() {
         //TODO Add restaurant name, create employees, create sections, create menu
     }
 
-    private void getSections(){
+    private void getSections() {
         Database.getInstance().restRef.document(Database.getInstance().getRestaurantId()).collection(CURRENT).get().
                 addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                for (DocumentSnapshot doc : queryDocumentSnapshots) {
-                    Section section = doc.toObject(Section.class);
-                    _sections.add(section);
-                }
-                viewPager =  findViewById(R.id.viewPager);
-                tab = findViewById(R.id.tabLayout);
-                for (Section section : _sections) {
-                    tab.addTab(tab.newTab().setText(section.getName()));
-                }
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                            Section section = doc.toObject(Section.class);
+                            _sections.add(section);
+                        }
+                        viewPager = findViewById(R.id.viewPager);
+                        tab = findViewById(R.id.tabLayout);
+                        for (Section section : _sections) {
+                            tab.addTab(tab.newTab().setText(section.getName()));
+                        }
 
-                adapter = new TabSectionAdapter
-                        (getSupportFragmentManager(), _sections);
-                viewPager.setAdapter(adapter);
-                viewPager.setOffscreenPageLimit(10);
-                viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tab));
-            }
-        });
+                        adapter = new TabSectionAdapter
+                                (getSupportFragmentManager(), _sections);
+                        viewPager.setAdapter(adapter);
+                        viewPager.setOffscreenPageLimit(10);
+                        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tab));
+                    }
+                });
     }
 
 
@@ -114,7 +114,7 @@ public class TableChoice extends AppCompatActivity {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
 
-                    if(_restaurant ==null) {
+                    if (_restaurant == null) {
                         getRestaurant();
                     }
 
