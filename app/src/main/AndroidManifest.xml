@@ -15,10 +15,16 @@
             android:name=".UI.LoginActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".UI.MenuOrder"
-            android:label="@string/title_activity_menu_order" />
+        android:name=".UI.OrderActivity"
+        android:label="@string/title_activity_menu_order" />
 
-        <activity android:name=".UI.TableChoice">
+        <activity
+            android:name=".UI.MenuActivity"
+            android:label="@string/title_activity_menu" />
+
+        <activity android:name=".UI.TablesActivity"
+            android:label="@string/title_activity_tables">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

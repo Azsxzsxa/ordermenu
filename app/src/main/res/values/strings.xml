@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">ordermenu</string>
-    <string name="title_activity_menu_order">MenuOrder</string>
+    <string name="title_activity_menu_order">Order</string>
+    <string name="title_activity_tables">Tables</string>
+    <string name="title_activity_menu">Menu</string>
     <string name="login_hint_password">Password</string>
     <string name="login_hint_email">Email</string>
     <string name="login_btn_text">Log in</string>

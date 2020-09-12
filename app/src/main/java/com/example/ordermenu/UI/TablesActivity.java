@@ -2,6 +2,7 @@ package com.example.ordermenu.UI;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
@@ -25,7 +26,7 @@ import java.util.ArrayList;
 
 import static com.example.ordermenu.Utils.StrUtil.CURRENT;
 
-public class TableChoice extends AppCompatActivity {
+public class TablesActivity extends AppCompatActivity {
     private ArrayList<Section> _sections = new ArrayList<>();
 
     private TabSectionAdapter adapter;
@@ -39,6 +40,8 @@ public class TableChoice extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         setupFirebaseAuth();
     }
 
@@ -132,8 +135,8 @@ public class TableChoice extends AppCompatActivity {
                 } else {
                     // User is signed out
                     Logger.debug("onAuthStateChanged: signed_out");
-                    Toast.makeText(TableChoice.this, "Not logged in", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(TableChoice.this, LoginActivity.class);
+                    Toast.makeText(TablesActivity.this, "Not logged in", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(TablesActivity.this, LoginActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                     finish();

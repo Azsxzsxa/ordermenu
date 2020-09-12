@@ -25,7 +25,7 @@ import static com.example.ordermenu.Utils.StrUtil.TABLE_POSITION;
 import static com.example.ordermenu.Utils.StrUtil.TABLE_SECTION;
 
 
-public class DynamicSection extends Fragment implements RVTableAdapter.ItemClickListener {
+public class DynamicSectionFragment extends Fragment implements RVTableAdapter.ItemClickListener {
 
     private View view;
     private String _sectionName;
@@ -47,8 +47,8 @@ public class DynamicSection extends Fragment implements RVTableAdapter.ItemClick
         initTablesRV(_tableCount);
     }
 
-    public static DynamicSection addFragment(Section section) {
-        DynamicSection fragment = new DynamicSection();
+    public static DynamicSectionFragment addFragment(Section section) {
+        DynamicSectionFragment fragment = new DynamicSectionFragment();
         Bundle args = new Bundle();
         args.putString(StrUtil.SECTION_NAME, section.getName());
         args.putInt(StrUtil.SECTION_TABLE_COUNT, section.getTableCount());
@@ -75,9 +75,9 @@ public class DynamicSection extends Fragment implements RVTableAdapter.ItemClick
     public void onTableClick(View view, int arrPosition) {
         int tablePosition = arrPosition + 1;
         Logger.debug("Item clicked " + tablePosition);
-        Intent mIntent = new Intent(getActivity(), MenuOrder.class);
+        Intent mIntent = new Intent(getActivity(), OrderActivity.class);
         Bundle mBundle = new Bundle();
-        mBundle.putString(TABLE_POSITION, String.valueOf(tablePosition));
+        mBundle.putInt(TABLE_POSITION, tablePosition);
         mBundle.putString(TABLE_SECTION, _sectionName);
         mIntent.putExtras(mBundle);
         startActivity(mIntent);

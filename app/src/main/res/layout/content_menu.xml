@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".UI.MenuOrder"
-    tools:showIn="@layout/activity_menu_order">
+    tools:context=".UI.OrderActivity"
+    tools:showIn="@layout/activity_menu">
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewPager"
