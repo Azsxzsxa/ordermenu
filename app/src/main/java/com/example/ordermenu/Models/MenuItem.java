@@ -4,12 +4,13 @@ public class MenuItem {
     String category;
     String name;
     int price;
-    int quantity = 0;
+    int quantity;
 
-    public MenuItem(String category, String name, int price) {
+    public MenuItem(String category, String name, int price, int quantity) {
         this.category = category;
         this.name = name;
         this.price = price;
+        this.quantity = quantity;
     }
 
     public MenuItem() {

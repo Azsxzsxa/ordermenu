@@ -4,43 +4,37 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.ordermenu.Models.MenuItem;
 import com.example.ordermenu.R;
 
-import java.util.ArrayList;
+import java.util.List;
 
-public class RVMenuAdapter extends RecyclerView.Adapter<RVMenuAdapter.ViewHolder> {
-    private ArrayList<MenuItem> mData;
+public class RVMenuAdapter extends RecyclerView.Adapter<RVMenuAdapter.ViewHolder>{
+    private List<String> mData;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
 
     // data is passed into the constructor
-    public RVMenuAdapter(Context context, ArrayList<MenuItem> data) {
+    public RVMenuAdapter(Context context, List<String> data) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
     }
 
     // inflates the row layout from xml when needed
-    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.rv_menuitem_row, parent, false);
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = mInflater.inflate(R.layout.rv_menucategory_row, parent, false);
         return new ViewHolder(view);
     }
 
     // binds the data to the TextView in each row
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        String name = mData.get(position).getName();
-        int quantity = mData.get(position).getQuantity();
-        holder.itemName.setText(name);
-        holder.itemQuantity.setText(String.valueOf(quantity));
+        String line = mData.get(position);
+        holder.myTextView.setText(line);
     }
 
     // total number of rows
@@ -52,40 +46,22 @@ public class RVMenuAdapter extends RecyclerView.Adapter<RVMenuAdapter.ViewHolder
 
     // stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView itemName;
-        TextView itemQuantity;
-        Button itemMinusBtn;
-        Button itemPlusBtn;
+        TextView myTextView;
 
         ViewHolder(View itemView) {
             super(itemView);
-            itemName = itemView.findViewById(R.id.item_name);
-            itemQuantity = itemView.findViewById(R.id.tv_quantity);
-            itemMinusBtn = itemView.findViewById(R.id.btn_minus);
-            itemPlusBtn = itemView.findViewById(R.id.btn_plus);
-            itemMinusBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mClickListener.onMinusClick(v, getAdapterPosition());
-                }
-            });
-            itemPlusBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mClickListener.onPlusClick(v, getAdapterPosition());
-                }
-            });
-
+            myTextView = itemView.findViewById(R.id.TV_menuTitle);
+            itemView.setOnClickListener(this);
         }
 
-
         @Override
-        public void onClick(View v) {
+        public void onClick(View view) {
+            if (mClickListener != null) mClickListener.onMenuClick(view, getAdapterPosition());
         }
     }
 
     // convenience method for getting data at click position
-    MenuItem getItem(int id) {
+    String getItem(int id) {
         return mData.get(id);
     }
 
@@ -96,8 +72,6 @@ public class RVMenuAdapter extends RecyclerView.Adapter<RVMenuAdapter.ViewHolder
 
     // parent activity will implement this method to respond to click events
     public interface ItemClickListener {
-        void onPlusClick(View view, int position);
-
-        void onMinusClick(View view, int position);
+        void onMenuClick(View view, int position);
     }
 }

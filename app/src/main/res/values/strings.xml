@@ -10,6 +10,7 @@
     <string name="login_please_log_in_text">Please log in to continue</string>
     <string name="login_register">Register</string>
     <string name="login_not_filled">You didn\'t fill in all the fields</string>
+    <string name="search">Search</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
