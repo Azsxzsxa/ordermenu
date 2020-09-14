@@ -4,19 +4,15 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.ordermenu.Adapters.RVOrderAdapter;
-import com.example.ordermenu.Adapters.RVTableAdapter;
 import com.example.ordermenu.Models.MenuItem;
 import com.example.ordermenu.Utils.Database;
 import com.example.ordermenu.Utils.Logger;
 import com.example.ordermenu.Utils.StrUtil;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -29,12 +25,11 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
+import static com.example.ordermenu.Utils.StrUtil.DB_ORDER;
+import static com.example.ordermenu.Utils.StrUtil.DB_TABLES;
 import static com.example.ordermenu.Utils.StrUtil.SECTION_DOC_ID;
 import static com.example.ordermenu.Utils.StrUtil.TABLE_DOC_ID;
-import static com.example.ordermenu.Utils.StrUtil.TABLE_POSITION;
-import static com.example.ordermenu.Utils.StrUtil.TABLE_SECTION;
 
 public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.ItemClickListener {
 
@@ -56,8 +51,10 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
             @Override
             public void onClick(View view) {
                 //go to menu
-                Intent mIntent = new Intent(getApplication(), MenuActivity.class);
-                startActivity(mIntent);
+                Intent intent = new Intent(getApplication(), MenuActivity.class);
+                intent.putExtra(TABLE_DOC_ID, _table_doc_id);
+                intent.putExtra(SECTION_DOC_ID, _section_doc_id);
+                startActivity(intent);
             }
         });
 
@@ -72,8 +69,8 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
     }
 
     private void getOrder() {
-        Database.getInstance().restRef.document(Database.getInstance().getRestaurantId()).collection(StrUtil.CURRENT).document(_section_doc_id)
-                .collection("Tables").document(_table_doc_id).collection("Order")
+        Database.getInstance().restRef.document(Database.getInstance().getRestaurantId()).collection(StrUtil.DB_CURRENT).document(_section_doc_id)
+                .collection(DB_TABLES).document(_table_doc_id).collection(DB_ORDER)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {

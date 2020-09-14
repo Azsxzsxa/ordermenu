@@ -21,8 +21,9 @@ import com.example.ordermenu.R;
 import com.example.ordermenu.Utils.Database;
 import com.example.ordermenu.Utils.Logger;
 import com.example.ordermenu.Utils.StrUtil;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -31,8 +32,6 @@ import java.util.List;
 
 import static com.example.ordermenu.Utils.StrUtil.SECTION_DOC_ID;
 import static com.example.ordermenu.Utils.StrUtil.TABLE_DOC_ID;
-import static com.example.ordermenu.Utils.StrUtil.TABLE_POSITION;
-import static com.example.ordermenu.Utils.StrUtil.TABLE_SECTION;
 
 
 public class DynamicSectionFragment extends Fragment implements RVTableAdapter.ItemClickListener {
@@ -54,32 +53,39 @@ public class DynamicSectionFragment extends Fragment implements RVTableAdapter.I
             _section_doc_id = getArguments().getString(SECTION_DOC_ID, "");
             _tableCount = getArguments().getInt(StrUtil.SECTION_TABLE_COUNT, 0);
 
-            getTables(_section_doc_id);
+            if (_section_doc_id != null)
+                getTables(_section_doc_id);
         }
         initTablesRV();
         return view;
     }
 
     private void getTables(String section_doc_id) {
-        Database.getInstance().restRef.document(Database.getInstance().getRestaurantId()).collection(StrUtil.CURRENT).document(section_doc_id)
+        Database.getInstance().restRef.document(Database.getInstance().getRestaurantId()).collection(StrUtil.DB_CURRENT).document(section_doc_id)
                 .collection("Tables").orderBy("number", Query.Direction.ASCENDING)
-                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                if (queryDocumentSnapshots != null && queryDocumentSnapshots.size() > 0) {
-                    for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                        if (documentSnapshot != null) {
-                            Table table = documentSnapshot.toObject(Table.class);
-                            if (table != null) {
-                                table.setDocumentID(documentSnapshot.getId());
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        if (value != null && error == null && value.size() > 0) {
+                            for (DocumentSnapshot documentSnapshot : value) {
+                                if (documentSnapshot != null) {
+                                    Table table = documentSnapshot.toObject(Table.class);
+                                    if (table != null) {
+                                        table.setDocumentID(documentSnapshot.getId());
+                                    }
+                                    if (_tableList.contains(table)) {
+                                        _tableList.set(_tableList.indexOf(table), table);
+                                        _rvTableAdapter.notifyItemChanged(_tableList.indexOf(table));
+                                    } else {
+                                        _tableList.add(table);
+                                        _rvTableAdapter.notifyItemInserted(_tableList.size() - 1);
+                                    }
+                                }
                             }
-                            _tableList.add(table);
-                            _rvTableAdapter.notifyItemInserted(_tableList.size() - 1);
+
                         }
                     }
-                }
-            }
-        });
+                });
     }
 
     public static DynamicSectionFragment addFragment(Section section) {

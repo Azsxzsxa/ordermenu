@@ -2,7 +2,6 @@ package com.example.ordermenu.UI;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
@@ -24,7 +23,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-import static com.example.ordermenu.Utils.StrUtil.CURRENT;
+import static com.example.ordermenu.Utils.StrUtil.DB_CURRENT;
 
 public class TablesActivity extends AppCompatActivity {
     private ArrayList<Section> _sections = new ArrayList<>();
@@ -40,8 +39,6 @@ public class TablesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
         setupFirebaseAuth();
     }
 
@@ -81,7 +78,7 @@ public class TablesActivity extends AppCompatActivity {
     }
 
     private void getSections() {
-        Database.getInstance().restRef.document(Database.getInstance().getRestaurantId()).collection(CURRENT).get().
+        Database.getInstance().restRef.document(Database.getInstance().getRestaurantId()).collection(DB_CURRENT).get().
                 addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
