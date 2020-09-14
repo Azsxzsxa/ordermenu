@@ -87,7 +87,10 @@ public class TablesActivity extends AppCompatActivity {
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         for (DocumentSnapshot doc : queryDocumentSnapshots) {
                             Section section = doc.toObject(Section.class);
-                            _sections.add(section);
+                            if (section != null) {
+                                section.setDocumentID(doc.getId());
+                                _sections.add(section);
+                            }
                         }
                         viewPager = findViewById(R.id.viewPager);
                         tab = findViewById(R.id.tabLayout);

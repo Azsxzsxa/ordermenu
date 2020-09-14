@@ -31,13 +31,18 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import static com.example.ordermenu.Utils.StrUtil.SECTION_DOC_ID;
+import static com.example.ordermenu.Utils.StrUtil.TABLE_DOC_ID;
 import static com.example.ordermenu.Utils.StrUtil.TABLE_POSITION;
 import static com.example.ordermenu.Utils.StrUtil.TABLE_SECTION;
 
-public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.ItemClickListener{
+public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.ItemClickListener {
 
     ArrayList<MenuItem> _menuItems = new ArrayList<>();
     RVOrderAdapter _rvOrderAdapter;
+
+    String _section_doc_id;
+    String _table_doc_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,48 +61,37 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
             }
         });
 
-        int tablePosition = Objects.requireNonNull(getIntent().getExtras()).getInt(TABLE_POSITION);
-        String tableSection = Objects.requireNonNull(getIntent().getExtras()).getString(TABLE_SECTION);
-        Logger.debug("Order for table " + tablePosition + " from " + tableSection);
-        getOrder(tablePosition, tableSection);
+        if (getIntent().getExtras() != null) {
+            _table_doc_id = getIntent().getExtras().getString(TABLE_DOC_ID, "");
+            _section_doc_id = getIntent().getExtras().getString(SECTION_DOC_ID, "");
+            getOrder();
+        }
 
-
-
+        Logger.debug("Order for table " + _table_doc_id + " from " + _section_doc_id);
 
     }
 
-    private void getOrder(final int tablePosition, String tableSection) {
-        Database.getInstance().restRef.document(Database.getInstance().getRestaurantId()).collection(StrUtil.CURRENT).whereEqualTo("name",tableSection).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                for (DocumentSnapshot doc : queryDocumentSnapshots) {
-                    doc.getReference().collection("Tables").whereEqualTo("number",tablePosition).get().
-                            addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                        @Override
-                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                            for (DocumentSnapshot doc : queryDocumentSnapshots) {
-                                doc.getReference().collection("Order").addSnapshotListener(new EventListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                                        _menuItems = new ArrayList<>();
-                                        for (DocumentSnapshot doc : value) {
-                                            _menuItems.add(doc.toObject(MenuItem.class));
-                                        }
-                                        initOrderRV();
-                                    }
-                                });
+    private void getOrder() {
+        Database.getInstance().restRef.document(Database.getInstance().getRestaurantId()).collection(StrUtil.CURRENT).document(_section_doc_id)
+                .collection("Tables").document(_table_doc_id).collection("Order")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        if (value != null && error == null) {
+                            _menuItems = new ArrayList<>();
+                            for (DocumentSnapshot doc : value) {
+                                _menuItems.add(doc.toObject(MenuItem.class));
                             }
+                            initOrderRV();
                         }
-                    });
-                }
-            }
-        });
+                    }
+                });
     }
 
     private void initOrderRV() {
         if (_rvOrderAdapter != null) {
             _rvOrderAdapter.updateList(_menuItems);
-        }else {
+        } else {
             RecyclerView recyclerView = findViewById(R.id.RV_order);
             recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
             _rvOrderAdapter = new RVOrderAdapter(this, _menuItems);
@@ -109,7 +103,7 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
 
     @Override
     public void onPlusClick(View view, int position) {
-        _menuItems.get(position).setQuantity(_menuItems.get(position).getQuantity()+1);
+        _menuItems.get(position).setQuantity(_menuItems.get(position).getQuantity() + 1);
         _rvOrderAdapter.notifyItemChanged(position);
 
     }
@@ -117,7 +111,7 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
     @Override
     public void onMinusClick(View view, int position) {
         if (_menuItems.get(position).getQuantity() > 0) {
-            _menuItems.get(position).setQuantity(_menuItems.get(position).getQuantity()-1);
+            _menuItems.get(position).setQuantity(_menuItems.get(position).getQuantity() - 1);
             _rvOrderAdapter.notifyItemChanged(position);
         }
     }

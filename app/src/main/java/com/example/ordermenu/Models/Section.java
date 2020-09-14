@@ -1,6 +1,7 @@
 package com.example.ordermenu.Models;
 
 public class Section {
+    private String documentID;
     private String name;
     private int tableCount;
 
@@ -10,6 +11,14 @@ public class Section {
     }
 
     public Section() {
+    }
+
+    public String getDocumentID() {
+        return documentID;
+    }
+
+    public void setDocumentID(String documentID) {
+        this.documentID = documentID;
     }
 
     public String getName() {

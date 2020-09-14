@@ -6,26 +6,29 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.ordermenu.Models.Table;
 import com.example.ordermenu.R;
 
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class RVTableAdapter extends RecyclerView.Adapter<RVTableAdapter.ViewHolder>{
-    private List<String> mData;
+public class RVTableAdapter extends RecyclerView.Adapter<RVTableAdapter.ViewHolder> {
+    private List<Table> mTableList;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
 
     // data is passed into the constructor
-    public RVTableAdapter(Context context, List<String> data) {
+    public RVTableAdapter(Context context, List<Table> tableList) {
         this.mInflater = LayoutInflater.from(context);
-        this.mData = data;
+        this.mTableList = tableList;
     }
 
     // inflates the row layout from xml when needed
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.rv_table_row, parent, false);
         return new ViewHolder(view);
     }
@@ -33,14 +36,14 @@ public class RVTableAdapter extends RecyclerView.Adapter<RVTableAdapter.ViewHold
     // binds the data to the TextView in each row
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        String line = mData.get(position);
+        String line = mTableList.get(position).getNumber() + "";
         holder.myTextView.setText(line);
     }
 
     // total number of rows
     @Override
     public int getItemCount() {
-        return mData.size();
+        return mTableList.size();
     }
 
 
@@ -62,7 +65,7 @@ public class RVTableAdapter extends RecyclerView.Adapter<RVTableAdapter.ViewHold
 
     // convenience method for getting data at click position
     String getItem(int id) {
-        return mData.get(id);
+        return mTableList.get(id).getNumber() + "";
     }
 
     // allows clicks events to be caught
