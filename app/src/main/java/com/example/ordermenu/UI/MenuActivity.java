@@ -20,22 +20,16 @@ public class MenuActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
 
-        if (getIntent() != null && getIntent().getExtras() != null) {
-            String _table_doc_id = getIntent().getExtras().getString(TABLE_DOC_ID, "");
-            String _section_doc_id = getIntent().getExtras().getString(SECTION_DOC_ID, "");
-
-            NavController navController;
-            NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
-            if (navHostFragment != null) {
-                navController = navHostFragment.getNavController();
-                Bundle bundle = new Bundle();
-                bundle.putString(TABLE_DOC_ID, _table_doc_id);
-                bundle.putString(SECTION_DOC_ID, _section_doc_id);
-                navController.setGraph(R.navigation.nav_graph, bundle);
-            }
-        }else {
-            Toast.makeText(this, "ERROR", Toast.LENGTH_SHORT).show();
+        NavController navController;
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+        if (navHostFragment != null) {
+            navController = navHostFragment.getNavController();
+//                Bundle bundle = new Bundle();
+//                bundle.putString(TABLE_DOC_ID, _table_doc_id);
+//                bundle.putString(SECTION_DOC_ID, _section_doc_id);
+            navController.setGraph(R.navigation.nav_graph);
         }
+
 
     }
 

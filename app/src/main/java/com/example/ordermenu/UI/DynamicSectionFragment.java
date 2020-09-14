@@ -20,6 +20,7 @@ import com.example.ordermenu.Models.Table;
 import com.example.ordermenu.R;
 import com.example.ordermenu.Utils.Database;
 import com.example.ordermenu.Utils.Logger;
+import com.example.ordermenu.Utils.OrderUtil;
 import com.example.ordermenu.Utils.StrUtil;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -111,10 +112,9 @@ public class DynamicSectionFragment extends Fragment implements RVTableAdapter.I
     public void onTableClick(View view, int position) {
         Logger.debug("Item clicked " + _tableList.get(position).getNumber());
         Intent mIntent = new Intent(getActivity(), OrderActivity.class);
-        Bundle mBundle = new Bundle();
-        mBundle.putString(SECTION_DOC_ID, _section_doc_id);
-        mBundle.putString(TABLE_DOC_ID, _tableList.get(position).getDocumentID());
-        mIntent.putExtras(mBundle);
+        OrderUtil.getInstance().setSectionDocID(_section_doc_id);
+        OrderUtil.getInstance().setTableDocID(_tableList.get(position).getDocumentID());
+
         startActivity(mIntent);
     }
 }

@@ -14,5 +14,6 @@ public final class StrUtil {
     public final static String MENU = "Menu";
     public final static String DB_TABLES = "Tables";
     public final static String DB_ORDER = "Order";
+    public final static String DB_CATEGORY = "category";
 
 }

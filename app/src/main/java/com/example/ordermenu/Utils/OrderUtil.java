@@ -8,6 +8,8 @@ import java.util.List;
 public class OrderUtil {
     private static OrderUtil INSTANCE;
     private List<MenuItem> menuItemList = new ArrayList<>();
+    private String tableDocID;
+    private String sectionDocID;
 
     private OrderUtil() {
     }
@@ -55,4 +57,19 @@ public class OrderUtil {
         }
     }
 
+    public String getTableDocID() {
+        return tableDocID;
+    }
+
+    public String getSectionDocID() {
+        return sectionDocID;
+    }
+
+    public void setTableDocID(String tableDocID) {
+        this.tableDocID = tableDocID;
+    }
+
+    public void setSectionDocID(String sectionDocID) {
+        this.sectionDocID = sectionDocID;
+    }
 }

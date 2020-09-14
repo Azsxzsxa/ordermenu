@@ -14,6 +14,9 @@
         <action
             android:id="@+id/action_menuCategoriesFragment_to_menuItemsFragment"
             app:destination="@id/menuItemsFragment" />
+        <action
+            android:id="@+id/action_menuCategoriesFragment_to_menuReviewFragment"
+            app:destination="@id/menuReviewFragment" />
     </fragment>
     <fragment
         android:id="@+id/menuItemsFragment"
@@ -27,4 +30,10 @@
             android:name="category"
             app:argType="string" />
     </fragment>
+    <fragment
+        android:id="@+id/menuReviewFragment"
+        android:name="com.example.ordermenu.UI.MenuReviewFragment"
+        android:label="fragment_menu_review"
+        tools:layout="@layout/fragment_menu_review" />
+
 </navigation>

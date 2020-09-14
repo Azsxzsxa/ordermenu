@@ -18,6 +18,7 @@ import com.example.ordermenu.Adapters.RVMenuCategoriesAdapter;
 import com.example.ordermenu.Models.Restaurant;
 import com.example.ordermenu.R;
 import com.example.ordermenu.Utils.Database;
+import com.example.ordermenu.Utils.OrderUtil;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 
@@ -32,7 +33,8 @@ public class MenuCategoriesFragment extends Fragment implements RVMenuCategories
 
     List<String> _menuCategories = new ArrayList<>();
     View view;
-    String _section_doc_id, _table_doc_id;
+    String _section_doc_id = OrderUtil.getInstance().getSectionDocID();
+    String _table_doc_id = OrderUtil.getInstance().getTableDocID();
     RVMenuCategoriesAdapter _rvMenuAdapter;
 
     @Override
@@ -75,13 +77,8 @@ public class MenuCategoriesFragment extends Fragment implements RVMenuCategories
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Toast.makeText(getContext(), _table_doc_id, Toast.LENGTH_SHORT).show();
 
-        if (getArguments() != null) {
-            _section_doc_id = getArguments().getString(SECTION_DOC_ID, "");
-            _table_doc_id = getArguments().getString(TABLE_DOC_ID, "");
-
-            Toast.makeText(getContext(), _table_doc_id, Toast.LENGTH_SHORT).show();
-        }
 
     }
 

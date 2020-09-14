@@ -3,10 +3,11 @@ package com.example.ordermenu.UI;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.example.ordermenu.Adapters.RVOrderAdapter;
+import com.example.ordermenu.Adapters.RVMenuItemAdapter;
 import com.example.ordermenu.Models.MenuItem;
 import com.example.ordermenu.Utils.Database;
 import com.example.ordermenu.Utils.Logger;
+import com.example.ordermenu.Utils.OrderUtil;
 import com.example.ordermenu.Utils.StrUtil;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -31,13 +32,13 @@ import static com.example.ordermenu.Utils.StrUtil.DB_TABLES;
 import static com.example.ordermenu.Utils.StrUtil.SECTION_DOC_ID;
 import static com.example.ordermenu.Utils.StrUtil.TABLE_DOC_ID;
 
-public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.ItemClickListener {
+public class OrderActivity extends AppCompatActivity implements RVMenuItemAdapter.ItemClickListener {
 
     ArrayList<MenuItem> _menuItems = new ArrayList<>();
-    RVOrderAdapter _rvOrderAdapter;
+    RVMenuItemAdapter _rvOrderAdapter;
 
-    String _section_doc_id;
-    String _table_doc_id;
+    String _section_doc_id = OrderUtil.getInstance().getSectionDocID();
+    String _table_doc_id = OrderUtil.getInstance().getTableDocID();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,18 +53,18 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
             public void onClick(View view) {
                 //go to menu
                 Intent intent = new Intent(getApplication(), MenuActivity.class);
-                intent.putExtra(TABLE_DOC_ID, _table_doc_id);
-                intent.putExtra(SECTION_DOC_ID, _section_doc_id);
+//                intent.putExtra(TABLE_DOC_ID, _table_doc_id);
+//                intent.putExtra(SECTION_DOC_ID, _section_doc_id);
                 startActivity(intent);
             }
         });
 
-        if (getIntent().getExtras() != null) {
-            _table_doc_id = getIntent().getExtras().getString(TABLE_DOC_ID, "");
-            _section_doc_id = getIntent().getExtras().getString(SECTION_DOC_ID, "");
-            getOrder();
-        }
-
+//        if (getIntent().getExtras() != null) {
+//            _table_doc_id = getIntent().getExtras().getString(TABLE_DOC_ID, "");
+//            _section_doc_id = getIntent().getExtras().getString(SECTION_DOC_ID, "");
+//            getOrder();
+//        }
+        getOrder();
         Logger.debug("Order for table " + _table_doc_id + " from " + _section_doc_id);
 
     }
@@ -91,7 +92,7 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
         } else {
             RecyclerView recyclerView = findViewById(R.id.RV_order);
             recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-            _rvOrderAdapter = new RVOrderAdapter(this, _menuItems);
+            _rvOrderAdapter = new RVMenuItemAdapter(this, _menuItems);
             _rvOrderAdapter.setClickListener(this);
             recyclerView.setAdapter(_rvOrderAdapter);
         }
