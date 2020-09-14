@@ -30,7 +30,7 @@ public class RVOrderAdapter extends RecyclerView.Adapter<RVOrderAdapter.ViewHold
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.rv_menuitem_row, parent, false);
+        View view = mInflater.inflate(R.layout.rv_order_item_row, parent, false);
         return new ViewHolder(view);
     }
 

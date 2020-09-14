@@ -16,7 +16,7 @@
             android:id="@+id/TV_menuTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="Title here" />
+            tools:text="Menu item here" />
 
 
     </RelativeLayout>

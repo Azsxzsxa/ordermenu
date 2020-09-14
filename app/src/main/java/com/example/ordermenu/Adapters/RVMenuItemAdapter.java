@@ -6,41 +6,44 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.ordermenu.Models.MenuItem;
 import com.example.ordermenu.R;
 
 import java.util.List;
 
-public class RVMenuAdapter extends RecyclerView.Adapter<RVMenuAdapter.ViewHolder>{
-    private List<String> mData;
+public class RVMenuItemAdapter extends RecyclerView.Adapter<RVMenuItemAdapter.ViewHolder>{
+    private List<MenuItem> menuItemList;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
 
     // data is passed into the constructor
-    public RVMenuAdapter(Context context, List<String> data) {
+    public RVMenuItemAdapter(Context context, List<MenuItem> menuItems) {
         this.mInflater = LayoutInflater.from(context);
-        this.mData = data;
+        this.menuItemList = menuItems;
     }
 
     // inflates the row layout from xml when needed
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.rv_menucategory_row, parent, false);
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = mInflater.inflate(R.layout.rv_menu_item, parent, false);
         return new ViewHolder(view);
     }
 
     // binds the data to the TextView in each row
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        String line = mData.get(position);
-        holder.myTextView.setText(line);
+        String name = menuItemList.get(position).getName();
+        holder.myTextView.setText(name);
     }
 
     // total number of rows
     @Override
     public int getItemCount() {
-        return mData.size();
+        return menuItemList.size();
     }
 
 
@@ -56,14 +59,10 @@ public class RVMenuAdapter extends RecyclerView.Adapter<RVMenuAdapter.ViewHolder
 
         @Override
         public void onClick(View view) {
-            if (mClickListener != null) mClickListener.onMenuClick(view, getAdapterPosition());
+            if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
         }
     }
 
-    // convenience method for getting data at click position
-    String getItem(int id) {
-        return mData.get(id);
-    }
 
     // allows clicks events to be caught
     public void setClickListener(ItemClickListener itemClickListener) {
@@ -72,6 +71,6 @@ public class RVMenuAdapter extends RecyclerView.Adapter<RVMenuAdapter.ViewHolder
 
     // parent activity will implement this method to respond to click events
     public interface ItemClickListener {
-        void onMenuClick(View view, int position);
+        void onItemClick(View view, int position);
     }
 }
