@@ -87,15 +87,33 @@ public class MenuItemsFragment extends Fragment implements RVMenuItemAdapter.Ite
 
     @Override
     public void onPlusClick(View view, int position) {
+
+        MenuItem menuItem = new MenuItem();
+        menuItem.setQuantity(_menuItemList.get(position).getQuantity());
+        menuItem.setCategory(_menuItemList.get(position).getCategory());
+        menuItem.setName(_menuItemList.get(position).getName());
+        menuItem.setPrice(_menuItemList.get(position).getPrice());
+
+        OrderUtil.getInstance().increaseQuantity(menuItem);
+
         _menuItemList.get(position).setQuantity(_menuItemList.get(position).getQuantity() + 1);
-        OrderUtil.getInstance().increaseQuantity(_menuItemList.get(position));
         _rvMenuItemAdapter.notifyItemChanged(position);
     }
 
     @Override
     public void onMinusClick(View view, int position) {
-        _menuItemList.get(position).setQuantity(_menuItemList.get(position).getQuantity() - 1);
-        OrderUtil.getInstance().decreaseQuantity(_menuItemList.get(position));
-        _rvMenuItemAdapter.notifyItemChanged(position);
+
+        MenuItem menuItem = new MenuItem();
+        menuItem.setQuantity(_menuItemList.get(position).getQuantity());
+        menuItem.setCategory(_menuItemList.get(position).getCategory());
+        menuItem.setName(_menuItemList.get(position).getName());
+        menuItem.setPrice(_menuItemList.get(position).getPrice());
+
+        OrderUtil.getInstance().decreaseQuantity(menuItem);
+
+        if (_menuItemList.get(position).getQuantity() > 0) {
+            _menuItemList.get(position).setQuantity(_menuItemList.get(position).getQuantity() - 1);
+            _rvMenuItemAdapter.notifyItemChanged(position);
+        }
     }
 }

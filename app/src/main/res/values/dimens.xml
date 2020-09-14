@@ -6,4 +6,5 @@
     <dimen name="size_extralarge">50dp</dimen>
     <dimen name="size_extrasmall">4dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="card_corner_radius">12dp</dimen>
 </resources>

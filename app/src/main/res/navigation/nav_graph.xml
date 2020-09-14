@@ -29,6 +29,9 @@
         <argument
             android:name="category"
             app:argType="string" />
+        <action
+            android:id="@+id/action_menuItemsFragment_to_menuReviewFragment"
+            app:destination="@id/menuReviewFragment" />
     </fragment>
     <fragment
         android:id="@+id/menuReviewFragment"

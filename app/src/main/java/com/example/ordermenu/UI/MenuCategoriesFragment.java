@@ -74,13 +74,6 @@ public class MenuCategoriesFragment extends Fragment implements RVMenuCategories
         recyclerView.setAdapter(_rvMenuAdapter);
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        Toast.makeText(getContext(), _table_doc_id, Toast.LENGTH_SHORT).show();
-
-
-    }
 
     @Override
     public void onCategoryClick(View view, int position) {
