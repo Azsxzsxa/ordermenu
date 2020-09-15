@@ -29,12 +29,10 @@ import java.util.ArrayList;
 
 import static com.example.ordermenu.Utils.StrUtil.DB_ORDER;
 import static com.example.ordermenu.Utils.StrUtil.DB_TABLES;
-import static com.example.ordermenu.Utils.StrUtil.SECTION_DOC_ID;
-import static com.example.ordermenu.Utils.StrUtil.TABLE_DOC_ID;
 
 public class OrderActivity extends AppCompatActivity implements RVMenuItemAdapter.ItemClickListener {
 
-    ArrayList<MenuItem> _menuItems = new ArrayList<>();
+    ArrayList<MenuItem> _menuItemList = new ArrayList<>();
     RVMenuItemAdapter _rvOrderAdapter;
 
     String _section_doc_id = OrderUtil.getInstance().getSectionDocID();
@@ -76,10 +74,15 @@ public class OrderActivity extends AppCompatActivity implements RVMenuItemAdapte
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                         if (value != null && error == null) {
-                            _menuItems = new ArrayList<>();
+                            _menuItemList = new ArrayList<>();
                             for (DocumentSnapshot doc : value) {
-                                _menuItems.add(doc.toObject(MenuItem.class));
+                                MenuItem menuItem = doc.toObject(MenuItem.class);
+                                if (menuItem != null) {
+                                    menuItem.setDocument_id(doc.getId());
+                                    _menuItemList.add(menuItem);
+                                }
                             }
+                            OrderUtil.getInstance().setOrderedList(_menuItemList);
                             initOrderRV();
                         }
                     }
@@ -88,11 +91,11 @@ public class OrderActivity extends AppCompatActivity implements RVMenuItemAdapte
 
     private void initOrderRV() {
         if (_rvOrderAdapter != null) {
-            _rvOrderAdapter.updateList(_menuItems);
+            _rvOrderAdapter.updateList(_menuItemList);
         } else {
             RecyclerView recyclerView = findViewById(R.id.RV_order);
             recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-            _rvOrderAdapter = new RVMenuItemAdapter(this, _menuItems);
+            _rvOrderAdapter = new RVMenuItemAdapter(this, _menuItemList);
             _rvOrderAdapter.setClickListener(this);
             recyclerView.setAdapter(_rvOrderAdapter);
         }
@@ -101,15 +104,15 @@ public class OrderActivity extends AppCompatActivity implements RVMenuItemAdapte
 
     @Override
     public void onPlusClick(View view, int position) {
-        _menuItems.get(position).setQuantity(_menuItems.get(position).getQuantity() + 1);
+        _menuItemList.get(position).setQuantity(_menuItemList.get(position).getQuantity() + 1);
         _rvOrderAdapter.notifyItemChanged(position);
 
     }
 
     @Override
     public void onMinusClick(View view, int position) {
-        if (_menuItems.get(position).getQuantity() > 0) {
-            _menuItems.get(position).setQuantity(_menuItems.get(position).getQuantity() - 1);
+        if (_menuItemList.get(position).getQuantity() > 0) {
+            _menuItemList.get(position).setQuantity(_menuItemList.get(position).getQuantity() - 1);
             _rvOrderAdapter.notifyItemChanged(position);
         }
     }

@@ -20,6 +20,7 @@ import com.example.ordermenu.R;
 import com.example.ordermenu.Utils.Database;
 import com.example.ordermenu.Utils.OrderUtil;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
@@ -36,14 +37,23 @@ public class MenuCategoriesFragment extends Fragment implements RVMenuCategories
     String _section_doc_id = OrderUtil.getInstance().getSectionDocID();
     String _table_doc_id = OrderUtil.getInstance().getTableDocID();
     RVMenuCategoriesAdapter _rvMenuAdapter;
+    ExtendedFloatingActionButton fab_review;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_menu_categories, container, false);
-
+        fab_review = view.findViewById(R.id.FAB_review);
         initRV();
         getCategories();
+
+        fab_review.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(view).navigate(MenuCategoriesFragmentDirections.actionMenuCategoriesFragmentToMenuReviewFragment());
+            }
+        });
+
         return view;
     }
 
@@ -56,8 +66,10 @@ public class MenuCategoriesFragment extends Fragment implements RVMenuCategories
                             Restaurant restaurant = documentSnapshot.toObject(Restaurant.class);
                             if (restaurant != null) {
                                 for (String category : restaurant.getMenuCategories()) {
-                                    _menuCategories.add(category);
-                                    _rvMenuAdapter.notifyItemInserted(_menuCategories.size() - 1);
+                                    if (!_menuCategories.contains(category)) {
+                                        _menuCategories.add(category);
+                                        _rvMenuAdapter.notifyItemInserted(_menuCategories.size() - 1);
+                                    }
                                 }
                             }
                         }

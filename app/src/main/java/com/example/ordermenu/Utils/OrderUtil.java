@@ -12,6 +12,7 @@ import static androidx.constraintlayout.widget.Constraints.TAG;
 public class OrderUtil {
     private static OrderUtil INSTANCE;
     private List<MenuItem> menuItemList = new ArrayList<>();
+    private List<MenuItem> orderedList = new ArrayList<>();
     private String tableDocID;
     private String sectionDocID;
 
@@ -77,5 +78,17 @@ public class OrderUtil {
 
     public void setSectionDocID(String sectionDocID) {
         this.sectionDocID = sectionDocID;
+    }
+
+    public List<MenuItem> getOrderedList() {
+        return orderedList;
+    }
+
+    public void setOrderedList(List<MenuItem> orderedList) {
+        this.orderedList = orderedList;
+    }
+
+    public void setMenuItemList(List<MenuItem> menuItemList) {
+        this.menuItemList = menuItemList;
     }
 }

@@ -114,6 +114,7 @@ public class DynamicSectionFragment extends Fragment implements RVTableAdapter.I
         Intent mIntent = new Intent(getActivity(), OrderActivity.class);
         OrderUtil.getInstance().setSectionDocID(_section_doc_id);
         OrderUtil.getInstance().setTableDocID(_tableList.get(position).getDocumentID());
+        OrderUtil.getInstance().clearMenuItemList();
 
         startActivity(mIntent);
     }

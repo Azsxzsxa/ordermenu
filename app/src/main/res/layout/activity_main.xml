@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UI.TablesActivity"
-    >
+    android:background="@color/fragment_background_color"
+    tools:context=".UI.TablesActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
@@ -20,12 +20,12 @@
             android:background="?attr/colorPrimary">
 
             <TextView
-                android:textColor="#000000"
-                android:textSize="18sp"
-                android:textStyle="bold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/title_activity_tables" />
+                android:text="@string/title_activity_tables"
+                android:textColor="#000000"
+                android:textSize="18sp"
+                android:textStyle="bold" />
         </androidx.appcompat.widget.Toolbar>
 
     </com.google.android.material.appbar.AppBarLayout>

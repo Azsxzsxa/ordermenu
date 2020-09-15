@@ -14,4 +14,6 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="review_order">Review Order</string>
+    <string name="toolbar_add_to_order">Add to order</string>
+    <string name="toolbar_review_order">Review order</string>
 </resources>

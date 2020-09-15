@@ -19,6 +19,7 @@ import com.example.ordermenu.R;
 import com.example.ordermenu.Utils.Database;
 import com.example.ordermenu.Utils.OrderUtil;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -35,24 +36,38 @@ public class MenuItemsFragment extends Fragment implements RVMenuItemAdapter.Ite
     List<MenuItem> _menuItemList = new ArrayList<>();
     RVMenuItemAdapter _rvMenuItemAdapter;
     View view;
+    ExtendedFloatingActionButton fab_review;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_menu_items, container, false);
+        fab_review = view.findViewById(R.id.FAB_review);
 
         if (getArguments() != null) {
             MenuItemsFragmentArgs menuItemsFragmentArgs = MenuItemsFragmentArgs.fromBundle(getArguments());
             _category = menuItemsFragmentArgs.getCategory();
-            getMenuItemsFromDb();
         }
+        if (_category != null)
+            getMenuItemsFromDb();
+
         initRV();
+
+        //Back button listener
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                Navigation.findNavController(view).navigate(MenuItemsFragmentDirections.actionMenuItemsFragmentToMenuCategoriesFragment());
+                Navigation.findNavController(view).popBackStack();
             }
         });
+
+        fab_review.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(view).navigate(MenuItemsFragmentDirections.actionMenuItemsFragmentToMenuReviewFragment());
+            }
+        });
+
         return view;
     }
 
@@ -72,18 +87,27 @@ public class MenuItemsFragment extends Fragment implements RVMenuItemAdapter.Ite
                 if (queryDocumentSnapshots != null && queryDocumentSnapshots.size() > 0) {
                     for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                         MenuItem menuItem = documentSnapshot.toObject(MenuItem.class);
-                        if (_menuItemList.contains(menuItem)) {
-                            _menuItemList.set(_menuItemList.indexOf(menuItem), menuItem);
-                            _rvMenuItemAdapter.notifyItemChanged(_menuItemList.indexOf(menuItem));
-                        } else {
-                            if (OrderUtil.getInstance().getMenuItemList().contains(menuItem)) {
-                                int position = OrderUtil.getInstance().getMenuItemList().indexOf(menuItem);
-                                if (menuItem != null) {
+                        if (menuItem != null) {
+                            menuItem.setDocument_id(documentSnapshot.getId());
+                            if (_menuItemList.contains(menuItem)) {
+                                if (OrderUtil.getInstance().getMenuItemList().contains(menuItem)) {
+                                    int position = OrderUtil.getInstance().getMenuItemList().indexOf(menuItem);
                                     menuItem.setQuantity(OrderUtil.getInstance().getMenuItemList().get(position).getQuantity());
+                                } else {
+                                    _menuItemList.set(_menuItemList.indexOf(menuItem), menuItem);
                                 }
+                                _rvMenuItemAdapter.notifyItemChanged(_menuItemList.indexOf(menuItem));
+                            } else {
+                                if (OrderUtil.getInstance().getMenuItemList().contains(menuItem)) {
+                                    int position = OrderUtil.getInstance().getMenuItemList().indexOf(menuItem);
+                                    menuItem.setQuantity(OrderUtil.getInstance().getMenuItemList().get(position).getQuantity());
+                                    Log.d(TAG, "onSuccess: contine " + menuItem.getName() + " " + OrderUtil.getInstance().getMenuItemList().get(position).getQuantity());
+                                    _menuItemList.add(OrderUtil.getInstance().getMenuItemList().get(position));
+                                } else {
+                                    _menuItemList.add(menuItem);
+                                }
+                                _rvMenuItemAdapter.notifyItemInserted(_menuItemList.size() - 1);
                             }
-                            _menuItemList.add(menuItem);
-                            _rvMenuItemAdapter.notifyItemInserted(_menuItemList.size() - 1);
                         }
                     }
                 }
@@ -94,30 +118,13 @@ public class MenuItemsFragment extends Fragment implements RVMenuItemAdapter.Ite
 
     @Override
     public void onPlusClick(View view, int position) {
-//        MenuItem menuItem = new MenuItem();
-//        menuItem.setQuantity(_menuItemList.get(position).getQuantity());
-//        menuItem.setCategory(_menuItemList.get(position).getCategory());
-//        menuItem.setName(_menuItemList.get(position).getName());
-//        menuItem.setPrice(_menuItemList.get(position).getPrice());
         OrderUtil.getInstance().increaseQuantity(_menuItemList.get(position));
-
-//        _menuItemList.get(position).setQuantity(_menuItemList.get(position).getQuantity() + 1);
         _rvMenuItemAdapter.notifyItemChanged(position);
     }
 
     @Override
     public void onMinusClick(View view, int position) {
-//        MenuItem menuItem = new MenuItem();
-//        menuItem.setQuantity(_menuItemList.get(position).getQuantity());
-//        menuItem.setCategory(_menuItemList.get(position).getCategory());
-//        menuItem.setName(_menuItemList.get(position).getName());
-//        menuItem.setPrice(_menuItemList.get(position).getPrice());
         OrderUtil.getInstance().decreaseQuantity(_menuItemList.get(position));
         _rvMenuItemAdapter.notifyItemChanged(position);
-
-//        if (_menuItemList.get(position).getQuantity() > 0) {
-////            _menuItemList.get(position).setQuantity(_menuItemList.get(position).getQuantity() - 1);
-//            _rvMenuItemAdapter.notifyItemChanged(position);
-//        }
     }
 }
