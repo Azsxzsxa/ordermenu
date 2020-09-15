@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/size_small">
+
+    <TextView
+        android:id="@+id/TV_menuTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="@dimen/size_small"
+        android:textSize="18sp"
+        tools:text="pizza" />
+
+    <LinearLayout
+        android:id="@+id/btn_LL"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/TV_menuTitle"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_minus"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:text="-" />
+
+        <TextView
+            android:id="@+id/tv_quantity2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="@dimen/size_small"
+            android:textSize="18sp"
+            tools:text="10" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_plus"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:text="+" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_LL"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="@dimen/size_small"
+        android:orientation="horizontal">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_save"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:text="@string/save" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_cancel"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:text="@string/cancel" />
+    </LinearLayout>
+
+</RelativeLayout>

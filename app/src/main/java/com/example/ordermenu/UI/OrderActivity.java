@@ -1,23 +1,32 @@
 package com.example.ordermenu.UI;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.ordermenu.Adapters.RVMenuItemAdapter;
+import com.example.ordermenu.Adapters.RVOrderAdapter;
 import com.example.ordermenu.Models.MenuItem;
 import com.example.ordermenu.Utils.Database;
 import com.example.ordermenu.Utils.Logger;
 import com.example.ordermenu.Utils.OrderUtil;
 import com.example.ordermenu.Utils.StrUtil;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.ordermenu.R;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -27,13 +36,14 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
+import static com.example.ordermenu.Utils.StrUtil.DB_CURRENT;
 import static com.example.ordermenu.Utils.StrUtil.DB_ORDER;
 import static com.example.ordermenu.Utils.StrUtil.DB_TABLES;
 
-public class OrderActivity extends AppCompatActivity implements RVMenuItemAdapter.ItemClickListener {
+public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.ItemClickListener {
 
     ArrayList<MenuItem> _menuItemList = new ArrayList<>();
-    RVMenuItemAdapter _rvOrderAdapter;
+    RVOrderAdapter _rvOrderAdapter;
 
     String _section_doc_id = OrderUtil.getInstance().getSectionDocID();
     String _table_doc_id = OrderUtil.getInstance().getTableDocID();
@@ -95,7 +105,7 @@ public class OrderActivity extends AppCompatActivity implements RVMenuItemAdapte
         } else {
             RecyclerView recyclerView = findViewById(R.id.RV_order);
             recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-            _rvOrderAdapter = new RVMenuItemAdapter(this, _menuItemList);
+            _rvOrderAdapter = new RVOrderAdapter(this, _menuItemList);
             _rvOrderAdapter.setClickListener(this);
             recyclerView.setAdapter(_rvOrderAdapter);
         }
@@ -103,17 +113,77 @@ public class OrderActivity extends AppCompatActivity implements RVMenuItemAdapte
 
 
     @Override
-    public void onPlusClick(View view, int position) {
-        _menuItemList.get(position).setQuantity(_menuItemList.get(position).getQuantity() + 1);
-        _rvOrderAdapter.notifyItemChanged(position);
+    public void onEditClick(View v, final int position) {
+//        View popupView = getLayoutInflater().inflate(R.layout.popup_edit_order, (ViewGroup) v, false);
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.popup_edit_order);
 
-    }
+        TextView itemName = dialog.findViewById(R.id.TV_menuTitle);
+        final TextView itemQuantity = dialog.findViewById(R.id.tv_quantity2);
+        Button minusBtn = dialog.findViewById(R.id.btn_minus);
+        Button plusBtn = dialog.findViewById(R.id.btn_plus);
+        Button saveBtn = dialog.findViewById(R.id.btn_save);
+        Button cancelBtn = dialog.findViewById(R.id.btn_cancel);
 
-    @Override
-    public void onMinusClick(View view, int position) {
-        if (_menuItemList.get(position).getQuantity() > 0) {
-            _menuItemList.get(position).setQuantity(_menuItemList.get(position).getQuantity() - 1);
-            _rvOrderAdapter.notifyItemChanged(position);
-        }
+        itemName.setText(_menuItemList.get(position).getName());
+        itemQuantity.setText(String.valueOf(_menuItemList.get(position).getQuantity()));
+
+        minusBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (Integer.parseInt(itemQuantity.getText().toString()) > 0) {
+                    itemQuantity.setText(String.valueOf(Integer.parseInt(itemQuantity.getText().toString()) - 1));
+                }
+            }
+        });
+        plusBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                itemQuantity.setText(String.valueOf(Integer.parseInt(itemQuantity.getText().toString()) + 1));
+            }
+        });
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.cancel();
+            }
+        });
+        saveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                _menuItemList.get(position).setQuantity(Integer.parseInt(itemQuantity.getText().toString()));
+                if (_menuItemList.get(position).getQuantity() == 0) {
+                    Database.getInstance().restRef.document(Database.getInstance().getRestaurantId())
+                            .collection(DB_CURRENT)
+                            .document(OrderUtil.getInstance().getSectionDocID())
+                            .collection(DB_TABLES)
+                            .document(OrderUtil.getInstance().getTableDocID())
+                            .collection(DB_ORDER)
+                            .document(_menuItemList.get(position).getDocument_id())
+                            .delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            dialog.cancel();
+                        }
+                    });
+                } else {
+                    Database.getInstance().restRef.document(Database.getInstance().getRestaurantId())
+                            .collection(DB_CURRENT)
+                            .document(OrderUtil.getInstance().getSectionDocID())
+                            .collection(DB_TABLES)
+                            .document(OrderUtil.getInstance().getTableDocID())
+                            .collection(DB_ORDER)
+                            .document(_menuItemList.get(position).getDocument_id())
+                            .set(_menuItemList.get(position)).
+                            addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    dialog.cancel();
+                                }
+                            });
+                }
+            }
+        });
+        dialog.show();
     }
 }

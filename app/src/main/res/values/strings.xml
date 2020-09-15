@@ -16,4 +16,6 @@
     <string name="review_order">Review Order</string>
     <string name="toolbar_add_to_order">Add to order</string>
     <string name="toolbar_review_order">Review order</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
 </resources>

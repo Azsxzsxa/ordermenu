@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.ordermenu.Adapters.RVMenuItemAdapter;
+import com.example.ordermenu.Adapters.RVPrevAdapter;
 import com.example.ordermenu.Models.MenuItem;
 import com.example.ordermenu.R;
 import com.example.ordermenu.Utils.Database;
@@ -34,6 +35,7 @@ public class MenuReviewFragment extends Fragment implements RVMenuItemAdapter.It
     View view;
     List<MenuItem> _menuItemList = new ArrayList<>();
     RVMenuItemAdapter _rvMenuItemAdapter;
+    RVPrevAdapter _rvMenuPrevAdapter;
     ExtendedFloatingActionButton fab_add_to_order;
     int counter = 0;
 
@@ -74,8 +76,8 @@ public class MenuReviewFragment extends Fragment implements RVMenuItemAdapter.It
                         public void onSuccess(Void aVoid) {
                             counter++;
                             if (counter == _menuItemList.size()) {
-                                _menuItemList.clear();
-                                _rvMenuItemAdapter.notifyDataSetChanged();
+//                                _menuItemList.clear();
+//                                _rvMenuItemAdapter.notifyDataSetChanged();
                                 OrderUtil.getInstance().clearMenuItemList();
 
                                 if (getActivity() != null)
@@ -100,6 +102,15 @@ public class MenuReviewFragment extends Fragment implements RVMenuItemAdapter.It
         _rvMenuItemAdapter = new RVMenuItemAdapter(getContext(), _menuItemList);
         _rvMenuItemAdapter.setClickListener(this);
         recyclerView.setAdapter(_rvMenuItemAdapter);
+
+        if (!OrderUtil.getInstance().getOrderedList().isEmpty()) {
+            RecyclerView prevRecyclerView = (RecyclerView) view.findViewById(R.id.RV_prevItems);
+            prevRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            _rvMenuPrevAdapter = new RVPrevAdapter(getContext(), OrderUtil.getInstance().getOrderedList());
+            prevRecyclerView.setAdapter(_rvMenuPrevAdapter);
+        }
+
+
     }
 
     @Override

@@ -54,7 +54,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/RV_menuItems"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/search" />
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton

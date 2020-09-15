@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,13 +17,13 @@ import com.example.ordermenu.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RVMenuItemAdapter extends RecyclerView.Adapter<RVMenuItemAdapter.ViewHolder> {
+public class RVOrderAdapter extends RecyclerView.Adapter<RVOrderAdapter.ViewHolder> {
     private List<MenuItem> mData;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
 
     // data is passed into the constructor
-    public RVMenuItemAdapter(Context context, List<MenuItem> data) {
+    public RVOrderAdapter(Context context, List<MenuItem> data) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
     }
@@ -31,7 +32,7 @@ public class RVMenuItemAdapter extends RecyclerView.Adapter<RVMenuItemAdapter.Vi
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.rv_menu_item_row, parent, false);
+        View view = mInflater.inflate(R.layout.rv_order_item_row, parent, false);
         return new ViewHolder(view);
     }
 
@@ -55,25 +56,16 @@ public class RVMenuItemAdapter extends RecyclerView.Adapter<RVMenuItemAdapter.Vi
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView itemName;
         TextView itemQuantity;
-        Button itemMinusBtn;
-        Button itemPlusBtn;
+
 
         ViewHolder(View itemView) {
             super(itemView);
             itemName = itemView.findViewById(R.id.item_name);
             itemQuantity = itemView.findViewById(R.id.tv_quantity);
-            itemMinusBtn = itemView.findViewById(R.id.btn_minus);
-            itemPlusBtn = itemView.findViewById(R.id.btn_plus);
-            itemMinusBtn.setOnClickListener(new View.OnClickListener() {
+            itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
-                    mClickListener.onMinusClick(v, getAdapterPosition());
-                }
-            });
-            itemPlusBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mClickListener.onPlusClick(v, getAdapterPosition());
+                public void onClick(View view) {
+                    mClickListener.onEditClick(view, getAdapterPosition());
                 }
             });
 
@@ -97,9 +89,8 @@ public class RVMenuItemAdapter extends RecyclerView.Adapter<RVMenuItemAdapter.Vi
 
     // parent activity will implement this method to respond to click events
     public interface ItemClickListener {
-        void onPlusClick(View view, int position);
+        void onEditClick(View view, int position);
 
-        void onMinusClick(View view, int position);
     }
 
     public void updateList(ArrayList<MenuItem> newList) {
