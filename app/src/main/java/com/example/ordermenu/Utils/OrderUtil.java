@@ -1,9 +1,13 @@
 package com.example.ordermenu.Utils;
 
+import android.util.Log;
+
 import com.example.ordermenu.Models.MenuItem;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class OrderUtil {
     private static OrderUtil INSTANCE;
@@ -30,10 +34,12 @@ public class OrderUtil {
     }
 
     private void addItem(MenuItem menuItem) {
+        menuItem.setQuantity(1);
         menuItemList.add(menuItem);
     }
 
     private void removeItem(MenuItem menuItem) {
+        menuItem.setQuantity(0);
         menuItemList.remove(menuItem);
     }
 

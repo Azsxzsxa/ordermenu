@@ -8,6 +8,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,6 +76,12 @@ public class MenuItemsFragment extends Fragment implements RVMenuItemAdapter.Ite
                             _menuItemList.set(_menuItemList.indexOf(menuItem), menuItem);
                             _rvMenuItemAdapter.notifyItemChanged(_menuItemList.indexOf(menuItem));
                         } else {
+                            if (OrderUtil.getInstance().getMenuItemList().contains(menuItem)) {
+                                int position = OrderUtil.getInstance().getMenuItemList().indexOf(menuItem);
+                                if (menuItem != null) {
+                                    menuItem.setQuantity(OrderUtil.getInstance().getMenuItemList().get(position).getQuantity());
+                                }
+                            }
                             _menuItemList.add(menuItem);
                             _rvMenuItemAdapter.notifyItemInserted(_menuItemList.size() - 1);
                         }
@@ -87,33 +94,30 @@ public class MenuItemsFragment extends Fragment implements RVMenuItemAdapter.Ite
 
     @Override
     public void onPlusClick(View view, int position) {
+//        MenuItem menuItem = new MenuItem();
+//        menuItem.setQuantity(_menuItemList.get(position).getQuantity());
+//        menuItem.setCategory(_menuItemList.get(position).getCategory());
+//        menuItem.setName(_menuItemList.get(position).getName());
+//        menuItem.setPrice(_menuItemList.get(position).getPrice());
+        OrderUtil.getInstance().increaseQuantity(_menuItemList.get(position));
 
-        MenuItem menuItem = new MenuItem();
-        menuItem.setQuantity(_menuItemList.get(position).getQuantity());
-        menuItem.setCategory(_menuItemList.get(position).getCategory());
-        menuItem.setName(_menuItemList.get(position).getName());
-        menuItem.setPrice(_menuItemList.get(position).getPrice());
-
-        OrderUtil.getInstance().increaseQuantity(menuItem);
-
-        _menuItemList.get(position).setQuantity(_menuItemList.get(position).getQuantity() + 1);
+//        _menuItemList.get(position).setQuantity(_menuItemList.get(position).getQuantity() + 1);
         _rvMenuItemAdapter.notifyItemChanged(position);
     }
 
     @Override
     public void onMinusClick(View view, int position) {
+//        MenuItem menuItem = new MenuItem();
+//        menuItem.setQuantity(_menuItemList.get(position).getQuantity());
+//        menuItem.setCategory(_menuItemList.get(position).getCategory());
+//        menuItem.setName(_menuItemList.get(position).getName());
+//        menuItem.setPrice(_menuItemList.get(position).getPrice());
+        OrderUtil.getInstance().decreaseQuantity(_menuItemList.get(position));
+        _rvMenuItemAdapter.notifyItemChanged(position);
 
-        MenuItem menuItem = new MenuItem();
-        menuItem.setQuantity(_menuItemList.get(position).getQuantity());
-        menuItem.setCategory(_menuItemList.get(position).getCategory());
-        menuItem.setName(_menuItemList.get(position).getName());
-        menuItem.setPrice(_menuItemList.get(position).getPrice());
-
-        OrderUtil.getInstance().decreaseQuantity(menuItem);
-
-        if (_menuItemList.get(position).getQuantity() > 0) {
-            _menuItemList.get(position).setQuantity(_menuItemList.get(position).getQuantity() - 1);
-            _rvMenuItemAdapter.notifyItemChanged(position);
-        }
+//        if (_menuItemList.get(position).getQuantity() > 0) {
+////            _menuItemList.get(position).setQuantity(_menuItemList.get(position).getQuantity() - 1);
+//            _rvMenuItemAdapter.notifyItemChanged(position);
+//        }
     }
 }
