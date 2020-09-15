@@ -5,19 +5,20 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="4dp"
-    app:cardCornerRadius="12dp">
+    app:cardCornerRadius="@dimen/card_corner_radius">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="@dimen/size_medium">
+        android:padding="@dimen/size_small">
 
         <TextView
             android:id="@+id/TV_menuTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="@dimen/size_small"
+            android:textSize="16sp"
             tools:text="Title here" />
-
 
     </RelativeLayout>
 

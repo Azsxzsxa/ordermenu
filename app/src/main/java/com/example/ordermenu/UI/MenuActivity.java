@@ -29,8 +29,5 @@ public class MenuActivity extends AppCompatActivity {
 //                bundle.putString(SECTION_DOC_ID, _section_doc_id);
             navController.setGraph(R.navigation.nav_graph);
         }
-
-
     }
-
 }

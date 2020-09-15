@@ -7,4 +7,6 @@
     <dimen name="size_extrasmall">4dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="card_corner_radius">12dp</dimen>
+    <dimen name="button_height">45dp</dimen>
+    <dimen name="button_corner_radius">8dp</dimen>
 </resources>

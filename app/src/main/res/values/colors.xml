@@ -10,4 +10,5 @@
 
     <color name="input_card_color">#e5e5e5</color>
     <color name="input_card_stroke_color">#fafafa</color>
+    <color name="dialog_text_color">#1f1f1f</color>
 </resources>

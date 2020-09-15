@@ -52,8 +52,6 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -115,7 +113,7 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
     @Override
     public void onEditClick(View v, final int position) {
 //        View popupView = getLayoutInflater().inflate(R.layout.popup_edit_order, (ViewGroup) v, false);
-        final Dialog dialog = new Dialog(this);
+        final Dialog dialog = new Dialog(this,R.style.MyThemeDialogCustom);
         dialog.setContentView(R.layout.popup_edit_order);
 
         TextView itemName = dialog.findViewById(R.id.TV_menuTitle);

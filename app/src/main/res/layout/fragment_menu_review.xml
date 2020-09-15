@@ -18,12 +18,12 @@
             android:background="?attr/colorPrimary">
 
             <TextView
+                style="@style/TextAppearance.MaterialComponents.Headline6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/toolbar_review_order"
                 android:textColor="#000000"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textSize="18sp" />
         </androidx.appcompat.widget.Toolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -39,6 +39,7 @@
             android:id="@+id/RV_order_review"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/RV_prevItems"
             android:layout_width="match_parent"
