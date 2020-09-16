@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.ordermenu.Utils.StrUtil.SECTION_DOC_ID;
+import static com.example.ordermenu.Utils.StrUtil.SECTION_NAME;
 
 
 public class TablesSectionFragment extends Fragment implements RVTableAdapter.ItemClickListener {
@@ -92,7 +93,7 @@ public class TablesSectionFragment extends Fragment implements RVTableAdapter.It
         TablesSectionFragment fragment = new TablesSectionFragment();
         Bundle args = new Bundle();
         args.putString(SECTION_DOC_ID, section.getDocumentID());
-        Log.d(TAG, "addFragment: SECTION DOC ID " + section.getDocumentID());
+        args.putString(SECTION_NAME, section.getName());
         fragment.setArguments(args);
         return fragment;
     }
@@ -113,6 +114,10 @@ public class TablesSectionFragment extends Fragment implements RVTableAdapter.It
         Intent mIntent = new Intent(getActivity(), OrderActivity.class);
         OrderUtil.getInstance().setSectionDocID(_section_doc_id);
         OrderUtil.getInstance().setTableDocID(_tableList.get(position).getDocumentID());
+        OrderUtil.getInstance().setTableNumber(_tableList.get(position).getNumber());
+        OrderUtil.getInstance().setSectionName(_sectionName);
+        OrderUtil.getInstance().setStartOrderDate(_tableList.get(position).getStartOrderDate());
+        OrderUtil.getInstance().setEndOrderDate(_tableList.get(position).getEndOrderDate());
         OrderUtil.getInstance().clearMenuItemList();
 
         startActivity(mIntent);

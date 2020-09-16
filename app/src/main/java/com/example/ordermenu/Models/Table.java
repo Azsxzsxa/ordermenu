@@ -1,15 +1,20 @@
 package com.example.ordermenu.Models;
 
+import java.util.Date;
 import java.util.Objects;
 
 public class Table {
     private String documentID;
     private Integer number;
     private Boolean occupied;
+    private Date startOrderDate;
+    private Date endOrderDate;
 
-    public Table(Integer number, Boolean occupied) {
+    public Table(Integer number, Boolean occupied, Date startOrderDate, Date endOrderDate) {
         this.number = number;
         this.occupied = occupied;
+        this.startOrderDate = startOrderDate;
+        this.endOrderDate = endOrderDate;
     }
 
     public Table() {
@@ -37,6 +42,22 @@ public class Table {
 
     public void setOccupied(Boolean occupied) {
         this.occupied = occupied;
+    }
+
+    public Date getStartOrderDate() {
+        return startOrderDate;
+    }
+
+    public void setStartOrderDate(Date startOrderDate) {
+        this.startOrderDate = startOrderDate;
+    }
+
+    public Date getEndOrderDate() {
+        return endOrderDate;
+    }
+
+    public void setEndOrderDate(Date endOrderDate) {
+        this.endOrderDate = endOrderDate;
     }
 
     @Override

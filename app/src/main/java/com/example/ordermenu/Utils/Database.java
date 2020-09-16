@@ -10,6 +10,7 @@ import static com.example.ordermenu.Utils.StrUtil.DB_TABLES;
 
 public class Database {
     private static Database INSTANCE;
+
     private final  FirebaseFirestore db = FirebaseFirestore.getInstance();
     public final CollectionReference restRef = db.collection(StrUtil.DB_RESTAURANTS);
     public final String userUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -24,6 +25,10 @@ public class Database {
             INSTANCE = new Database();
         }
         return INSTANCE;
+    }
+
+    public FirebaseFirestore getDb() {
+        return db;
     }
 
     public String getRestaurantId() {

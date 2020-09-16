@@ -1,5 +1,6 @@
 package com.example.ordermenu.UI;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -8,6 +9,7 @@ import android.os.Bundle;
 
 import com.example.ordermenu.Adapters.RVOrderAdapter;
 import com.example.ordermenu.Models.MenuItem;
+import com.example.ordermenu.Models.Order;
 import com.example.ordermenu.Utils.Database;
 import com.example.ordermenu.Utils.Logger;
 import com.example.ordermenu.Utils.OrderUtil;
@@ -20,17 +22,23 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.ordermenu.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.ItemClickListener {
 
@@ -51,6 +59,7 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
             public void onClick(View view) {
                 Intent intent = new Intent(getApplication(), MenuActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -65,9 +74,23 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
                                 Database.getInstance().getOrderRef().get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                                     @Override
                                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                        List<MenuItem> menuItems = new ArrayList<>();
                                         for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                            menuItems.add(documentSnapshot.toObject(MenuItem.class));
                                             documentSnapshot.getReference().delete();
                                         }
+                                        DocumentReference ref = Database.getInstance().restRef
+                                                .document(Database.getInstance().getRestaurantId())
+                                                .collection("History").document();
+                                        Order order = new Order(ref.getId(),FirebaseAuth.getInstance().getUid(),
+                                                OrderUtil.getInstance().getTableNumber(),
+                                                OrderUtil.getInstance().getSectionName(),
+                                                OrderUtil.getInstance().getStartOrderDate(),
+                                                new Date(),
+                                                menuItems
+                                                );
+                                        Database.getInstance().restRef.document(Database.getInstance().getRestaurantId())
+                                                .collection("History").document(ref.getId()).set(order);
                                     }
                                 });
 
@@ -102,6 +125,7 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
                             _menuItemList.add(menuItem);
                         }
                     }
+                    Log.d("asdfasdf", "onEvent: dddddd");
                     OrderUtil.getInstance().setOrderedList(_menuItemList);
                     initOrderRV();
                 }

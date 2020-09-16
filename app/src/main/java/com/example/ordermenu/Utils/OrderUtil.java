@@ -5,6 +5,7 @@ import android.util.Log;
 import com.example.ordermenu.Models.MenuItem;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static androidx.constraintlayout.widget.Constraints.TAG;
@@ -14,7 +15,11 @@ public class OrderUtil {
     private List<MenuItem> menuItemList = new ArrayList<>();
     private List<MenuItem> orderedList = new ArrayList<>();
     private String tableDocID;
+    private int tableNumber;
     private String sectionDocID;
+    private String sectionName;
+    private Date startOrderDate;
+    private Date endOrderDate;
 
     private OrderUtil() {
     }
@@ -90,5 +95,37 @@ public class OrderUtil {
 
     public void setMenuItemList(List<MenuItem> menuItemList) {
         this.menuItemList = menuItemList;
+    }
+
+    public int getTableNumber() {
+        return tableNumber;
+    }
+
+    public void setTableNumber(int tableNumber) {
+        this.tableNumber = tableNumber;
+    }
+
+    public String getSectionName() {
+        return sectionName;
+    }
+
+    public void setSectionName(String sectionName) {
+        this.sectionName = sectionName;
+    }
+
+    public Date getStartOrderDate() {
+        return startOrderDate;
+    }
+
+    public void setStartOrderDate(Date startOrderDate) {
+        this.startOrderDate = startOrderDate;
+    }
+
+    public Date getEndOrderDate() {
+        return endOrderDate;
+    }
+
+    public void setEndOrderDate(Date endOrderDate) {
+        this.endOrderDate = endOrderDate;
     }
 }
