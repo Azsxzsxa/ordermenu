@@ -1,6 +1,5 @@
 package com.example.ordermenu.UI;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -13,7 +12,6 @@ import com.example.ordermenu.Models.Order;
 import com.example.ordermenu.Utils.Database;
 import com.example.ordermenu.Utils.Logger;
 import com.example.ordermenu.Utils.OrderUtil;
-import com.example.ordermenu.Utils.StrUtil;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -33,8 +31,8 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -47,6 +45,7 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
 
     String _section_doc_id = OrderUtil.getInstance().getSectionDocID();
     String _table_doc_id = OrderUtil.getInstance().getTableDocID();
+    ListenerRegistration orderSnapshotListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,13 +81,13 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
                                         DocumentReference ref = Database.getInstance().restRef
                                                 .document(Database.getInstance().getRestaurantId())
                                                 .collection("History").document();
-                                        Order order = new Order(ref.getId(),FirebaseAuth.getInstance().getUid(),
+                                        Order order = new Order(ref.getId(), FirebaseAuth.getInstance().getUid(),
                                                 OrderUtil.getInstance().getTableNumber(),
                                                 OrderUtil.getInstance().getSectionName(),
                                                 OrderUtil.getInstance().getStartOrderDate(),
                                                 new Date(),
                                                 menuItems
-                                                );
+                                        );
                                         Database.getInstance().restRef.document(Database.getInstance().getRestaurantId())
                                                 .collection("History").document(ref.getId()).set(order);
                                     }
@@ -113,7 +112,7 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
     }
 
     private void getOrder() {
-        Database.getInstance().getOrderRef().addSnapshotListener(new EventListener<QuerySnapshot>() {
+        orderSnapshotListener = Database.getInstance().getOrderRef().addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                 if (value != null && error == null) {
@@ -208,5 +207,11 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
             }
         });
         dialog.show();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        orderSnapshotListener.remove();
     }
 }
