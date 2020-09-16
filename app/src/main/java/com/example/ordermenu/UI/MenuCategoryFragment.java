@@ -83,6 +83,7 @@ public class MenuCategoryFragment extends Fragment implements RVMenuCategoryAdap
 
     @Override
     public void onCategoryClick(View view, int position) {
-        Navigation.findNavController(view).navigate(MenuCategoryFragmentDirections.actionMenuCategoriesFragmentToMenuItemsFragment(_menuCategories.get(position)));
+        Navigation.findNavController(view)
+                .navigate(MenuCategoryFragmentDirections.actionMenuCategoriesFragmentToMenuItemsFragment(_menuCategories.get(position)));
     }
 }

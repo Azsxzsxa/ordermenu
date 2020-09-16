@@ -1,6 +1,8 @@
 package com.example.ordermenu.UI;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -30,10 +32,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-import static com.example.ordermenu.Utils.StrUtil.DB_CURRENT;
-import static com.example.ordermenu.Utils.StrUtil.DB_ORDER;
-import static com.example.ordermenu.Utils.StrUtil.DB_TABLES;
-
 public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.ItemClickListener {
 
     ArrayList<MenuItem> _menuItemList = new ArrayList<>();
@@ -47,32 +45,48 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order);
 
-        FloatingActionButton fab = findViewById(R.id.order_toMenu_fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton toMenuFab = findViewById(R.id.order_toMenu_fab);
+        toMenuFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //go to menu
                 Intent intent = new Intent(getApplication(), MenuActivity.class);
-//                intent.putExtra(TABLE_DOC_ID, _table_doc_id);
-//                intent.putExtra(SECTION_DOC_ID, _section_doc_id);
                 startActivity(intent);
             }
         });
 
-//        if (getIntent().getExtras() != null) {
-//            _table_doc_id = getIntent().getExtras().getString(TABLE_DOC_ID, "");
-//            _section_doc_id = getIntent().getExtras().getString(SECTION_DOC_ID, "");
-//            getOrder();
-//        }
+        FloatingActionButton clearTableFab = findViewById(R.id.order_clear_fab);
+        clearTableFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new AlertDialog.Builder(OrderActivity.this)
+                        .setMessage(R.string.question_clear_table)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                Database.getInstance().getOrderRef().get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                        for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                            documentSnapshot.getReference().delete();
+                                        }
+                                    }
+                                });
+                                Intent intent = new Intent(getApplication(), TablesActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK  | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, null)
+                        .show();
+            }
+        });
+
         getOrder();
         Logger.debug("Order for table " + _table_doc_id + " from " + _section_doc_id);
 
     }
 
     private void getOrder() {
-        Database.getInstance().restRef.document(Database.getInstance().getRestaurantId()).collection(StrUtil.DB_CURRENT).document(_section_doc_id)
-                .collection(DB_TABLES).document(_table_doc_id).collection(DB_ORDER)
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+        Database.getInstance().getOrderRef().addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                         if (value != null && error == null) {
@@ -106,8 +120,7 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
 
     @Override
     public void onEditClick(View v, final int position) {
-//        View popupView = getLayoutInflater().inflate(R.layout.popup_edit_order, (ViewGroup) v, false);
-        final Dialog dialog = new Dialog(this,R.style.MyThemeDialogCustom);
+        final Dialog dialog = new Dialog(this, R.style.MyThemeDialogCustom);
         dialog.setContentView(R.layout.popup_edit_order);
 
         TextView itemName = dialog.findViewById(R.id.orderPopup_name_tv);
@@ -145,12 +158,7 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
             public void onClick(View view) {
                 _menuItemList.get(position).setQuantity(Integer.parseInt(itemQuantity.getText().toString()));
                 if (_menuItemList.get(position).getQuantity() == 0) {
-                    Database.getInstance().restRef.document(Database.getInstance().getRestaurantId())
-                            .collection(DB_CURRENT)
-                            .document(OrderUtil.getInstance().getSectionDocID())
-                            .collection(DB_TABLES)
-                            .document(OrderUtil.getInstance().getTableDocID())
-                            .collection(DB_ORDER)
+                    Database.getInstance().getOrderRef()
                             .document(_menuItemList.get(position).getDocument_id())
                             .delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
@@ -159,12 +167,7 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
                         }
                     });
                 } else {
-                    Database.getInstance().restRef.document(Database.getInstance().getRestaurantId())
-                            .collection(DB_CURRENT)
-                            .document(OrderUtil.getInstance().getSectionDocID())
-                            .collection(DB_TABLES)
-                            .document(OrderUtil.getInstance().getTableDocID())
-                            .collection(DB_ORDER)
+                    Database.getInstance().getOrderRef()
                             .document(_menuItemList.get(position).getDocument_id())
                             .set(_menuItemList.get(position)).
                             addOnSuccessListener(new OnSuccessListener<Void>() {

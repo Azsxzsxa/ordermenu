@@ -24,9 +24,6 @@ public class MenuActivity extends AppCompatActivity {
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
         if (navHostFragment != null) {
             navController = navHostFragment.getNavController();
-//                Bundle bundle = new Bundle();
-//                bundle.putString(TABLE_DOC_ID, _table_doc_id);
-//                bundle.putString(SECTION_DOC_ID, _section_doc_id);
             navController.setGraph(R.navigation.nav_graph);
         }
     }

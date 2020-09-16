@@ -24,10 +24,6 @@ import com.google.android.material.floatingactionbutton.ExtendedFloatingActionBu
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.ordermenu.Utils.StrUtil.DB_CURRENT;
-import static com.example.ordermenu.Utils.StrUtil.DB_ORDER;
-import static com.example.ordermenu.Utils.StrUtil.DB_TABLES;
-
 public class MenuReviewFragment extends Fragment implements RVMenuItemAdapter.ItemClickListener {
     View view;
     List<MenuItem> _menuItemList = new ArrayList<>();
@@ -61,20 +57,13 @@ public class MenuReviewFragment extends Fragment implements RVMenuItemAdapter.It
                         menuItem.setQuantity(menuItem.getQuantity() + orderedList.get(orderedList.indexOf(menuItem)).getQuantity());
                     }
 
-                    Database.getInstance().restRef.document(Database.getInstance().getRestaurantId())
-                            .collection(DB_CURRENT)
-                            .document(OrderUtil.getInstance().getSectionDocID())
-                            .collection(DB_TABLES)
-                            .document(OrderUtil.getInstance().getTableDocID())
-                            .collection(DB_ORDER)
+                    Database.getInstance().getOrderRef()
                             .document(menuItem.getDocument_id())
                             .set(menuItem).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
                             counter++;
                             if (counter == _menuItemList.size()) {
-//                                _menuItemList.clear();
-//                                _rvMenuItemAdapter.notifyDataSetChanged();
                                 OrderUtil.getInstance().clearMenuItemList();
 
                                 if (getActivity() != null)
@@ -82,8 +71,6 @@ public class MenuReviewFragment extends Fragment implements RVMenuItemAdapter.It
                             }
                         }
                     });
-
-
                 }
             }
         });

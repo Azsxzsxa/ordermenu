@@ -4,6 +4,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import static com.example.ordermenu.Utils.StrUtil.DB_ORDER;
+import static com.example.ordermenu.Utils.StrUtil.DB_TABLES;
+
 public class Database {
     private static Database INSTANCE;
     private final  FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -28,5 +31,10 @@ public class Database {
 
     public void setRestaurantId(String restaurantId) {
         this.restaurantId = restaurantId;
+    }
+
+    public CollectionReference getOrderRef(){
+        return restRef.document(restaurantId).collection(StrUtil.DB_CURRENT).document(OrderUtil.getInstance().getSectionDocID())
+                .collection(DB_TABLES).document(OrderUtil.getInstance().getTableDocID()).collection(DB_ORDER);
     }
 }
