@@ -29,7 +29,7 @@ public class RVPrevAdapter extends RecyclerView.Adapter<RVPrevAdapter.ViewHolder
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.rv_menu_prev_row, parent, false);
+        View view = mInflater.inflate(R.layout.rv_menureview_prev_item, parent, false);
         return new ViewHolder(view);
     }
 
@@ -56,8 +56,8 @@ public class RVPrevAdapter extends RecyclerView.Adapter<RVPrevAdapter.ViewHolder
 
         ViewHolder(View itemView) {
             super(itemView);
-            itemName = itemView.findViewById(R.id.TV_prev_name);
-            itemQuant = itemView.findViewById(R.id.TV_prev_quant);
+            itemName = itemView.findViewById(R.id.menuReview_prev_quantity_tv);
+            itemQuant = itemView.findViewById(R.id.menuReview_prev_name_tv);
 //            itemView.setOnClickListener(this);
         }
 

@@ -31,7 +31,7 @@ public class RVMenuItemAdapter extends RecyclerView.Adapter<RVMenuItemAdapter.Vi
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.rv_menu_item_row, parent, false);
+        View view = mInflater.inflate(R.layout.rv_menuitems_item, parent, false);
         return new ViewHolder(view);
     }
 
@@ -60,10 +60,10 @@ public class RVMenuItemAdapter extends RecyclerView.Adapter<RVMenuItemAdapter.Vi
 
         ViewHolder(View itemView) {
             super(itemView);
-            itemName = itemView.findViewById(R.id.item_name);
-            itemQuantity = itemView.findViewById(R.id.tv_quantity);
-            itemMinusBtn = itemView.findViewById(R.id.btn_minus);
-            itemPlusBtn = itemView.findViewById(R.id.btn_plus);
+            itemName = itemView.findViewById(R.id.menuItems_name_tv);
+            itemQuantity = itemView.findViewById(R.id.menuItems_quantity_tv);
+            itemMinusBtn = itemView.findViewById(R.id.menuItems_minus_btn);
+            itemPlusBtn = itemView.findViewById(R.id.menuItems_plus_btn);
             itemMinusBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -43,7 +43,7 @@ public class TablesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tables);
 
-        MaterialButton logOut_Btn = findViewById(R.id.tablesActivity_logOut_btn);
+        MaterialButton logOut_Btn = findViewById(R.id.tables_logOut_btn);
         logOut_Btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -101,8 +101,8 @@ public class TablesActivity extends AppCompatActivity {
                                 _sections.add(section);
                             }
                         }
-                        viewPager = findViewById(R.id.viewPager);
-                        tab = findViewById(R.id.tabLayout);
+                        viewPager = findViewById(R.id.tables_vp);
+                        tab = findViewById(R.id.tables_tabs);
                         for (Section section : _sections) {
                             tab.addTab(tab.newTab().setText(section.getName()));
                         }

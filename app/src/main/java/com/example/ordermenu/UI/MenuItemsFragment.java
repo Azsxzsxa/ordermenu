@@ -42,7 +42,7 @@ public class MenuItemsFragment extends Fragment implements RVMenuItemAdapter.Ite
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_menu_items, container, false);
-        fab_review = view.findViewById(R.id.FAB_review);
+        fab_review = view.findViewById(R.id.menuItems_review_fab);
 
         if (getArguments() != null) {
             MenuItemsFragmentArgs menuItemsFragmentArgs = MenuItemsFragmentArgs.fromBundle(getArguments());
@@ -72,7 +72,7 @@ public class MenuItemsFragment extends Fragment implements RVMenuItemAdapter.Ite
     }
 
     private void initRV() {
-        RecyclerView recyclerView = view.findViewById(R.id.RV_menuItems);
+        RecyclerView recyclerView = view.findViewById(R.id.menuItems_items_rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         _rvMenuItemAdapter = new RVMenuItemAdapter(getContext(), _menuItemList);
         _rvMenuItemAdapter.setClickListener(this);

@@ -1,7 +1,5 @@
 package com.example.ordermenu.UI;
 
-import android.content.Intent;
-import android.database.DatabaseUtils;
 import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
@@ -20,7 +18,6 @@ import com.example.ordermenu.Models.MenuItem;
 import com.example.ordermenu.R;
 import com.example.ordermenu.Utils.Database;
 import com.example.ordermenu.Utils.OrderUtil;
-import com.example.ordermenu.Utils.StrUtil;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 
@@ -42,7 +39,7 @@ public class MenuReviewFragment extends Fragment implements RVMenuItemAdapter.It
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_menu_review, container, false);
-        fab_add_to_order = view.findViewById(R.id.FAB_add_to_table);
+        fab_add_to_order = view.findViewById(R.id.menuReview_add_fab);
 
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
             @Override
@@ -97,14 +94,14 @@ public class MenuReviewFragment extends Fragment implements RVMenuItemAdapter.It
     private void initRV() {
         _menuItemList = OrderUtil.getInstance().getMenuItemList();
 
-        RecyclerView recyclerView = view.findViewById(R.id.RV_order_review);
+        RecyclerView recyclerView = view.findViewById(R.id.menuReview_order_rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         _rvMenuItemAdapter = new RVMenuItemAdapter(getContext(), _menuItemList);
         _rvMenuItemAdapter.setClickListener(this);
         recyclerView.setAdapter(_rvMenuItemAdapter);
 
         if (!OrderUtil.getInstance().getOrderedList().isEmpty()) {
-            RecyclerView prevRecyclerView = (RecyclerView) view.findViewById(R.id.RV_prevItems);
+            RecyclerView prevRecyclerView = (RecyclerView) view.findViewById(R.id.menuReview_prev_rv);
             prevRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             _rvMenuPrevAdapter = new RVPrevAdapter(getContext(), OrderUtil.getInstance().getOrderedList());
             prevRecyclerView.setAdapter(_rvMenuPrevAdapter);

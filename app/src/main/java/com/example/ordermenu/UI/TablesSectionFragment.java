@@ -32,10 +32,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.ordermenu.Utils.StrUtil.SECTION_DOC_ID;
-import static com.example.ordermenu.Utils.StrUtil.TABLE_DOC_ID;
 
 
-public class DynamicSectionFragment extends Fragment implements RVTableAdapter.ItemClickListener {
+public class TablesSectionFragment extends Fragment implements RVTableAdapter.ItemClickListener {
     private static final String TAG = "DynamicSectionFragment";
 
     private View view;
@@ -47,7 +46,7 @@ public class DynamicSectionFragment extends Fragment implements RVTableAdapter.I
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_dynamic_section, container, false);
+        view = inflater.inflate(R.layout.fragment_tables_section, container, false);
 
         if (getArguments() != null) {
             _sectionName = getArguments().getString(StrUtil.SECTION_NAME, "");
@@ -89,8 +88,8 @@ public class DynamicSectionFragment extends Fragment implements RVTableAdapter.I
                 });
     }
 
-    public static DynamicSectionFragment addFragment(Section section) {
-        DynamicSectionFragment fragment = new DynamicSectionFragment();
+    public static TablesSectionFragment addFragment(Section section) {
+        TablesSectionFragment fragment = new TablesSectionFragment();
         Bundle args = new Bundle();
         args.putString(SECTION_DOC_ID, section.getDocumentID());
         Log.d(TAG, "addFragment: SECTION DOC ID " + section.getDocumentID());
@@ -101,7 +100,7 @@ public class DynamicSectionFragment extends Fragment implements RVTableAdapter.I
 
     public void initTablesRV() {
         // set up the RecyclerView
-        RecyclerView recyclerView = view.findViewById(R.id.RV_tables);
+        RecyclerView recyclerView = view.findViewById(R.id.tablesFrag_numbers_rv);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
         _rvTableAdapter = new RVTableAdapter(getContext(), _tableList);
         _rvTableAdapter.setClickListener(this);

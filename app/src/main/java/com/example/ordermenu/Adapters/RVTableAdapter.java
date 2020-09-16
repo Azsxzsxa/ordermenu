@@ -29,7 +29,7 @@ public class RVTableAdapter extends RecyclerView.Adapter<RVTableAdapter.ViewHold
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.rv_table_row, parent, false);
+        View view = mInflater.inflate(R.layout.rv_tables_item, parent, false);
         return new ViewHolder(view);
     }
 
@@ -53,7 +53,7 @@ public class RVTableAdapter extends RecyclerView.Adapter<RVTableAdapter.ViewHold
 
         ViewHolder(View itemView) {
             super(itemView);
-            myTextView = itemView.findViewById(R.id.TV_Line);
+            myTextView = itemView.findViewById(R.id.tables_number_tv);
             itemView.setOnClickListener(this);
         }
 

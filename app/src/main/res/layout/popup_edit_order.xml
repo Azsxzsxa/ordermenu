@@ -9,7 +9,7 @@
     android:padding="@dimen/size_small">
 
     <TextView
-        android:id="@+id/TV_menuTitle"
+        android:id="@+id/orderPopup_name_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -22,19 +22,19 @@
         android:id="@+id/btn_LL"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/TV_menuTitle"
+        android:layout_below="@id/orderPopup_name_tv"
         android:layout_centerHorizontal="true"
         android:layout_margin="@dimen/size_medium"
         android:orientation="horizontal">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_minus"
+            android:id="@+id/orderPopup_minus_btn"
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:text="-" />
 
         <TextView
-            android:id="@+id/tv_quantity2"
+            android:id="@+id/orderPopup_quantity_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -45,7 +45,7 @@
             tools:text="10" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_plus"
+            android:id="@+id/orderPopup_plus_btn"
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:text="+" />
@@ -61,7 +61,7 @@
         android:orientation="horizontal">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_save"
+            android:id="@+id/orderPopup_save_btn"
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/button_height"
@@ -69,7 +69,7 @@
             android:text="@string/save" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_cancel"
+            android:id="@+id/orderPopup_cancel_btn"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/button_height"

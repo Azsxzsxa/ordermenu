@@ -4,27 +4,21 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.example.ordermenu.Adapters.RVMenuItemAdapter;
 import com.example.ordermenu.Adapters.RVOrderAdapter;
 import com.example.ordermenu.Models.MenuItem;
 import com.example.ordermenu.Utils.Database;
 import com.example.ordermenu.Utils.Logger;
 import com.example.ordermenu.Utils.OrderUtil;
 import com.example.ordermenu.Utils.StrUtil;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -53,7 +47,7 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.order_toMenu_fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -101,7 +95,7 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
         if (_rvOrderAdapter != null) {
             _rvOrderAdapter.updateList(_menuItemList);
         } else {
-            RecyclerView recyclerView = findViewById(R.id.RV_order);
+            RecyclerView recyclerView = findViewById(R.id.order_items_rv);
             recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
             _rvOrderAdapter = new RVOrderAdapter(this, _menuItemList);
             _rvOrderAdapter.setClickListener(this);
@@ -116,12 +110,12 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
         final Dialog dialog = new Dialog(this,R.style.MyThemeDialogCustom);
         dialog.setContentView(R.layout.popup_edit_order);
 
-        TextView itemName = dialog.findViewById(R.id.TV_menuTitle);
-        final TextView itemQuantity = dialog.findViewById(R.id.tv_quantity2);
-        Button minusBtn = dialog.findViewById(R.id.btn_minus);
-        Button plusBtn = dialog.findViewById(R.id.btn_plus);
-        Button saveBtn = dialog.findViewById(R.id.btn_save);
-        Button cancelBtn = dialog.findViewById(R.id.btn_cancel);
+        TextView itemName = dialog.findViewById(R.id.orderPopup_name_tv);
+        final TextView itemQuantity = dialog.findViewById(R.id.orderPopup_quantity_tv);
+        Button minusBtn = dialog.findViewById(R.id.orderPopup_minus_btn);
+        Button plusBtn = dialog.findViewById(R.id.orderPopup_plus_btn);
+        Button saveBtn = dialog.findViewById(R.id.orderPopup_save_btn);
+        Button cancelBtn = dialog.findViewById(R.id.orderPopup_cancel_btn);
 
         itemName.setText(_menuItemList.get(position).getName());
         itemQuantity.setText(String.valueOf(_menuItemList.get(position).getQuantity()));

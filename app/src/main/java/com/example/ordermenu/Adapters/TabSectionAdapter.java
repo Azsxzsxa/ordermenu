@@ -6,7 +6,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.example.ordermenu.Models.Section;
-import com.example.ordermenu.UI.DynamicSectionFragment;
+import com.example.ordermenu.UI.TablesSectionFragment;
 
 import java.util.ArrayList;
 
@@ -23,7 +23,7 @@ public class TabSectionAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return DynamicSectionFragment.addFragment(mSections.get(position));
+        return TablesSectionFragment.addFragment(mSections.get(position));
     }
 
     @Override

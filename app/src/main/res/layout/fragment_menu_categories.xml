@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/fragment_background_color"
-    tools:context=".UI.MenuCategoriesFragment">
+    tools:context=".UI.MenuCategoryFragment">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
@@ -38,7 +38,7 @@
         android:padding="@dimen/size_medium">
 
         <SearchView
-            android:id="@+id/search"
+            android:id="@+id/menuCategories_search_sv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/rounded_card"
@@ -51,13 +51,13 @@
             app:searchIcon="@drawable/ic_outline_search_24" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/RV_menuCategory"
+            android:id="@+id/menuCategory_items_rv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/search" />
+            android:layout_below="@+id/menuItems_search_sv" />
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-            android:id="@+id/FAB_review"
+            android:id="@+id/menuCategory_review_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"

@@ -36,18 +36,18 @@
         android:padding="@dimen/size_medium">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/RV_order_review"
+            android:id="@+id/menuReview_order_rv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/RV_prevItems"
+            android:id="@+id/menuReview_prev_rv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/RV_order_review" />
+            android:layout_below="@+id/menuReview_order_rv" />
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-            android:id="@+id/FAB_add_to_table"
+            android:id="@+id/menuReview_add_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"

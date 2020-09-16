@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/menuCategoriesFragment"
-        android:name="com.example.ordermenu.UI.MenuCategoriesFragment"
+        android:name="com.example.ordermenu.UI.MenuCategoryFragment"
         android:label="fragment_menu_categories"
         tools:layout="@layout/fragment_menu_categories" >
         <action

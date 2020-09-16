@@ -15,7 +15,7 @@
             android:layout_margin="@dimen/size_medium">
 
             <TextView
-                android:id="@+id/item_name"
+                android:id="@+id/order_name_tv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
@@ -34,7 +34,7 @@
 
 
                 <TextView
-                    android:id="@+id/tv_quantity"
+                    android:id="@+id/order_quantity_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:hint="0"

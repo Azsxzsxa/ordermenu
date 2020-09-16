@@ -13,13 +13,13 @@ import com.example.ordermenu.R;
 
 import java.util.List;
 
-public class RVMenuCategoriesAdapter extends RecyclerView.Adapter<RVMenuCategoriesAdapter.ViewHolder>{
+public class RVMenuCategoryAdapter extends RecyclerView.Adapter<RVMenuCategoryAdapter.ViewHolder>{
     private List<String> mData;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
 
     // data is passed into the constructor
-    public RVMenuCategoriesAdapter(Context context, List<String> data) {
+    public RVMenuCategoryAdapter(Context context, List<String> data) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
     }
@@ -28,7 +28,7 @@ public class RVMenuCategoriesAdapter extends RecyclerView.Adapter<RVMenuCategori
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.rv_menucategory_row, parent, false);
+        View view = mInflater.inflate(R.layout.rv_menucategory_item, parent, false);
         return new ViewHolder(view);
     }
 
@@ -52,7 +52,7 @@ public class RVMenuCategoriesAdapter extends RecyclerView.Adapter<RVMenuCategori
 
         ViewHolder(View itemView) {
             super(itemView);
-            myTextView = itemView.findViewById(R.id.TV_menuTitle);
+            myTextView = itemView.findViewById(R.id.menuCategory_name_tv);
             itemView.setOnClickListener(this);
         }
 

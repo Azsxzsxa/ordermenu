@@ -4,8 +4,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -32,7 +30,7 @@ public class RVOrderAdapter extends RecyclerView.Adapter<RVOrderAdapter.ViewHold
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.rv_order_item_row, parent, false);
+        View view = mInflater.inflate(R.layout.rv_order_item, parent, false);
         return new ViewHolder(view);
     }
 
@@ -60,8 +58,8 @@ public class RVOrderAdapter extends RecyclerView.Adapter<RVOrderAdapter.ViewHold
 
         ViewHolder(View itemView) {
             super(itemView);
-            itemName = itemView.findViewById(R.id.item_name);
-            itemQuantity = itemView.findViewById(R.id.tv_quantity);
+            itemName = itemView.findViewById(R.id.order_name_tv);
+            itemQuantity = itemView.findViewById(R.id.order_quantity_tv);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
