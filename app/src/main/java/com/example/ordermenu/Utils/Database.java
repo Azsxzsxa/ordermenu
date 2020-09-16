@@ -2,6 +2,7 @@ package com.example.ordermenu.Utils;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import static com.example.ordermenu.Utils.StrUtil.DB_ORDER;
@@ -36,5 +37,10 @@ public class Database {
     public CollectionReference getOrderRef(){
         return restRef.document(restaurantId).collection(StrUtil.DB_CURRENT).document(OrderUtil.getInstance().getSectionDocID())
                 .collection(DB_TABLES).document(OrderUtil.getInstance().getTableDocID()).collection(DB_ORDER);
+    }
+
+    public DocumentReference getTableRef(){
+        return restRef.document(restaurantId).collection(StrUtil.DB_CURRENT).document(OrderUtil.getInstance().getSectionDocID())
+                .collection(DB_TABLES).document(OrderUtil.getInstance().getTableDocID());
     }
 }

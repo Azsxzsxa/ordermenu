@@ -1,13 +1,17 @@
 package com.example.ordermenu.Adapters;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.ordermenu.Models.Table;
 import com.example.ordermenu.R;
+import com.google.android.material.card.MaterialCardView;
 
 import java.util.List;
 
@@ -15,6 +19,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class RVTableAdapter extends RecyclerView.Adapter<RVTableAdapter.ViewHolder> {
+    private static final String TAG = "RVTableAdapter";
+
     private List<Table> mTableList;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
@@ -38,6 +44,14 @@ public class RVTableAdapter extends RecyclerView.Adapter<RVTableAdapter.ViewHold
     public void onBindViewHolder(ViewHolder holder, int position) {
         String line = mTableList.get(position).getNumber() + "";
         holder.myTextView.setText(line);
+
+        if (mTableList.get(position).getOccupied() != null && mTableList.get(position).getOccupied()) {
+            Log.d(TAG, "onBindViewHolder: NOT NULL, occupied");
+            holder.relativeLayout.setBackgroundResource(R.drawable.table_occupied_background);
+        } else {
+            holder.relativeLayout.setBackgroundResource(R.drawable.table_free_background);
+            Log.d(TAG, "onBindViewHolder: null / not occupied");
+        }
     }
 
     // total number of rows
@@ -50,10 +64,12 @@ public class RVTableAdapter extends RecyclerView.Adapter<RVTableAdapter.ViewHold
     // stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView myTextView;
+        RelativeLayout relativeLayout;
 
         ViewHolder(View itemView) {
             super(itemView);
             myTextView = itemView.findViewById(R.id.tables_number_tv);
+            relativeLayout = itemView.findViewById(R.id.tables_relativeLayout);
             itemView.setOnClickListener(this);
         }
 

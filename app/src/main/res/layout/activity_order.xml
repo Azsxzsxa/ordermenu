@@ -40,12 +40,13 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         app:srcCompat="@drawable/ic_outline_add_24" />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/order_clear_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|start"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@drawable/ic_baseline_remove_24" />
+        app:srcCompat="@drawable/ic_outline_delete_sweep_24" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -11,4 +11,7 @@
     <color name="input_card_color">#e5e5e5</color>
     <color name="input_card_stroke_color">#fafafa</color>
     <color name="dialog_text_color">#1f1f1f</color>
+
+    <color name="table_occupied_color">#D50000</color>
+    <color name="table_free_color">#00b0ff</color>
 </resources>

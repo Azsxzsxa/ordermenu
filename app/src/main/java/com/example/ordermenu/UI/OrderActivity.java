@@ -70,8 +70,12 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
                                         }
                                     }
                                 });
+
+                                //Update table to be free
+                                Database.getInstance().getTableRef().update("occupied", false);
+
                                 Intent intent = new Intent(getApplication(), TablesActivity.class);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK  | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 startActivity(intent);
                             }
                         })
@@ -87,22 +91,22 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
 
     private void getOrder() {
         Database.getInstance().getOrderRef().addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                        if (value != null && error == null) {
-                            _menuItemList = new ArrayList<>();
-                            for (DocumentSnapshot doc : value) {
-                                MenuItem menuItem = doc.toObject(MenuItem.class);
-                                if (menuItem != null) {
-                                    menuItem.setDocument_id(doc.getId());
-                                    _menuItemList.add(menuItem);
-                                }
-                            }
-                            OrderUtil.getInstance().setOrderedList(_menuItemList);
-                            initOrderRV();
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (value != null && error == null) {
+                    _menuItemList = new ArrayList<>();
+                    for (DocumentSnapshot doc : value) {
+                        MenuItem menuItem = doc.toObject(MenuItem.class);
+                        if (menuItem != null) {
+                            menuItem.setDocument_id(doc.getId());
+                            _menuItemList.add(menuItem);
                         }
                     }
-                });
+                    OrderUtil.getInstance().setOrderedList(_menuItemList);
+                    initOrderRV();
+                }
+            }
+        });
     }
 
     private void initOrderRV() {

@@ -54,7 +54,7 @@
             android:id="@+id/menuCategory_items_rv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/menuItems_search_sv" />
+            android:layout_below="@+id/menuCategories_search_sv" />
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/menuCategory_review_fab"

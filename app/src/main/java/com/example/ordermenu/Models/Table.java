@@ -5,9 +5,11 @@ import java.util.Objects;
 public class Table {
     private String documentID;
     private Integer number;
+    private Boolean occupied;
 
-    public Table(Integer number) {
+    public Table(Integer number, Boolean occupied) {
         this.number = number;
+        this.occupied = occupied;
     }
 
     public Table() {
@@ -27,6 +29,14 @@ public class Table {
 
     public void setNumber(Integer number) {
         this.number = number;
+    }
+
+    public Boolean getOccupied() {
+        return occupied;
+    }
+
+    public void setOccupied(Boolean occupied) {
+        this.occupied = occupied;
     }
 
     @Override

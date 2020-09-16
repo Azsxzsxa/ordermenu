@@ -66,6 +66,9 @@ public class MenuReviewFragment extends Fragment implements RVMenuItemAdapter.It
                             if (counter == _menuItemList.size()) {
                                 OrderUtil.getInstance().clearMenuItemList();
 
+                                //Update table to be occupied
+                                Database.getInstance().getTableRef().update("occupied", true);
+
                                 if (getActivity() != null)
                                     getActivity().finish();
                             }

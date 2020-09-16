@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tables_relativeLayout"
     android:layout_width="100dp"
     android:layout_height="100dp"
     android:layout_margin="@dimen/size_small"
-    android:backgroundTint="@color/colorPrimary"
-    android:padding="@dimen/size_small"
-    app:cardCornerRadius="@dimen/card_corner_radius">
+    android:background="@drawable/table_free_background"
+    android:padding="@dimen/size_small">
 
     <TextView
         android:id="@+id/tables_number_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_centerInParent="true"
         android:textSize="20sp"
         tools:text="777" />
 
-</com.google.android.material.card.MaterialCardView>
+</RelativeLayout>
