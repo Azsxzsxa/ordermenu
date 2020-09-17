@@ -3,6 +3,7 @@ package com.example.ordermenu.UI;
 import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,6 +22,9 @@ import com.example.ordermenu.Utils.OrderUtil;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -32,11 +36,12 @@ import static com.example.ordermenu.Utils.StrUtil.MENU;
 public class MenuItemsFragment extends Fragment implements RVMenuItemAdapter.ItemClickListener {
     private static final String TAG = "MenuItemsFragment";
 
-    String _category;
-    List<MenuItem> _menuItemList = new ArrayList<>();
-    RVMenuItemAdapter _rvMenuItemAdapter;
-    View view;
-    ExtendedFloatingActionButton fab_review;
+    private String _category;
+    private List<MenuItem> _menuItemList = new ArrayList<>();
+    private RVMenuItemAdapter _rvMenuItemAdapter;
+    private View view;
+    private ExtendedFloatingActionButton fab_review;
+    private ListenerRegistration menuItemListener;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -48,10 +53,10 @@ public class MenuItemsFragment extends Fragment implements RVMenuItemAdapter.Ite
             MenuItemsFragmentArgs menuItemsFragmentArgs = MenuItemsFragmentArgs.fromBundle(getArguments());
             _category = menuItemsFragmentArgs.getCategory();
         }
-        if (_category != null)
+        if (_category != null) {
             getMenuItemsFromDb();
-
-        initRV();
+            initRV();
+        }
 
         //Back button listener
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
@@ -80,39 +85,40 @@ public class MenuItemsFragment extends Fragment implements RVMenuItemAdapter.Ite
     }
 
     private void getMenuItemsFromDb() {
-        Database.getInstance().restRef.document(Database.getInstance().getRestaurantId()).collection(MENU).whereEqualTo(DB_CATEGORY, _category)
-                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                if (queryDocumentSnapshots != null && queryDocumentSnapshots.size() > 0) {
-                    for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                        MenuItem menuItem = documentSnapshot.toObject(MenuItem.class);
-                        if (menuItem != null) {
-                            menuItem.setDocument_id(documentSnapshot.getId());
-                            if (_menuItemList.contains(menuItem)) {
-                                if (OrderUtil.getInstance().getMenuItemList().contains(menuItem)) {
-                                    int position = OrderUtil.getInstance().getMenuItemList().indexOf(menuItem);
-                                    menuItem.setQuantity(OrderUtil.getInstance().getMenuItemList().get(position).getQuantity());
-                                } else {
-                                    _menuItemList.set(_menuItemList.indexOf(menuItem), menuItem);
+        menuItemListener = Database.getInstance().restRef.document(Database.getInstance().getRestaurantId()).collection(MENU).whereEqualTo(DB_CATEGORY, _category)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        if (value != null && value.size() > 0 && error == null) {
+                            Log.d("asdf", "onEvent: triggered");
+                            for (DocumentSnapshot documentSnapshot : value) {
+                                MenuItem menuItem = documentSnapshot.toObject(MenuItem.class);
+                                if (menuItem != null) {
+                                    menuItem.setDocument_id(documentSnapshot.getId());
+                                    if (_menuItemList.contains(menuItem)) {
+                                        if (OrderUtil.getInstance().getMenuItemList().contains(menuItem)) {
+                                            int position = OrderUtil.getInstance().getMenuItemList().indexOf(menuItem);
+                                            menuItem.setQuantity(OrderUtil.getInstance().getMenuItemList().get(position).getQuantity());
+                                        } else {
+                                            _menuItemList.set(_menuItemList.indexOf(menuItem), menuItem);
+                                        }
+                                        _rvMenuItemAdapter.notifyItemChanged(_menuItemList.indexOf(menuItem));
+                                    } else {
+                                        if (OrderUtil.getInstance().getMenuItemList().contains(menuItem)) {
+                                            int position = OrderUtil.getInstance().getMenuItemList().indexOf(menuItem);
+                                            menuItem.setQuantity(OrderUtil.getInstance().getMenuItemList().get(position).getQuantity());
+                                            Log.d(TAG, "onSuccess: contine " + menuItem.getName() + " " + OrderUtil.getInstance().getMenuItemList().get(position).getQuantity());
+                                            _menuItemList.add(OrderUtil.getInstance().getMenuItemList().get(position));
+                                        } else {
+                                            _menuItemList.add(menuItem);
+                                        }
+                                        _rvMenuItemAdapter.notifyItemInserted(_menuItemList.size() - 1);
+                                    }
                                 }
-                                _rvMenuItemAdapter.notifyItemChanged(_menuItemList.indexOf(menuItem));
-                            } else {
-                                if (OrderUtil.getInstance().getMenuItemList().contains(menuItem)) {
-                                    int position = OrderUtil.getInstance().getMenuItemList().indexOf(menuItem);
-                                    menuItem.setQuantity(OrderUtil.getInstance().getMenuItemList().get(position).getQuantity());
-                                    Log.d(TAG, "onSuccess: contine " + menuItem.getName() + " " + OrderUtil.getInstance().getMenuItemList().get(position).getQuantity());
-                                    _menuItemList.add(OrderUtil.getInstance().getMenuItemList().get(position));
-                                } else {
-                                    _menuItemList.add(menuItem);
-                                }
-                                _rvMenuItemAdapter.notifyItemInserted(_menuItemList.size() - 1);
                             }
                         }
                     }
-                }
-            }
-        });
+                });
     }
 
 
@@ -126,5 +132,11 @@ public class MenuItemsFragment extends Fragment implements RVMenuItemAdapter.Ite
     public void onMinusClick(View view, int position) {
         OrderUtil.getInstance().decreaseQuantity(_menuItemList.get(position));
         _rvMenuItemAdapter.notifyItemChanged(position);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        menuItemListener.remove();
     }
 }

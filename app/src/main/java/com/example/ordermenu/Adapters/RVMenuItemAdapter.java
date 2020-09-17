@@ -42,6 +42,19 @@ public class RVMenuItemAdapter extends RecyclerView.Adapter<RVMenuItemAdapter.Vi
         int quantity = mData.get(position).getQuantity();
         holder.itemName.setText(name);
         holder.itemQuantity.setText(String.valueOf(quantity));
+
+        if (mData.get(position).getAvailable()) {
+        holder.itemMinusBtn.setEnabled(true);
+        holder.itemPlusBtn.setEnabled(true);
+        holder.itemQuantity.setEnabled(true);
+        holder.itemName.setEnabled(true);
+        } else {
+            holder.itemMinusBtn.setEnabled(false);
+            holder.itemPlusBtn.setEnabled(false);
+            holder.itemQuantity.setEnabled(false);
+            holder.itemName.setEnabled(false);
+        }
+
     }
 
     // total number of rows
