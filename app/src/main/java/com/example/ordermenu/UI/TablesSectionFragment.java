@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +30,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.ordermenu.Utils.StrUtil.DB_TABLES;
 import static com.example.ordermenu.Utils.StrUtil.SECTION_DOC_ID;
 import static com.example.ordermenu.Utils.StrUtil.SECTION_NAME;
 
@@ -63,7 +63,7 @@ public class TablesSectionFragment extends Fragment implements RVTableAdapter.It
 
     private void getTables(String section_doc_id) {
         Database.getInstance().restRef.document(Database.getInstance().getRestaurantId()).collection(StrUtil.DB_CURRENT).document(section_doc_id)
-                .collection("Tables").orderBy("number", Query.Direction.ASCENDING)
+                .collection(DB_TABLES).orderBy("number", Query.Direction.ASCENDING)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -110,15 +110,13 @@ public class TablesSectionFragment extends Fragment implements RVTableAdapter.It
 
     @Override
     public void onTableClick(View view, int position) {
-        Logger.debug("Item clicked " + _tableList.get(position).getNumber());
         Intent mIntent = new Intent(getActivity(), OrderActivity.class);
-        OrderUtil.getInstance().setSectionDocID(_section_doc_id);
-        OrderUtil.getInstance().setTableDocID(_tableList.get(position).getDocumentID());
-        OrderUtil.getInstance().setTableNumber(_tableList.get(position).getNumber());
-        OrderUtil.getInstance().setSectionName(_sectionName);
-        OrderUtil.getInstance().setStartOrderDate(_tableList.get(position).getStartOrderDate());
-        OrderUtil.getInstance().setEndOrderDate(_tableList.get(position).getEndOrderDate());
-        OrderUtil.getInstance().clearMenuItemList();
+
+        OrderUtil.getInstance().setTableSwitched(_section_doc_id,
+                _tableList.get(position).getDocumentID()
+                ,_tableList.get(position).getNumber(), _sectionName,
+                _tableList.get(position).getStartOrderDate(),
+                _tableList.get(position).getEndOrderDate());
 
         startActivity(mIntent);
     }

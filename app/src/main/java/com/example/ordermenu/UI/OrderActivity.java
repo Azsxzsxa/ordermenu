@@ -43,10 +43,6 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
     ArrayList<MenuItem> _menuItemList = new ArrayList<>();
     RVOrderAdapter _rvOrderAdapter;
 
-    String _section_doc_id = OrderUtil.getInstance().getSectionDocID();
-    String _table_doc_id = OrderUtil.getInstance().getTableDocID();
-    ListenerRegistration orderSnapshotListener;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,14 +101,11 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
                         .show();
             }
         });
-
         getOrder();
-        Logger.debug("Order for table " + _table_doc_id + " from " + _section_doc_id);
-
     }
 
     private void getOrder() {
-        orderSnapshotListener = Database.getInstance().getOrderRef().addSnapshotListener(new EventListener<QuerySnapshot>() {
+        Database.getInstance().getOrderRef().addSnapshotListener(OrderActivity.this, new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                 if (value != null && error == null) {
@@ -124,7 +117,6 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
                             _menuItemList.add(menuItem);
                         }
                     }
-                    Log.d("asdfasdf", "onEvent: dddddd");
                     OrderUtil.getInstance().setOrderedList(_menuItemList);
                     initOrderRV();
                 }
@@ -207,11 +199,5 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
             }
         });
         dialog.show();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        orderSnapshotListener.remove();
     }
 }

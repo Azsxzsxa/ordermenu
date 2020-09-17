@@ -77,11 +77,11 @@ public class OrderUtil {
         return sectionDocID;
     }
 
-    public void setTableDocID(String tableDocID) {
+    private void setTableDocID(String tableDocID) {
         this.tableDocID = tableDocID;
     }
 
-    public void setSectionDocID(String sectionDocID) {
+    private void setSectionDocID(String sectionDocID) {
         this.sectionDocID = sectionDocID;
     }
 
@@ -101,7 +101,7 @@ public class OrderUtil {
         return tableNumber;
     }
 
-    public void setTableNumber(int tableNumber) {
+    private void setTableNumber(int tableNumber) {
         this.tableNumber = tableNumber;
     }
 
@@ -109,7 +109,7 @@ public class OrderUtil {
         return sectionName;
     }
 
-    public void setSectionName(String sectionName) {
+    private void setSectionName(String sectionName) {
         this.sectionName = sectionName;
     }
 
@@ -127,5 +127,16 @@ public class OrderUtil {
 
     public void setEndOrderDate(Date endOrderDate) {
         this.endOrderDate = endOrderDate;
+    }
+
+    public void setTableSwitched(String sectionDocID, String tableDocID, int tableNumber,
+                                 String sectionName, Date startOrderDate, Date endOrderDate) {
+        setSectionDocID(sectionDocID);
+        setTableDocID(tableDocID);
+        setTableNumber(tableNumber);
+        setSectionName(sectionName);
+        setStartOrderDate(startOrderDate);
+        setEndOrderDate(endOrderDate);
+        clearMenuItemList();
     }
 }
