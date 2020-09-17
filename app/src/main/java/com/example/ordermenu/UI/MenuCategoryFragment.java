@@ -10,8 +10,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 
 import com.example.ordermenu.Adapters.RVMenuCategoryAdapter;
+import com.example.ordermenu.Adapters.RVMenuItemAdapter;
 import com.example.ordermenu.Models.Restaurant;
 import com.example.ordermenu.R;
 import com.example.ordermenu.Utils.Database;
@@ -23,15 +25,16 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MenuCategoryFragment extends Fragment implements RVMenuCategoryAdapter.ItemClickListener {
+public class MenuCategoryFragment extends Fragment implements RVMenuCategoryAdapter.ItemClickListener , RVMenuItemAdapter.ItemClickListener{
     private static final String TAG = "MenuCategoriesFragment";
 
     List<String> _menuCategories = new ArrayList<>();
     View view;
-    String _section_doc_id = OrderUtil.getInstance().getSectionDocID();
-    String _table_doc_id = OrderUtil.getInstance().getTableDocID();
     RVMenuCategoryAdapter _rvMenuAdapter;
+    RVMenuItemAdapter _rvMenuItemAdapter;
     ExtendedFloatingActionButton fab_review;
+    private RecyclerView categoryRecyclerView;
+    private RecyclerView searchRecyclerView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -45,6 +48,26 @@ public class MenuCategoryFragment extends Fragment implements RVMenuCategoryAdap
             @Override
             public void onClick(View v) {
                 Navigation.findNavController(view).navigate(MenuCategoryFragmentDirections.actionMenuCategoriesFragmentToMenuReviewFragment());
+            }
+        });
+
+        SearchView searchView = view.findViewById(R.id.menuCategory_search_sv);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (newText.isEmpty()) {
+                    categoryRecyclerView.setVisibility(View.VISIBLE);
+                    searchRecyclerView.setVisibility(View.INVISIBLE);
+                }else{
+                    categoryRecyclerView.setVisibility(View.INVISIBLE);
+                    searchRecyclerView.setVisibility(View.VISIBLE);
+                }
+                _rvMenuItemAdapter.getFilter().filter(newText);
+                return false;
             }
         });
 
@@ -72,12 +95,21 @@ public class MenuCategoryFragment extends Fragment implements RVMenuCategoryAdap
     }
 
     private void initRV() {
-        //init RV
-        RecyclerView recyclerView = view.findViewById(R.id.menuCategory_items_rv);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        //category RV
+        categoryRecyclerView = view.findViewById(R.id.menuCategory_items_rv);
+        categoryRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         _rvMenuAdapter = new RVMenuCategoryAdapter(getContext(), _menuCategories);
         _rvMenuAdapter.setClickListener(this);
-        recyclerView.setAdapter(_rvMenuAdapter);
+        categoryRecyclerView.setAdapter(_rvMenuAdapter);
+
+        //search menuitem rv
+        searchRecyclerView = view.findViewById(R.id.menuCategory_search_rv);
+        searchRecyclerView.setVisibility(View.INVISIBLE);
+        searchRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        _rvMenuItemAdapter = new RVMenuItemAdapter(getContext(), OrderUtil.getInstance().getSearchMenuItemsList());
+        _rvMenuItemAdapter.setClickListener(this);
+        searchRecyclerView.setAdapter(_rvMenuItemAdapter);
+
     }
 
 
@@ -85,5 +117,17 @@ public class MenuCategoryFragment extends Fragment implements RVMenuCategoryAdap
     public void onCategoryClick(View view, int position) {
         Navigation.findNavController(view)
                 .navigate(MenuCategoryFragmentDirections.actionMenuCategoriesFragmentToMenuItemsFragment(_menuCategories.get(position)));
+    }
+
+    @Override
+    public void onPlusClick(View view, int position) {
+//        OrderUtil.getInstance().increaseQuantity(OrderUtil.getInstance().getSearchMenuItemsList().get(position));
+//        _rvMenuItemAdapter.notifyItemChanged(position);
+    }
+
+    @Override
+    public void onMinusClick(View view, int position) {
+//        OrderUtil.getInstance().decreaseQuantity(OrderUtil.getInstance().getSearchMenuItemsList().get(position));
+//        _rvMenuItemAdapter.notifyItemChanged(position);
     }
 }

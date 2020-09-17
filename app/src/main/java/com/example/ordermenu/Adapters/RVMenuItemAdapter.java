@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Filter;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -12,11 +13,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ordermenu.Models.MenuItem;
 import com.example.ordermenu.R;
+import com.example.ordermenu.Utils.OrderUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class RVMenuItemAdapter extends RecyclerView.Adapter<RVMenuItemAdapter.ViewHolder> {
+    private List<MenuItem> mDataFull;
     private List<MenuItem> mData;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
@@ -25,6 +28,7 @@ public class RVMenuItemAdapter extends RecyclerView.Adapter<RVMenuItemAdapter.Vi
     public RVMenuItemAdapter(Context context, List<MenuItem> data) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
+        this.mDataFull = new ArrayList<>(mData);
     }
 
     // inflates the row layout from xml when needed
@@ -119,4 +123,36 @@ public class RVMenuItemAdapter extends RecyclerView.Adapter<RVMenuItemAdapter.Vi
         mData = newList;
         notifyDataSetChanged();
     }
+
+    public Filter getFilter() {
+        return filter;
+    }
+
+    private Filter filter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence charSequence) {
+            List<MenuItem> filteredList = new ArrayList<>();
+            if (charSequence == null || charSequence.length() == 0) {
+                filteredList.addAll(mDataFull);
+            } else {
+                String filterPattern = charSequence.toString().toLowerCase().trim();
+                for (MenuItem item : mDataFull) {
+                    if (item.getName().toLowerCase().contains(filterPattern)) {
+                        filteredList.add(item);
+                    }
+                }
+            }
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+            mData.clear();
+            mData.addAll((List) filterResults.values);
+            notifyDataSetChanged();
+        }
+    };
+
 }

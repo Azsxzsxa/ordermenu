@@ -8,12 +8,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static androidx.constraintlayout.widget.Constraints.TAG;
-
 public class OrderUtil {
     private static OrderUtil INSTANCE;
-    private List<MenuItem> menuItemList = new ArrayList<>();
-    private List<MenuItem> orderedList = new ArrayList<>();
+    private List<MenuItem> currentOrderList = new ArrayList<>();
+    private List<MenuItem> alreadyOrderedList = new ArrayList<>();
+    private List<MenuItem> allMenuItemsList = new ArrayList<>();
+    private List<MenuItem> searchMenuItemsList = new ArrayList<>();
     private String tableDocID;
     private int tableNumber;
     private String sectionDocID;
@@ -31,41 +31,42 @@ public class OrderUtil {
         return INSTANCE;
     }
 
-    public List<MenuItem> getMenuItemList() {
-        return menuItemList;
+    public List<MenuItem> getCurrentOrderList() {
+        return currentOrderList;
     }
 
     public void clearMenuItemList() {
-        menuItemList = new ArrayList<>();
+        currentOrderList = new ArrayList<>();
     }
 
     private void addItem(MenuItem menuItem) {
         menuItem.setQuantity(1);
-        menuItemList.add(menuItem);
+        currentOrderList.add(menuItem);
     }
 
     private void removeItem(MenuItem menuItem) {
         menuItem.setQuantity(0);
-        menuItemList.remove(menuItem);
+        currentOrderList.remove(menuItem);
     }
 
     public void increaseQuantity(MenuItem menuItem) {
-        if (menuItemList.contains(menuItem)) {
-            int position = menuItemList.indexOf(menuItem);
-            menuItemList.get(position).setQuantity(menuItemList.get(position).getQuantity() + 1);
+        if (currentOrderList.contains(menuItem)) {
+            int position = currentOrderList.indexOf(menuItem);
+            currentOrderList.get(position).setQuantity(currentOrderList.get(position).getQuantity() + 1);
         } else {
             addItem(menuItem);
         }
     }
 
     public void decreaseQuantity(MenuItem menuItem) {
-        if (menuItemList.contains(menuItem)) {
-            int position = menuItemList.indexOf(menuItem);
-            if (menuItemList.get(position).getQuantity() == 1) {
+        if (currentOrderList.contains(menuItem)) {
+            int position = currentOrderList.indexOf(menuItem);
+            if (currentOrderList.get(position).getQuantity() == 1) {
                 removeItem(menuItem);
             } else {
-                menuItemList.get(position).setQuantity(menuItemList.get(position).getQuantity() - 1);
+                currentOrderList.get(position).setQuantity(currentOrderList.get(position).getQuantity() - 1);
             }
+
         }
     }
 
@@ -85,16 +86,16 @@ public class OrderUtil {
         this.sectionDocID = sectionDocID;
     }
 
-    public List<MenuItem> getOrderedList() {
-        return orderedList;
+    public List<MenuItem> getAlreadyOrderedList() {
+        return alreadyOrderedList;
     }
 
-    public void setOrderedList(List<MenuItem> orderedList) {
-        this.orderedList = orderedList;
+    public void setAlreadyOrderedList(List<MenuItem> alreadyOrderedList) {
+        this.alreadyOrderedList = alreadyOrderedList;
     }
 
-    public void setMenuItemList(List<MenuItem> menuItemList) {
-        this.menuItemList = menuItemList;
+    public void setCurrentOrderList(List<MenuItem> currentOrderList) {
+        this.currentOrderList = currentOrderList;
     }
 
     public int getTableNumber() {
@@ -129,6 +130,36 @@ public class OrderUtil {
         this.endOrderDate = endOrderDate;
     }
 
+    public List<MenuItem> getAllMenuItemsList() {
+        return allMenuItemsList;
+    }
+
+    public void setAllMenuItemsList(List<MenuItem> allMenuItemsList) {
+//        this.allMenuItemsList = allMenuItemsList;
+        for (MenuItem menuItem : allMenuItemsList) {
+            searchMenuItemsList.add(new MenuItem(menuItem.getCategory(), menuItem.getName(),
+                    menuItem.getPrice(), menuItem.getQuantity(), menuItem.getAvailable()));
+            this.allMenuItemsList.add(new MenuItem(menuItem.getCategory(), menuItem.getName(),
+                    menuItem.getPrice(), menuItem.getQuantity(), menuItem.getAvailable()));
+        }
+//        setSearchMenuItemsList(allMenuItemsList);
+        if (!currentOrderList.isEmpty()) {
+            for (MenuItem menuItem : currentOrderList) {
+                int position = getSearchMenuItemsList().indexOf(menuItem);
+                getSearchMenuItemsList().get(position).setQuantity(menuItem.getQuantity());
+            }
+        }
+
+    }
+
+    public List<MenuItem> getSearchMenuItemsList() {
+        return searchMenuItemsList;
+    }
+
+    public void setSearchMenuItemsList(List<MenuItem> searchMenuItemsList) {
+        this.searchMenuItemsList = searchMenuItemsList;
+    }
+
     public void setTableSwitched(String sectionDocID, String tableDocID, int tableNumber,
                                  String sectionName, Date startOrderDate, Date endOrderDate) {
         setSectionDocID(sectionDocID);
@@ -137,6 +168,16 @@ public class OrderUtil {
         setSectionName(sectionName);
         setStartOrderDate(startOrderDate);
         setEndOrderDate(endOrderDate);
+        clearSearchMenuItemsList();
         clearMenuItemList();
+    }
+
+    private void clearSearchMenuItemsList() {
+        searchMenuItemsList = new ArrayList<>();
+//        searchMenuItemsList.addAll(allMenuItemsList);
+        for (MenuItem menuItem : allMenuItemsList) {
+            searchMenuItemsList.add(new MenuItem(menuItem.getCategory(), menuItem.getName(),
+                    menuItem.getPrice(), menuItem.getQuantity(), menuItem.getAvailable()));
+        }
     }
 }

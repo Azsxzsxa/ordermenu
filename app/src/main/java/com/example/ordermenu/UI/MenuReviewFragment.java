@@ -59,7 +59,7 @@ public class MenuReviewFragment extends Fragment implements RVMenuItemAdapter.It
         });
 
         //current order RV
-        _menuItemList = OrderUtil.getInstance().getMenuItemList();
+        _menuItemList = OrderUtil.getInstance().getCurrentOrderList();
         RecyclerView recyclerView = view.findViewById(R.id.menuReview_order_rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         _rvMenuItemAdapter = new RVMenuItemAdapter(getContext(), _menuItemList);
@@ -67,10 +67,10 @@ public class MenuReviewFragment extends Fragment implements RVMenuItemAdapter.It
         recyclerView.setAdapter(_rvMenuItemAdapter);
 
         //already ordered RV
-        if (OrderUtil.getInstance().getOrderedList().size() > 0) {
+        if (OrderUtil.getInstance().getAlreadyOrderedList().size() > 0) {
             RecyclerView prevRecyclerView = view.findViewById(R.id.menuReview_prev_rv);
             prevRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-            _rvMenuPrevAdapter = new RVPrevAdapter(getContext(), OrderUtil.getInstance().getOrderedList());
+            _rvMenuPrevAdapter = new RVPrevAdapter(getContext(), OrderUtil.getInstance().getAlreadyOrderedList());
             prevRecyclerView.setAdapter(_rvMenuPrevAdapter);
         }
 
@@ -78,7 +78,7 @@ public class MenuReviewFragment extends Fragment implements RVMenuItemAdapter.It
 
     private void sendOrderToDB() {
         counter = 0;
-        List<MenuItem> orderedList = OrderUtil.getInstance().getOrderedList();
+        List<MenuItem> orderedList = OrderUtil.getInstance().getAlreadyOrderedList();
         for (MenuItem menuItem : _menuItemList) {
             if (orderedList.contains(menuItem)) {
                 menuItem.setQuantity(menuItem.getQuantity() + orderedList.get(orderedList.indexOf(menuItem)).getQuantity());
@@ -95,7 +95,7 @@ public class MenuReviewFragment extends Fragment implements RVMenuItemAdapter.It
                         WriteBatch batch = Database.getInstance().getDb().batch();
                         batch.update(Database.getInstance().getTableRef(), "occupied", true);
 
-                        if (OrderUtil.getInstance().getOrderedList().size() == 0) {
+                        if (OrderUtil.getInstance().getAlreadyOrderedList().size() == 0) {
                             batch.update(Database.getInstance().getTableRef(), "startOrderDate", new Date());
                             OrderUtil.getInstance().setStartOrderDate(new Date());
                         }

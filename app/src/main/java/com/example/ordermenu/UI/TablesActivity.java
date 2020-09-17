@@ -10,12 +10,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.ordermenu.Models.MenuItem;
 import com.example.ordermenu.Models.Restaurant;
 import com.example.ordermenu.Models.Section;
 import com.example.ordermenu.Adapters.TabSectionAdapter;
 import com.example.ordermenu.R;
 import com.example.ordermenu.Utils.Database;
 import com.example.ordermenu.Utils.Logger;
+import com.example.ordermenu.Utils.OrderUtil;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.tabs.TabLayout;
@@ -27,8 +29,10 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.example.ordermenu.Utils.StrUtil.DB_CURRENT;
+import static com.example.ordermenu.Utils.StrUtil.DB_MENU;
 
 public class TablesActivity extends AppCompatActivity {
     private ArrayList<Section> _sections = new ArrayList<>();
@@ -79,6 +83,18 @@ public class TablesActivity extends AppCompatActivity {
                         for (DocumentSnapshot doc : queryDocumentSnapshots) {
                             _restaurant = doc.toObject(Restaurant.class);
                             Database.getInstance().setRestaurantId(doc.getId());
+                            doc.getReference().collection(DB_MENU).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                @Override
+                                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                    List<MenuItem> allMenuItems = new ArrayList<>();
+                                    for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                                        MenuItem menuItem = doc.toObject(MenuItem.class);
+                                        menuItem.setDocument_id(doc.getId());
+                                        allMenuItems.add(menuItem);
+                                    }
+                                    OrderUtil.getInstance().setAllMenuItemsList(allMenuItems);
+                                }
+                            });
                             getSections();
                         }
                         if (_restaurant == null) {

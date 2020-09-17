@@ -19,7 +19,6 @@ import com.example.ordermenu.Models.MenuItem;
 import com.example.ordermenu.R;
 import com.example.ordermenu.Utils.Database;
 import com.example.ordermenu.Utils.OrderUtil;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -31,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.ordermenu.Utils.StrUtil.DB_CATEGORY;
-import static com.example.ordermenu.Utils.StrUtil.MENU;
+import static com.example.ordermenu.Utils.StrUtil.DB_MENU;
 
 public class MenuItemsFragment extends Fragment implements RVMenuItemAdapter.ItemClickListener {
     private static final String TAG = "MenuItemsFragment";
@@ -85,7 +84,7 @@ public class MenuItemsFragment extends Fragment implements RVMenuItemAdapter.Ite
     }
 
     private void getMenuItemsFromDb() {
-        menuItemListener = Database.getInstance().restRef.document(Database.getInstance().getRestaurantId()).collection(MENU).whereEqualTo(DB_CATEGORY, _category)
+        menuItemListener = Database.getInstance().restRef.document(Database.getInstance().getRestaurantId()).collection(DB_MENU).whereEqualTo(DB_CATEGORY, _category)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -96,19 +95,19 @@ public class MenuItemsFragment extends Fragment implements RVMenuItemAdapter.Ite
                                 if (menuItem != null) {
                                     menuItem.setDocument_id(documentSnapshot.getId());
                                     if (_menuItemList.contains(menuItem)) {
-                                        if (OrderUtil.getInstance().getMenuItemList().contains(menuItem)) {
-                                            int position = OrderUtil.getInstance().getMenuItemList().indexOf(menuItem);
-                                            menuItem.setQuantity(OrderUtil.getInstance().getMenuItemList().get(position).getQuantity());
+                                        if (OrderUtil.getInstance().getCurrentOrderList().contains(menuItem)) {
+                                            int position = OrderUtil.getInstance().getCurrentOrderList().indexOf(menuItem);
+                                            menuItem.setQuantity(OrderUtil.getInstance().getCurrentOrderList().get(position).getQuantity());
                                         } else {
                                             _menuItemList.set(_menuItemList.indexOf(menuItem), menuItem);
                                         }
                                         _rvMenuItemAdapter.notifyItemChanged(_menuItemList.indexOf(menuItem));
                                     } else {
-                                        if (OrderUtil.getInstance().getMenuItemList().contains(menuItem)) {
-                                            int position = OrderUtil.getInstance().getMenuItemList().indexOf(menuItem);
-                                            menuItem.setQuantity(OrderUtil.getInstance().getMenuItemList().get(position).getQuantity());
-                                            Log.d(TAG, "onSuccess: contine " + menuItem.getName() + " " + OrderUtil.getInstance().getMenuItemList().get(position).getQuantity());
-                                            _menuItemList.add(OrderUtil.getInstance().getMenuItemList().get(position));
+                                        if (OrderUtil.getInstance().getCurrentOrderList().contains(menuItem)) {
+                                            int position = OrderUtil.getInstance().getCurrentOrderList().indexOf(menuItem);
+                                            menuItem.setQuantity(OrderUtil.getInstance().getCurrentOrderList().get(position).getQuantity());
+                                            Log.d(TAG, "onSuccess: contine " + menuItem.getName() + " " + OrderUtil.getInstance().getCurrentOrderList().get(position).getQuantity());
+                                            _menuItemList.add(OrderUtil.getInstance().getCurrentOrderList().get(position));
                                         } else {
                                             _menuItemList.add(menuItem);
                                         }

@@ -10,7 +10,6 @@ import com.example.ordermenu.Adapters.RVOrderAdapter;
 import com.example.ordermenu.Models.MenuItem;
 import com.example.ordermenu.Models.Order;
 import com.example.ordermenu.Utils.Database;
-import com.example.ordermenu.Utils.Logger;
 import com.example.ordermenu.Utils.OrderUtil;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -20,7 +19,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -31,7 +29,6 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -117,7 +114,7 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
                             _menuItemList.add(menuItem);
                         }
                     }
-                    OrderUtil.getInstance().setOrderedList(_menuItemList);
+                    OrderUtil.getInstance().setAlreadyOrderedList(_menuItemList);
                     initOrderRV();
                 }
             }
