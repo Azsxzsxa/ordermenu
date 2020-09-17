@@ -8,6 +8,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,8 @@ import java.util.Date;
 import java.util.List;
 
 public class MenuReviewFragment extends Fragment implements RVMenuItemAdapter.ItemClickListener {
+    private static final String TAG = "MenuReviewFragment";
+
     View view;
     List<MenuItem> _menuItemList = new ArrayList<>();
     RVMenuItemAdapter _rvMenuItemAdapter;
@@ -80,36 +83,40 @@ public class MenuReviewFragment extends Fragment implements RVMenuItemAdapter.It
         counter = 0;
         List<MenuItem> orderedList = OrderUtil.getInstance().getAlreadyOrderedList();
         for (MenuItem menuItem : _menuItemList) {
-            if (orderedList.contains(menuItem)) {
-                menuItem.setQuantity(menuItem.getQuantity() + orderedList.get(orderedList.indexOf(menuItem)).getQuantity());
-            }
-            Database.getInstance().getOrderRef().document(menuItem.getDocument_id())
-                    .set(menuItem).addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void aVoid) {
-                    counter++;
-                    if (counter == _menuItemList.size()) {
-                        OrderUtil.getInstance().clearMenuItemList();
-
-                        //Update table to be occupied
-                        WriteBatch batch = Database.getInstance().getDb().batch();
-                        batch.update(Database.getInstance().getTableRef(), "occupied", true);
-
-                        if (OrderUtil.getInstance().getAlreadyOrderedList().size() == 0) {
-                            batch.update(Database.getInstance().getTableRef(), "startOrderDate", new Date());
-                            OrderUtil.getInstance().setStartOrderDate(new Date());
-                        }
-
-                        batch.commit().addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                if (getActivity() != null)
-                                    getActivity().finish();
-                            }
-                        });
-                    }
+            if (menuItem.getDocument_id() == null) {
+                Log.d(TAG, "sendOrderToDB: " + menuItem.getName() + " doc id null");
+            } else {
+                if (orderedList.contains(menuItem)) {
+                    menuItem.setQuantity(menuItem.getQuantity() + orderedList.get(orderedList.indexOf(menuItem)).getQuantity());
                 }
-            });
+                Database.getInstance().getOrderRef().document(menuItem.getDocument_id())
+                        .set(menuItem).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        counter++;
+                        if (counter == _menuItemList.size()) {
+                            OrderUtil.getInstance().clearMenuItemList();
+
+                            //Update table to be occupied
+                            WriteBatch batch = Database.getInstance().getDb().batch();
+                            batch.update(Database.getInstance().getTableRef(), "occupied", true);
+
+                            if (OrderUtil.getInstance().getAlreadyOrderedList().size() == 0) {
+                                batch.update(Database.getInstance().getTableRef(), "startOrderDate", new Date());
+                                OrderUtil.getInstance().setStartOrderDate(new Date());
+                            }
+
+                            batch.commit().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    if (getActivity() != null)
+                                        getActivity().finish();
+                                }
+                            });
+                        }
+                    }
+                });
+            }
         }
     }
 

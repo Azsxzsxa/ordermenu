@@ -7,6 +7,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +26,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MenuCategoryFragment extends Fragment implements RVMenuCategoryAdapter.ItemClickListener , RVMenuItemAdapter.ItemClickListener{
+public class MenuCategoryFragment extends Fragment implements RVMenuCategoryAdapter.ItemClickListener, RVMenuItemAdapter.ItemClickListener {
     private static final String TAG = "MenuCategoriesFragment";
 
     List<String> _menuCategories = new ArrayList<>();
@@ -51,18 +52,27 @@ public class MenuCategoryFragment extends Fragment implements RVMenuCategoryAdap
             }
         });
 
-        SearchView searchView = view.findViewById(R.id.menuCategory_search_sv);
+        final SearchView searchView = view.findViewById(R.id.menuCategory_search_sv);
+
+        searchView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchView.setIconified(false);
+            }
+        });
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 return false;
             }
+
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (newText.isEmpty()) {
                     categoryRecyclerView.setVisibility(View.VISIBLE);
                     searchRecyclerView.setVisibility(View.INVISIBLE);
-                }else{
+                } else {
                     categoryRecyclerView.setVisibility(View.INVISIBLE);
                     searchRecyclerView.setVisibility(View.VISIBLE);
                 }
@@ -102,6 +112,8 @@ public class MenuCategoryFragment extends Fragment implements RVMenuCategoryAdap
         _rvMenuAdapter.setClickListener(this);
         categoryRecyclerView.setAdapter(_rvMenuAdapter);
 
+
+        OrderUtil.getInstance().updateSearchItemList();
         //search menuitem rv
         searchRecyclerView = view.findViewById(R.id.menuCategory_search_rv);
         searchRecyclerView.setVisibility(View.INVISIBLE);
@@ -121,13 +133,29 @@ public class MenuCategoryFragment extends Fragment implements RVMenuCategoryAdap
 
     @Override
     public void onPlusClick(View view, int position) {
-//        OrderUtil.getInstance().increaseQuantity(OrderUtil.getInstance().getSearchMenuItemsList().get(position));
-//        _rvMenuItemAdapter.notifyItemChanged(position);
+        Log.d(TAG, "onPlusClick: ");
+
+        OrderUtil.getInstance().increaseQuantity(OrderUtil.getInstance().getSearchMenuItemsList().get(position));
+
+        int indexOfSearchItemInCurrentOrder = OrderUtil.getInstance().getCurrentOrderList().indexOf(
+                OrderUtil.getInstance().getSearchMenuItemsList().get(position));
+
+        OrderUtil.getInstance().getSearchMenuItemsList().get(position).setQuantity(
+                OrderUtil.getInstance().getCurrentOrderList().get(indexOfSearchItemInCurrentOrder).getQuantity());
+
+        _rvMenuItemAdapter.notifyItemChanged(position);
     }
 
     @Override
     public void onMinusClick(View view, int position) {
-//        OrderUtil.getInstance().decreaseQuantity(OrderUtil.getInstance().getSearchMenuItemsList().get(position));
-//        _rvMenuItemAdapter.notifyItemChanged(position);
+        OrderUtil.getInstance().decreaseQuantity(OrderUtil.getInstance().getSearchMenuItemsList().get(position));
+
+        int indexOfSearchItemInCurrentOrder = OrderUtil.getInstance().getCurrentOrderList().indexOf(
+                OrderUtil.getInstance().getSearchMenuItemsList().get(position));
+
+        OrderUtil.getInstance().getSearchMenuItemsList().get(position).setQuantity(
+                OrderUtil.getInstance().getCurrentOrderList().get(indexOfSearchItemInCurrentOrder).getQuantity());
+
+        _rvMenuItemAdapter.notifyItemChanged(position);
     }
 }

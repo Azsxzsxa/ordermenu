@@ -89,8 +89,11 @@ public class TablesActivity extends AppCompatActivity {
                                     List<MenuItem> allMenuItems = new ArrayList<>();
                                     for (DocumentSnapshot doc : queryDocumentSnapshots) {
                                         MenuItem menuItem = doc.toObject(MenuItem.class);
-                                        menuItem.setDocument_id(doc.getId());
-                                        allMenuItems.add(menuItem);
+                                        if (menuItem != null) {
+                                            menuItem.setDocument_id(doc.getId());
+                                            if (!allMenuItems.contains(menuItem))
+                                                allMenuItems.add(menuItem);
+                                        }
                                     }
                                     OrderUtil.getInstance().setAllMenuItemsList(allMenuItems);
                                 }

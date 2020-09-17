@@ -10,7 +10,8 @@ public class MenuItem {
     private int quantity;
     private Boolean available;
 
-    public MenuItem(String category, String name, int price, int quantity, Boolean available) {
+    public MenuItem(String document_id, String category, String name, int price, int quantity, Boolean available) {
+        this.document_id = document_id;
         this.category = category;
         this.name = name;
         this.price = price;

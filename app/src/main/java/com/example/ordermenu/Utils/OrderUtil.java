@@ -1,7 +1,5 @@
 package com.example.ordermenu.Utils;
 
-import android.util.Log;
-
 import com.example.ordermenu.Models.MenuItem;
 
 import java.util.ArrayList;
@@ -137,20 +135,25 @@ public class OrderUtil {
     public void setAllMenuItemsList(List<MenuItem> allMenuItemsList) {
 //        this.allMenuItemsList = allMenuItemsList;
         for (MenuItem menuItem : allMenuItemsList) {
-            searchMenuItemsList.add(new MenuItem(menuItem.getCategory(), menuItem.getName(),
+
+            searchMenuItemsList.add(new MenuItem(menuItem.getDocument_id(), menuItem.getCategory(), menuItem.getName(),
                     menuItem.getPrice(), menuItem.getQuantity(), menuItem.getAvailable()));
-            this.allMenuItemsList.add(new MenuItem(menuItem.getCategory(), menuItem.getName(),
+            this.allMenuItemsList.add(new MenuItem(menuItem.getDocument_id(), menuItem.getCategory(), menuItem.getName(),
                     menuItem.getPrice(), menuItem.getQuantity(), menuItem.getAvailable()));
         }
 //        setSearchMenuItemsList(allMenuItemsList);
+        updateSearchItemList();
+    }
+
+    public void updateSearchItemList() {
         if (!currentOrderList.isEmpty()) {
             for (MenuItem menuItem : currentOrderList) {
                 int position = getSearchMenuItemsList().indexOf(menuItem);
                 getSearchMenuItemsList().get(position).setQuantity(menuItem.getQuantity());
             }
         }
-
     }
+
 
     public List<MenuItem> getSearchMenuItemsList() {
         return searchMenuItemsList;
@@ -168,15 +171,15 @@ public class OrderUtil {
         setSectionName(sectionName);
         setStartOrderDate(startOrderDate);
         setEndOrderDate(endOrderDate);
-        clearSearchMenuItemsList();
+        resetSearchMenuItemList();
         clearMenuItemList();
     }
 
-    private void clearSearchMenuItemsList() {
+    private void resetSearchMenuItemList() {
         searchMenuItemsList = new ArrayList<>();
 //        searchMenuItemsList.addAll(allMenuItemsList);
         for (MenuItem menuItem : allMenuItemsList) {
-            searchMenuItemsList.add(new MenuItem(menuItem.getCategory(), menuItem.getName(),
+            searchMenuItemsList.add(new MenuItem(menuItem.getDocument_id(), menuItem.getCategory(), menuItem.getName(),
                     menuItem.getPrice(), menuItem.getQuantity(), menuItem.getAvailable()));
         }
     }

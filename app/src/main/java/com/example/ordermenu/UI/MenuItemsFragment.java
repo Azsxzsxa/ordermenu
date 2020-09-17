@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 
 import com.example.ordermenu.Adapters.RVMenuItemAdapter;
 import com.example.ordermenu.Models.MenuItem;
@@ -41,12 +42,14 @@ public class MenuItemsFragment extends Fragment implements RVMenuItemAdapter.Ite
     private View view;
     private ExtendedFloatingActionButton fab_review;
     private ListenerRegistration menuItemListener;
+    private SearchView searchView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_menu_items, container, false);
         fab_review = view.findViewById(R.id.menuItems_review_fab);
+        searchView = view.findViewById(R.id.menuItems_search_sv);
 
         if (getArguments() != null) {
             MenuItemsFragmentArgs menuItemsFragmentArgs = MenuItemsFragmentArgs.fromBundle(getArguments());
@@ -69,6 +72,13 @@ public class MenuItemsFragment extends Fragment implements RVMenuItemAdapter.Ite
             @Override
             public void onClick(View v) {
                 Navigation.findNavController(view).navigate(MenuItemsFragmentDirections.actionMenuItemsFragmentToMenuReviewFragment());
+            }
+        });
+
+        searchView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchView.setIconified(false);
             }
         });
 
