@@ -38,24 +38,12 @@
         android:clipToPadding="false"
         android:padding="@dimen/size_medium">
 
-        <SearchView
-            android:id="@+id/menuItems_search_sv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/rounded_card"
-            android:imeOptions="actionDone"
-            android:inputType="textCapWords"
-            android:padding="4dp"
-            app:iconifiedByDefault="false"
-            app:queryHint="@string/search"
-            app:searchHintIcon="@drawable/ic_outline_search_24"
-            app:searchIcon="@drawable/ic_outline_search_24" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/menuItems_items_rv"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/menuItems_search_sv" />
+            android:layout_height="match_parent"
+             />
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/menuItems_review_fab"

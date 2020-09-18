@@ -49,7 +49,6 @@ public class MenuItemsFragment extends Fragment implements RVMenuItemAdapter.Ite
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_menu_items, container, false);
         fab_review = view.findViewById(R.id.menuItems_review_fab);
-        searchView = view.findViewById(R.id.menuItems_search_sv);
 
         if (getArguments() != null) {
             MenuItemsFragmentArgs menuItemsFragmentArgs = MenuItemsFragmentArgs.fromBundle(getArguments());
@@ -72,13 +71,6 @@ public class MenuItemsFragment extends Fragment implements RVMenuItemAdapter.Ite
             @Override
             public void onClick(View v) {
                 Navigation.findNavController(view).navigate(MenuItemsFragmentDirections.actionMenuItemsFragmentToMenuReviewFragment());
-            }
-        });
-
-        searchView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                searchView.setIconified(false);
             }
         });
 

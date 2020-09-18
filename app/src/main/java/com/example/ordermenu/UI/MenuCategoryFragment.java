@@ -1,12 +1,15 @@
 package com.example.ordermenu.UI;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +28,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class MenuCategoryFragment extends Fragment implements RVMenuCategoryAdapter.ItemClickListener, RVMenuItemAdapter.ItemClickListener {
     private static final String TAG = "MenuCategoriesFragment";
@@ -36,6 +40,7 @@ public class MenuCategoryFragment extends Fragment implements RVMenuCategoryAdap
     ExtendedFloatingActionButton fab_review;
     private RecyclerView categoryRecyclerView;
     private RecyclerView searchRecyclerView;
+    SearchView searchView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -45,6 +50,22 @@ public class MenuCategoryFragment extends Fragment implements RVMenuCategoryAdap
         initRV();
         getCategories();
 
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (TextUtils.isEmpty(searchView.getQuery())) {
+                    Intent intent = new Intent(getActivity(), OrderActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    requireActivity().finish();
+                }else{
+                    searchView.setQuery("",true);
+                    searchView.clearFocus();
+                }
+
+            }
+        });
+
         fab_review.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -52,7 +73,11 @@ public class MenuCategoryFragment extends Fragment implements RVMenuCategoryAdap
             }
         });
 
-        final SearchView searchView = view.findViewById(R.id.menuCategory_search_sv);
+        searchView = view.findViewById(R.id.menuCategory_search_sv);
+        searchView.onActionViewExpanded();
+        searchView.clearFocus();
+
+
 
         searchView.setOnClickListener(new View.OnClickListener() {
             @Override
