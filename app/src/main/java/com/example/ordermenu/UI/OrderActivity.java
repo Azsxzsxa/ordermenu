@@ -58,6 +58,28 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
             }
         });
 
+        FloatingActionButton markReadyFab = findViewById(R.id.order_ready_fab);
+        markReadyFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new AlertDialog.Builder(OrderActivity.this)
+                        .setMessage(R.string.question_order_ready)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                Database.getInstance().getOrderRef().get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                        Database.getInstance().getTableRef().update("occupied","ready");
+                                    }
+                                });
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, null)
+                        .show();
+
+            }
+        });
+
         FloatingActionButton clearTableFab = findViewById(R.id.order_clear_fab);
         clearTableFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,7 +92,7 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
                                     @Override
                                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                                         WriteBatch resetOrderBatch = Database.getInstance().getDb().batch();
-                                        resetOrderBatch.update(Database.getInstance().getTableRef(),"occupied",false);
+                                        resetOrderBatch.update(Database.getInstance().getTableRef(),"occupied","free");
                                         List<MenuItem> menuItems = new ArrayList<>();
                                         for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                             menuItems.add(documentSnapshot.toObject(MenuItem.class));

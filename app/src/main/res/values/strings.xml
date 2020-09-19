@@ -20,4 +20,5 @@
     <string name="cancel">Cancel</string>
     <string name="order">Order</string>
     <string name="question_clear_table">Are you sure you want to clear table order?</string>
+    <string name="question_order_ready">Mark order as ready?</string>
 </resources>

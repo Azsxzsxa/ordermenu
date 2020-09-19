@@ -6,11 +6,11 @@ import java.util.Objects;
 public class Table {
     private String documentID;
     private Integer number;
-    private Boolean occupied;
+    private String occupied;
     private Date startOrderDate;
     private Date endOrderDate;
 
-    public Table(Integer number, Boolean occupied, Date startOrderDate, Date endOrderDate) {
+    public Table(Integer number, String occupied, Date startOrderDate, Date endOrderDate) {
         this.number = number;
         this.occupied = occupied;
         this.startOrderDate = startOrderDate;
@@ -36,11 +36,11 @@ public class Table {
         this.number = number;
     }
 
-    public Boolean getOccupied() {
+    public String getOccupied() {
         return occupied;
     }
 
-    public void setOccupied(Boolean occupied) {
+    public void setOccupied(String occupied) {
         this.occupied = occupied;
     }
 

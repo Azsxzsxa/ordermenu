@@ -99,7 +99,7 @@ public class MenuReviewFragment extends Fragment implements RVMenuItemAdapter.It
 
                             //Update table to be occupied
                             WriteBatch batch = Database.getInstance().getDb().batch();
-                            batch.update(Database.getInstance().getTableRef(), "occupied", true);
+                            batch.update(Database.getInstance().getTableRef(), "occupied", "busy");
 
                             if (OrderUtil.getInstance().getAlreadyOrderedList().size() == 0) {
                                 batch.update(Database.getInstance().getTableRef(), "startOrderDate", new Date());
