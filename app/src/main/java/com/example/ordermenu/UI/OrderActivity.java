@@ -11,6 +11,7 @@ import com.example.ordermenu.Models.MenuItem;
 import com.example.ordermenu.Models.Order;
 import com.example.ordermenu.Utils.Database;
 import com.example.ordermenu.Utils.OrderUtil;
+import com.google.android.gms.common.api.Batch;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -19,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -30,6 +32,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -66,10 +69,12 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
                                 Database.getInstance().getOrderRef().get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                                     @Override
                                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                        WriteBatch resetOrderBatch = Database.getInstance().getDb().batch();
+                                        resetOrderBatch.update(Database.getInstance().getTableRef(),"occupied",false);
                                         List<MenuItem> menuItems = new ArrayList<>();
                                         for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                             menuItems.add(documentSnapshot.toObject(MenuItem.class));
-                                            documentSnapshot.getReference().delete();
+                                            resetOrderBatch.delete(documentSnapshot.getReference());
                                         }
                                         DocumentReference ref = Database.getInstance().restRef
                                                 .document(Database.getInstance().getRestaurantId())
@@ -81,13 +86,13 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
                                                 new Date(),
                                                 menuItems
                                         );
-                                        Database.getInstance().restRef.document(Database.getInstance().getRestaurantId())
-                                                .collection("History").document(ref.getId()).set(order);
+                                        resetOrderBatch.set(Database.getInstance().restRef.document(Database.getInstance().getRestaurantId())
+                                                .collection("History").document(ref.getId()),order);
+                                        resetOrderBatch.commit();
                                     }
                                 });
 
                                 //Update table to be free
-                                Database.getInstance().getTableRef().update("occupied", false);
 
                                 Intent intent = new Intent(getApplication(), TablesActivity.class);
                                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
