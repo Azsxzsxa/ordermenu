@@ -48,9 +48,11 @@ public class RVTableAdapter extends RecyclerView.Adapter<RVTableAdapter.ViewHold
         if (mTableList.get(position).getOccupied() != null && mTableList.get(position).getOccupied().equals("busy")) {
             Log.d(TAG, "onBindViewHolder: NOT NULL, occupied");
             holder.relativeLayout.setBackgroundResource(R.drawable.table_occupied_background);
-        } else {
+        } else if (mTableList.get(position).getOccupied().equals("free")) {
             holder.relativeLayout.setBackgroundResource(R.drawable.table_free_background);
             Log.d(TAG, "onBindViewHolder: null / not occupied");
+        } else {
+            holder.relativeLayout.setBackgroundResource(R.drawable.table_ready_background);
         }
     }
 
