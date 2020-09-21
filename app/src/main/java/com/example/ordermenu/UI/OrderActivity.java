@@ -91,26 +91,28 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
                                 Database.getInstance().getOrderRef().get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                                     @Override
                                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                        WriteBatch resetOrderBatch = Database.getInstance().getDb().batch();
-                                        resetOrderBatch.update(Database.getInstance().getTableRef(),"occupied","free");
-                                        List<MenuItem> menuItems = new ArrayList<>();
-                                        for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                                            menuItems.add(documentSnapshot.toObject(MenuItem.class));
-                                            resetOrderBatch.delete(documentSnapshot.getReference());
+                                        if (!queryDocumentSnapshots.isEmpty()) {
+                                            WriteBatch resetOrderBatch = Database.getInstance().getDb().batch();
+                                            resetOrderBatch.update(Database.getInstance().getTableRef(),"occupied","free");
+                                            List<MenuItem> menuItems = new ArrayList<>();
+                                            for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                                menuItems.add(documentSnapshot.toObject(MenuItem.class));
+                                                resetOrderBatch.delete(documentSnapshot.getReference());
+                                            }
+                                            DocumentReference ref = Database.getInstance().restRef
+                                                    .document(Database.getInstance().getRestaurantId())
+                                                    .collection("History").document();
+                                            Order order = new Order(ref.getId(), FirebaseAuth.getInstance().getUid(),
+                                                    OrderUtil.getInstance().getTableNumber(),
+                                                    OrderUtil.getInstance().getSectionName(),
+                                                    OrderUtil.getInstance().getStartOrderDate(),
+                                                    new Date(),
+                                                    menuItems
+                                            );
+                                            resetOrderBatch.set(Database.getInstance().restRef.document(Database.getInstance().getRestaurantId())
+                                                    .collection("History").document(ref.getId()),order);
+                                            resetOrderBatch.commit();
                                         }
-                                        DocumentReference ref = Database.getInstance().restRef
-                                                .document(Database.getInstance().getRestaurantId())
-                                                .collection("History").document();
-                                        Order order = new Order(ref.getId(), FirebaseAuth.getInstance().getUid(),
-                                                OrderUtil.getInstance().getTableNumber(),
-                                                OrderUtil.getInstance().getSectionName(),
-                                                OrderUtil.getInstance().getStartOrderDate(),
-                                                new Date(),
-                                                menuItems
-                                        );
-                                        resetOrderBatch.set(Database.getInstance().restRef.document(Database.getInstance().getRestaurantId())
-                                                .collection("History").document(ref.getId()),order);
-                                        resetOrderBatch.commit();
                                     }
                                 });
 

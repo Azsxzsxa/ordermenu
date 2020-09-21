@@ -7,6 +7,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Toast;
 
@@ -49,14 +50,6 @@ public class TablesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tables);
-
-        MaterialButton logOut_Btn = findViewById(R.id.tables_logOut_btn);
-        logOut_Btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-            }
-        });
 
         setupFirebaseAuth();
     }
@@ -155,18 +148,6 @@ public class TablesActivity extends AppCompatActivity {
                     if (_restaurant == null) {
                         getRestaurant();
                     }
-
-                    /*
-                    //check if email is verified
-                    if (user.isEmailVerified()) {
-                        // DO STUFF
-                        Log.d(TAG, "onAuthStateChanged: MAIL VERIFIED");
-                    } else {
-                        Toast.makeText(TableChoice.this, "Email is not Verified\nCheck your Inbox", Toast.LENGTH_SHORT).show();
-                        FirebaseAuth.getInstance().signOut();
-                    }
-                    */
-
                 } else {
                     // User is signed out
                     Logger.debug("onAuthStateChanged: signed_out");
@@ -176,9 +157,28 @@ public class TablesActivity extends AppCompatActivity {
                     startActivity(intent);
                     finish();
                 }
-                // ...
             }
         };
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar_menu,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull android.view.MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.actionMenu_logOut:
+                FirebaseAuth.getInstance().signOut();
+                return true;
+            case R.id.actionMenu_toMenu:
+                Intent intent = new Intent(TablesActivity.this, MenuAvailableActivity.class);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 }

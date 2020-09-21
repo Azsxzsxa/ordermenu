@@ -22,6 +22,8 @@ android {
 }
 
 dependencies {
+    implementation 'androidx.wear:wear:1.0.0'
+    compileOnly 'com.google.android.wearable:wearable:2.7.0'
     def nav_version = "2.3.0"
 
     //Nav component

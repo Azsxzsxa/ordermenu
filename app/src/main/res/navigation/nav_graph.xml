@@ -10,7 +10,7 @@
         android:id="@+id/menuCategoriesFragment"
         android:name="com.example.ordermenu.UI.MenuCategoryFragment"
         android:label="fragment_menu_categories"
-        tools:layout="@layout/fragment_menu_categories" >
+        tools:layout="@layout/fragment_menu_categories">
         <action
             android:id="@+id/action_menuCategoriesFragment_to_menuItemsFragment"
             app:destination="@id/menuItemsFragment" />
@@ -22,7 +22,7 @@
         android:id="@+id/menuItemsFragment"
         android:name="com.example.ordermenu.UI.MenuItemsFragment"
         android:label="fragment_menu_items"
-        tools:layout="@layout/fragment_menu_items" >
+        tools:layout="@layout/fragment_menu_items">
         <action
             android:id="@+id/action_menuItemsFragment_to_menuCategoriesFragment"
             app:destination="@id/menuCategoriesFragment" />
@@ -38,5 +38,6 @@
         android:name="com.example.ordermenu.UI.MenuReviewFragment"
         android:label="fragment_menu_review"
         tools:layout="@layout/fragment_menu_review" />
+
 
 </navigation>

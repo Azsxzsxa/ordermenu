@@ -21,4 +21,10 @@
     <string name="order">Order</string>
     <string name="question_clear_table">Are you sure you want to clear table order?</string>
     <string name="question_order_ready">Mark order as ready?</string>
+    <string name="menu">Menu</string>
+    <string name="log_out">Log out</string>
+    <string name="toolBarTables">Tables</string>
+    <string name="Menu_list">Menu list</string>
+
+
 </resources>
