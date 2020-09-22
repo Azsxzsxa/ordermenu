@@ -50,6 +50,7 @@ public class TablesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tables);
+        setTitle(R.string.toolBarTables);
 
         setupFirebaseAuth();
     }

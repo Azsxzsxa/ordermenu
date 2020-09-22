@@ -2,14 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.ordermenu">
 
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-
-    <uses-feature android:name="android.hardware.type.watch" />
-
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
+        android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -28,8 +25,7 @@
             android:name=".UI.MenuActivity"
             android:label="@string/menu" />
         <activity
-            android:name=".UI.TablesActivity"
-            android:label="@string/toolBarTables">
+            android:name=".UI.TablesActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

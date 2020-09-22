@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/tables_relativeLayout"
     android:layout_width="100dp"
     android:layout_height="100dp"
-    android:layout_margin="@dimen/size_small"
+    android:layout_margin="@dimen/size_medium"
     android:background="@drawable/table_free_background"
     android:padding="@dimen/size_small">
 
@@ -14,7 +12,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:textSize="20sp"
-        tools:text="777" />
+        android:textSize="20sp" />
 
 </RelativeLayout>
