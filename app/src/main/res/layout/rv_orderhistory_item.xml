@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/size_extrasmall"
+    android:elevation="2dp"
+    app:cardCornerRadius="@dimen/card_corner_radius">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/section"
+                android:layout_marginEnd="@dimen/size_small"/>
+
+            <TextView
+                android:id="@+id/orderhistory_item_sectionName_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="terrace" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/table"
+                android:layout_marginEnd="@dimen/size_small"/>
+
+            <TextView
+                android:id="@+id/orderhistory_item_tableNumber_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="4" />
+        </LinearLayout>
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/orderhistory_item_rv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:listitem="@layout/rv_menureview_prev_item"/>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/start_time"
+                android:layout_marginEnd="@dimen/size_small"/>
+
+            <TextView
+                android:id="@+id/orderhistory_item_startDate_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="16:24 16/02/2020" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/end_time"
+                android:layout_marginEnd="@dimen/size_small"/>
+
+            <TextView
+                android:id="@+id/orderhistory_item_endDate_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="17:50 16/02/2020" />
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/orderhistory_item_restore_btn"
+            android:textAlignment="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/restore"/>
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

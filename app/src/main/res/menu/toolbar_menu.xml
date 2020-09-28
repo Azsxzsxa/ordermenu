@@ -3,10 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/actionMenu_toMenu"
-        android:icon="@drawable/ic_baseline_fastfood_24"
         app:showAsAction="never"
         android:title="@string/menu">
     </item>
+
+    <item
+        android:id="@+id/actionMenu_toOrderHistory"
+        app:showAsAction="never"
+        android:title="@string/orders">
+    </item>
+
     <item
         android:id="@+id/actionMenu_logOut"
         app:showAsAction="never"

@@ -175,8 +175,12 @@ public class TablesActivity extends AppCompatActivity {
                 FirebaseAuth.getInstance().signOut();
                 return true;
             case R.id.actionMenu_toMenu:
-                Intent intent = new Intent(TablesActivity.this, MenuAvailableActivity.class);
-                startActivity(intent);
+                Intent intentMenu = new Intent(TablesActivity.this, MenuAvailableActivity.class);
+                startActivity(intentMenu);
+                return true;
+            case R.id.actionMenu_toOrderHistory:
+                Intent intentOrders = new Intent(TablesActivity.this, OrderHistoryActivity.class);
+                startActivity(intentOrders);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

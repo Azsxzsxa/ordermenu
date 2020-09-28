@@ -12,15 +12,19 @@ public class Order {
     private Date endTime;
     private String documentId;
     private List<MenuItem> menuItems;
+    private String tableId;
+    private String sectionId;
 
-    public Order(String documentId, String userId, int tableNumber, String tableSection, Date startTime, Date endTime, List<MenuItem> menuItems) {
-        this.documentId = documentId;
+    public Order(String userId, int tableNumber, String tableSection, Date startTime, Date endTime, String documentId, List<MenuItem> menuItems, String tableId, String sectionId) {
         this.userId = userId;
         this.tableNumber = tableNumber;
         this.tableSection = tableSection;
         this.startTime = startTime;
         this.endTime = endTime;
+        this.documentId = documentId;
         this.menuItems = menuItems;
+        this.tableId = tableId;
+        this.sectionId = sectionId;
     }
 
     public Order() {
@@ -80,6 +84,22 @@ public class Order {
 
     public void setMenuItems(List<MenuItem> menuItems) {
         this.menuItems = menuItems;
+    }
+
+    public String getTableId() {
+        return tableId;
+    }
+
+    public void setTableId(String tableId) {
+        this.tableId = tableId;
+    }
+
+    public String getSectionId() {
+        return sectionId;
+    }
+
+    public void setSectionId(String sectionId) {
+        this.sectionId = sectionId;
     }
 
     @Override

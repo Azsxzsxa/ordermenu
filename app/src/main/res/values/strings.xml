@@ -21,10 +21,26 @@
     <string name="order">Order</string>
     <string name="question_clear_table">Are you sure you want to clear table order?</string>
     <string name="question_order_ready">Mark order as ready?</string>
+    <string name="question_restore_order">Restore this order?</string>
     <string name="menu">Menu</string>
     <string name="log_out">Log out</string>
     <string name="toolBarTables">Tables</string>
     <string name="Menu_list">Menu list</string>
+    <string name="title_activity_order_history">OrderHistoryActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+    <string name="orders">Orders</string>
+    <string name="section">section</string>
+    <string name="table">table</string>
+    <string name="start_time">start time</string>
+    <string name="end_time">end time</string>
+    <string name="restore">restore</string>
+    <string name="table_not_free">The table is not free, make sure you have selected the correct order to restore or clear the table</string>
+    <string name="exit_discrd_order">New items have been selected but order has not been submitted. Continue and discard the new selected items?</string>
+    <string name="warning">Warning</string>
 
 
 </resources>

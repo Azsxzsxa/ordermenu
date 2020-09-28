@@ -27,6 +27,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static com.example.ordermenu.Utils.StrUtil.DB_TABLE_STATUS_BUSY;
+
 public class MenuReviewFragment extends Fragment implements RVMenuItemAdapter.ItemClickListener {
     private static final String TAG = "MenuReviewFragment";
 
@@ -99,7 +101,7 @@ public class MenuReviewFragment extends Fragment implements RVMenuItemAdapter.It
 
                             //Update table to be occupied
                             WriteBatch batch = Database.getInstance().getDb().batch();
-                            batch.update(Database.getInstance().getTableRef(), "occupied", "busy");
+                            batch.update(Database.getInstance().getTableRef(), "occupied", DB_TABLE_STATUS_BUSY);
 
                             if (OrderUtil.getInstance().getAlreadyOrderedList().size() == 0) {
                                 batch.update(Database.getInstance().getTableRef(), "startOrderDate", new Date());

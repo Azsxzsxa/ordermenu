@@ -16,6 +16,9 @@
             android:name=".UI.MenuAvailableActivity"
             android:label="@string/Menu_list" />
         <activity
+            android:name=".UI.OrderHistoryActivity"
+            android:label="@string/orders" />
+        <activity
             android:name=".UI.LoginActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
@@ -24,8 +27,7 @@
         <activity
             android:name=".UI.MenuActivity"
             android:label="@string/menu" />
-        <activity
-            android:name=".UI.TablesActivity">
+        <activity android:name=".UI.TablesActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

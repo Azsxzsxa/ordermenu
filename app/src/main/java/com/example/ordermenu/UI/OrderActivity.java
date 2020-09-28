@@ -38,10 +38,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static com.example.ordermenu.Utils.StrUtil.DB_TABLE_STATUS_FREE;
+import static com.example.ordermenu.Utils.StrUtil.DB_TABLE_STATUS_SERVED;
+
 public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.ItemClickListener {
 
     ArrayList<MenuItem> _menuItemList = new ArrayList<>();
     RVOrderAdapter _rvOrderAdapter;
+    FloatingActionButton clearTableFab;
+    FloatingActionButton markReadyFab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +63,7 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
             }
         });
 
-        FloatingActionButton markReadyFab = findViewById(R.id.order_ready_fab);
+        markReadyFab = findViewById(R.id.order_ready_fab);
         markReadyFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -69,7 +74,7 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
                                 Database.getInstance().getOrderRef().get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                                     @Override
                                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                        Database.getInstance().getTableRef().update("occupied","ready");
+                                        Database.getInstance().getTableRef().update("occupied",DB_TABLE_STATUS_SERVED);
                                     }
                                 });
                             }
@@ -80,7 +85,7 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
             }
         });
 
-        FloatingActionButton clearTableFab = findViewById(R.id.order_clear_fab);
+        clearTableFab = findViewById(R.id.order_clear_fab);
         clearTableFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -93,7 +98,7 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
                                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                                         if (!queryDocumentSnapshots.isEmpty()) {
                                             WriteBatch resetOrderBatch = Database.getInstance().getDb().batch();
-                                            resetOrderBatch.update(Database.getInstance().getTableRef(),"occupied","free");
+                                            resetOrderBatch.update(Database.getInstance().getTableRef(),"occupied",DB_TABLE_STATUS_FREE);
                                             List<MenuItem> menuItems = new ArrayList<>();
                                             for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                                 menuItems.add(documentSnapshot.toObject(MenuItem.class));
@@ -102,12 +107,15 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
                                             DocumentReference ref = Database.getInstance().restRef
                                                     .document(Database.getInstance().getRestaurantId())
                                                     .collection("History").document();
-                                            Order order = new Order(ref.getId(), FirebaseAuth.getInstance().getUid(),
+                                            Order order = new Order(FirebaseAuth.getInstance().getUid(),
                                                     OrderUtil.getInstance().getTableNumber(),
                                                     OrderUtil.getInstance().getSectionName(),
                                                     OrderUtil.getInstance().getStartOrderDate(),
                                                     new Date(),
-                                                    menuItems
+                                                    ref.getId(),
+                                                    menuItems,
+                                                    OrderUtil.getInstance().getTableDocID(),
+                                                    OrderUtil.getInstance().getSectionDocID()
                                             );
                                             resetOrderBatch.set(Database.getInstance().restRef.document(Database.getInstance().getRestaurantId())
                                                     .collection("History").document(ref.getId()),order);
@@ -139,12 +147,16 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
                     for (DocumentSnapshot doc : value) {
                         MenuItem menuItem = doc.toObject(MenuItem.class);
                         if (menuItem != null) {
-                            menuItem.setDocument_id(doc.getId());
+//                            menuItem.setDocument_id(doc.getId());
                             _menuItemList.add(menuItem);
                         }
                     }
                     OrderUtil.getInstance().setAlreadyOrderedList(_menuItemList);
                     initOrderRV();
+                    if (_menuItemList.isEmpty()) {
+                        clearTableFab.setEnabled(false);
+                        markReadyFab.setEnabled(false);
+                    }
                 }
             }
         });
@@ -225,5 +237,25 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
             }
         });
         dialog.show();
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        if (!OrderUtil.getInstance().getCurrentOrderList().isEmpty()) {
+            new AlertDialog.Builder(OrderActivity.this)
+                    .setTitle(R.string.warning)
+                    .setMessage(R.string.exit_discrd_order)
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    })
+
+                    .setNegativeButton(android.R.string.no, null)
+                    .show();
+        }else{
+        super.onBackPressed();
+        }
     }
 }

@@ -1,5 +1,10 @@
 package com.example.ordermenu.Utils;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 public final class StrUtil {
     public final static String DB_RESTAURANTS = "Restaurants";
     public final static String DB_CURRENT = "Current";
@@ -15,5 +20,9 @@ public final class StrUtil {
     public final static String DB_TABLES = "Tables";
     public final static String DB_ORDER = "Order";
     public final static String DB_CATEGORY = "category";
+    public final static String DB_HISTORY = "History";
+    public final static String DB_TABLE_STATUS_FREE = "free";
+    public final static String DB_TABLE_STATUS_BUSY = "busy";
+    public final static String DB_TABLE_STATUS_SERVED = "served";
 
 }
