@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.ordermenu.Models.MenuItem;
@@ -42,7 +43,7 @@ public class TablesActivity extends AppCompatActivity {
     private TabLayout tab;
     private ViewPager viewPager;
     private Restaurant _restaurant = null;
-
+    private ProgressBar progressBar;
 
     private FirebaseAuth.AuthStateListener mAuthListener;
 
@@ -50,6 +51,9 @@ public class TablesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tables);
+
+        progressBar = findViewById(R.id.tablesActivity_pb);
+
         setTitle(R.string.toolBarTables);
 
         setupFirebaseAuth();
@@ -111,6 +115,10 @@ public class TablesActivity extends AppCompatActivity {
                 addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
+                        if (progressBar.getVisibility() == View.VISIBLE)
+                            progressBar.setVisibility(View.GONE);
+
                         for (DocumentSnapshot doc : queryDocumentSnapshots) {
                             Section section = doc.toObject(Section.class);
                             if (section != null) {
@@ -164,7 +172,7 @@ public class TablesActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar_menu,menu);
+        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
         return true;
     }
 
@@ -175,12 +183,21 @@ public class TablesActivity extends AppCompatActivity {
                 FirebaseAuth.getInstance().signOut();
                 return true;
             case R.id.actionMenu_toMenu:
-                Intent intentMenu = new Intent(TablesActivity.this, MenuAvailableActivity.class);
-                startActivity(intentMenu);
+                if (OrderUtil.getInstance().getAllMenuItemsList() != null) {
+                    Intent intentMenu = new Intent(TablesActivity.this, MenuAvailableActivity.class);
+                    startActivity(intentMenu);
+                } else {
+                    Toast.makeText(this, "Getting info from database, please try again", Toast.LENGTH_SHORT).show();
+                }
                 return true;
             case R.id.actionMenu_toOrderHistory:
-                Intent intentOrders = new Intent(TablesActivity.this, OrderHistoryActivity.class);
-                startActivity(intentOrders);
+                if (Database.getInstance().getRestaurantId() != null) {
+                    Intent intentOrders = new Intent(TablesActivity.this, OrderHistoryActivity.class);
+                    startActivity(intentOrders);
+                } else {
+                    Toast.makeText(this, "Getting info from database, please try again", Toast.LENGTH_SHORT).show();
+                }
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

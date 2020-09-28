@@ -1,20 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:gravity="center_horizontal"
     android:padding="@dimen/size_small">
 
     <TextView
         android:id="@+id/menuReview_prev_quantity_tv"
-        android:layout_toRightOf="@+id/menuReview_prev_name_tv"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_margin="@dimen/size_small"
-        android:layout_height="wrap_content" />
+        android:layout_toEndOf="@+id/menuReview_prev_name_tv"
+        tools:text="1223" />
 
     <TextView
         android:id="@+id/menuReview_prev_name_tv"
-        android:layout_margin="@dimen/size_small"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/size_small"
+        tools:text="PIZAAAAAAAAAAAAAA" />
 
 </RelativeLayout>

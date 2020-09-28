@@ -9,9 +9,11 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.example.ordermenu.Adapters.RVTableAdapter;
 import com.example.ordermenu.Models.Section;
@@ -43,11 +45,14 @@ public class TablesSectionFragment extends Fragment implements RVTableAdapter.It
     private List<Table> _tableList = new ArrayList<>();
     private int _tableCount;
     private RVTableAdapter _rvTableAdapter;
+    private ProgressBar progressBar;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_tables_section, container, false);
+
+        progressBar = view.findViewById(R.id.tablesFrag_pb);
 
         if (getArguments() != null) {
             _sectionName = getArguments().getString(StrUtil.SECTION_NAME, "");
@@ -66,9 +71,13 @@ public class TablesSectionFragment extends Fragment implements RVTableAdapter.It
                 .collection(DB_TABLES).orderBy("number", Query.Direction.ASCENDING)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
-                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                        if (value != null && error == null && value.size() > 0) {
-                            for (DocumentSnapshot documentSnapshot : value) {
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) {
+                        if (queryDocumentSnapshots != null && error == null && queryDocumentSnapshots.size() > 0) {
+
+                            if (progressBar.getVisibility() == View.VISIBLE)
+                                progressBar.setVisibility(View.GONE);
+
+                            for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                 if (documentSnapshot != null) {
                                     Table table = documentSnapshot.toObject(Table.class);
                                     if (table != null) {
@@ -114,7 +123,7 @@ public class TablesSectionFragment extends Fragment implements RVTableAdapter.It
 
         OrderUtil.getInstance().setTableSwitched(_section_doc_id,
                 _tableList.get(position).getDocumentID()
-                ,_tableList.get(position).getNumber(), _sectionName,
+                , _tableList.get(position).getNumber(), _sectionName,
                 _tableList.get(position).getStartOrderDate(),
                 _tableList.get(position).getEndOrderDate());
 

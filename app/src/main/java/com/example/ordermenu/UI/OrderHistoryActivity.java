@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -44,11 +45,13 @@ public class OrderHistoryActivity extends AppCompatActivity implements RVOrderHi
     private static final String TAG = "OrderHistoryActivity";
     private RVOrderHistoryAdapter _orderHistoryAdapter;
     private List<Order> _orderItemList;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_history);
+        progressBar = findViewById(R.id.orderhistory_pb);
         getOrderHistory();
     }
 
@@ -59,6 +62,9 @@ public class OrderHistoryActivity extends AppCompatActivity implements RVOrderHi
                 .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                if (progressBar.getVisibility() == View.VISIBLE)
+                    progressBar.setVisibility(View.GONE);
+
                 _orderItemList = new ArrayList<>();
                 for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                     _orderItemList.add(documentSnapshot.toObject(Order.class));
