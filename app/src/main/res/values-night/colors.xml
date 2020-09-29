@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#0091EA</color>
+    <color name="colorPrimaryDark">#0081cb</color>
+    <color name="colorPrimaryLight">#64c1ff</color>
+    <color name="colorAccent">#64c1ff</color>
+    <color name="colorSecondary">#0091ea</color>
+    <color name="fragment_background_color">#141414</color>
+
+    <color name="toolbar_color">#0091EA</color>
+
+    <color name="searchBar_input_card_color">#202020</color>
+    <color name="searchBar_input_card_stroke_color">#151515</color>
+    <color name="dialog_text_color">#fafafa</color>
+
+    <color name="table_occupied_color">#E53935</color>
+    <color name="table_free_color">#00ACC1</color>
+    <color name="table_ready_color">#43A047</color>
+</resources>

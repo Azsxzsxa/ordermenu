@@ -11,7 +11,6 @@
     <string name="login_register">Register</string>
     <string name="login_not_filled">You didn\'t fill in all the fields</string>
     <string name="search">Search</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="review_order">Review Order</string>
     <string name="toolbar_add_to_order">Add to order</string>
@@ -26,7 +25,7 @@
     <string name="log_out">Log out</string>
     <string name="toolBarTables">Tables</string>
     <string name="Menu_list">Menu list</string>
-    <string name="title_activity_order_history">OrderHistoryActivity</string>
+    <string name="title_activity_order_history">Order History</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>

@@ -17,7 +17,7 @@
             android:id="@+id/menuCategory_search_sv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/rounded_card"
+            android:background="@drawable/search_bar_background"
             android:imeOptions="actionDone"
             android:inputType="textCapWords"
             android:padding="4dp"
@@ -30,7 +30,8 @@
             android:id="@+id/menuCategory_items_rv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/menuCategory_search_sv" />
+            android:layout_below="@+id/menuCategory_search_sv"
+            android:layout_marginTop="@dimen/size_small" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/menuCategory_search_rv"

@@ -3,6 +3,7 @@ package com.example.ordermenu.UI;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
@@ -21,6 +22,7 @@ import com.example.ordermenu.Utils.Database;
 import com.example.ordermenu.Utils.Logger;
 import com.example.ordermenu.Utils.OrderUtil;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -54,7 +56,36 @@ public class TablesActivity extends AppCompatActivity {
 
         progressBar = findViewById(R.id.tablesActivity_pb);
 
-        setTitle(R.string.toolBarTables);
+        MaterialToolbar toolbar = findViewById(R.id.tables_toolbar);
+        toolbar.inflateMenu(R.menu.toolbar_menu);
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(android.view.MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.actionMenu_logOut:
+                        FirebaseAuth.getInstance().signOut();
+                        return true;
+                    case R.id.actionMenu_toMenu:
+                        if (OrderUtil.getInstance().getAllMenuItemsList() != null) {
+                            Intent intentMenu = new Intent(TablesActivity.this, MenuAvailableActivity.class);
+                            startActivity(intentMenu);
+                        } else {
+                            Toast.makeText(TablesActivity.this, "Getting info from database, please try again", Toast.LENGTH_SHORT).show();
+                        }
+                        return true;
+                    case R.id.actionMenu_toOrderHistory:
+                        if (Database.getInstance().getRestaurantId() != null) {
+                            Intent intentOrders = new Intent(TablesActivity.this, OrderHistoryActivity.class);
+                            startActivity(intentOrders);
+                        } else {
+                            Toast.makeText(TablesActivity.this, "Getting info from database, please try again", Toast.LENGTH_SHORT).show();
+                        }
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        });
 
         setupFirebaseAuth();
     }
@@ -168,39 +199,5 @@ public class TablesActivity extends AppCompatActivity {
                 }
             }
         };
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull android.view.MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.actionMenu_logOut:
-                FirebaseAuth.getInstance().signOut();
-                return true;
-            case R.id.actionMenu_toMenu:
-                if (OrderUtil.getInstance().getAllMenuItemsList() != null) {
-                    Intent intentMenu = new Intent(TablesActivity.this, MenuAvailableActivity.class);
-                    startActivity(intentMenu);
-                } else {
-                    Toast.makeText(this, "Getting info from database, please try again", Toast.LENGTH_SHORT).show();
-                }
-                return true;
-            case R.id.actionMenu_toOrderHistory:
-                if (Database.getInstance().getRestaurantId() != null) {
-                    Intent intentOrders = new Intent(TablesActivity.this, OrderHistoryActivity.class);
-                    startActivity(intentOrders);
-                } else {
-                    Toast.makeText(this, "Getting info from database, please try again", Toast.LENGTH_SHORT).show();
-                }
-
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 }

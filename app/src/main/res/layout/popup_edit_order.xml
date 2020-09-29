@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_margin="@dimen/size_medium"
-        android:textColor="#000000"
+        android:textColor="@color/dialog_text_color"
         android:textSize="18sp"
         tools:text="pizza" />
 
@@ -31,7 +31,8 @@
             android:id="@+id/orderPopup_minus_btn"
             android:layout_width="45dp"
             android:layout_height="45dp"
-            android:text="-" />
+            android:text="-"
+            app:cornerRadius="@dimen/button_corner_radius" />
 
         <TextView
             android:id="@+id/orderPopup_quantity_tv"
@@ -48,7 +49,8 @@
             android:id="@+id/orderPopup_plus_btn"
             android:layout_width="45dp"
             android:layout_height="45dp"
-            android:text="+" />
+            android:text="+"
+            app:cornerRadius="@dimen/button_corner_radius" />
 
     </LinearLayout>
 
