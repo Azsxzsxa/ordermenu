@@ -8,6 +8,7 @@
     <color name="fragment_background_color">#141414</color>
 
     <color name="toolbar_color">#0091EA</color>
+    <color name="toolbar_text_color">#0f0f0f</color>
 
     <color name="searchBar_input_card_color">#202020</color>
     <color name="searchBar_input_card_stroke_color">#151515</color>

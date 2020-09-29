@@ -8,42 +8,40 @@
     android:elevation="2dp"
     app:cardCornerRadius="@dimen/card_corner_radius">
 
-        <RelativeLayout
-            android:id="@+id/top_RL"
+    <RelativeLayout
+        android:id="@+id/top_RL"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/size_medium">
+
+        <TextView
+            android:id="@+id/order_name_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="4dp"
+            android:layout_toStartOf="@id/buttonLayout"
+            android:textSize="18sp"
+            tools:text="item name" />
+
+        <LinearLayout
+            android:id="@+id/buttonLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/size_medium">
+            android:layout_alignParentEnd="true"
+            android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/order_name_tv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="4dp"
-                android:layout_toStartOf="@id/buttonLayout"
-                android:hint="item name"
-                android:textSize="18sp" />
-
-            <LinearLayout
-                android:id="@+id/buttonLayout"
+                android:id="@+id/order_quantity_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:orientation="horizontal">
+                android:padding="@dimen/size_medium"
+                android:textSize="18sp"
+                tools:text="0" />
 
+        </LinearLayout>
 
-                <TextView
-                    android:id="@+id/order_quantity_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:hint="0"
-                    android:padding="@dimen/size_medium"
-                    android:textSize="18sp" />
-
-            </LinearLayout>
-
-
-        </RelativeLayout>
+    </RelativeLayout>
 
 </com.google.android.material.card.MaterialCardView>

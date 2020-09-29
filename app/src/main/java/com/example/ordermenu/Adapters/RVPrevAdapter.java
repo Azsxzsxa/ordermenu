@@ -17,7 +17,6 @@ import java.util.List;
 public class RVPrevAdapter extends RecyclerView.Adapter<RVPrevAdapter.ViewHolder> {
     private List<MenuItem> prevList;
     private LayoutInflater mInflater;
-//    private ItemClickListener mClickListener;
 
     // data is passed into the constructor
     public RVPrevAdapter(Context context, List<MenuItem> prevList) {
@@ -25,7 +24,6 @@ public class RVPrevAdapter extends RecyclerView.Adapter<RVPrevAdapter.ViewHolder
         this.prevList = prevList;
     }
 
-    // inflates the row layout from xml when needed
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -33,16 +31,14 @@ public class RVPrevAdapter extends RecyclerView.Adapter<RVPrevAdapter.ViewHolder
         return new ViewHolder(view);
     }
 
-    // binds the data to the TextView in each row
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         String name = prevList.get(position).getName();
-        String quant = String.valueOf(prevList.get(position).getQuantity());
+        String quantity = String.valueOf(prevList.get(position).getQuantity());
         holder.itemName.setText(name);
-        holder.itemQuant.setText(quant);
+        holder.itemQuantity.setText(quantity);
     }
 
-    // total number of rows
     @Override
     public int getItemCount() {
         return prevList.size();
@@ -52,33 +48,12 @@ public class RVPrevAdapter extends RecyclerView.Adapter<RVPrevAdapter.ViewHolder
     // stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView itemName;
-        TextView itemQuant;
+        TextView itemQuantity;
 
         ViewHolder(View itemView) {
             super(itemView);
-            itemName = itemView.findViewById(R.id.menuReview_prev_quantity_tv);
-            itemQuant = itemView.findViewById(R.id.menuReview_prev_name_tv);
-//            itemView.setOnClickListener(this);
+            itemQuantity = itemView.findViewById(R.id.menuReview_prev_quantity_tv);
+            itemName = itemView.findViewById(R.id.menuReview_prev_name_tv);
         }
-
-//        @Override
-//        public void onClick(View view) {
-//            if (mClickListener != null) mClickListener.onTableClick(view, getAdapterPosition());
-//        }
     }
-
-    // convenience method for getting data at click position
-    String getItem(int id) {
-        return prevList.get(id).getDocument_id() + "";
-    }
-
-    // allows clicks events to be caught
-//    public void setClickListener(ItemClickListener itemClickListener) {
-//        this.mClickListener = itemClickListener;
-//    }
-//
-//    // parent activity will implement this method to respond to click events
-//    public interface ItemClickListener {
-//        void onTableClick(View view, int position);
-//    }
 }

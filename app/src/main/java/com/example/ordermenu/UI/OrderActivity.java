@@ -11,7 +11,6 @@ import com.example.ordermenu.Models.MenuItem;
 import com.example.ordermenu.Models.Order;
 import com.example.ordermenu.Utils.Database;
 import com.example.ordermenu.Utils.OrderUtil;
-import com.google.android.gms.common.api.Batch;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -20,7 +19,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -37,6 +35,7 @@ import com.google.firebase.firestore.WriteBatch;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import static com.example.ordermenu.Utils.StrUtil.DB_TABLE_STATUS_FREE;
 import static com.example.ordermenu.Utils.StrUtil.DB_TABLE_STATUS_SERVED;
@@ -47,11 +46,14 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
     RVOrderAdapter _rvOrderAdapter;
     FloatingActionButton clearTableFab;
     FloatingActionButton markReadyFab;
+    TextView totalPriceTv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order);
+
+        totalPriceTv = findViewById(R.id.order_total_price_textView);
 
         FloatingActionButton toMenuFab = findViewById(R.id.order_toMenu_fab);
         toMenuFab.setOnClickListener(new View.OnClickListener() {
@@ -74,7 +76,7 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
                                 Database.getInstance().getOrderRef().get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                                     @Override
                                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                        Database.getInstance().getTableRef().update("occupied",DB_TABLE_STATUS_SERVED);
+                                        Database.getInstance().getTableRef().update("occupied", DB_TABLE_STATUS_SERVED);
                                     }
                                 });
                             }
@@ -98,7 +100,7 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
                                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                                         if (!queryDocumentSnapshots.isEmpty()) {
                                             WriteBatch resetOrderBatch = Database.getInstance().getDb().batch();
-                                            resetOrderBatch.update(Database.getInstance().getTableRef(),"occupied",DB_TABLE_STATUS_FREE);
+                                            resetOrderBatch.update(Database.getInstance().getTableRef(), "occupied", DB_TABLE_STATUS_FREE);
                                             List<MenuItem> menuItems = new ArrayList<>();
                                             for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                                 menuItems.add(documentSnapshot.toObject(MenuItem.class));
@@ -118,7 +120,7 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
                                                     OrderUtil.getInstance().getSectionDocID()
                                             );
                                             resetOrderBatch.set(Database.getInstance().restRef.document(Database.getInstance().getRestaurantId())
-                                                    .collection("History").document(ref.getId()),order);
+                                                    .collection("History").document(ref.getId()), order);
                                             resetOrderBatch.commit();
                                         }
                                     }
@@ -156,6 +158,13 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
                     if (_menuItemList.isEmpty()) {
                         clearTableFab.setEnabled(false);
                         markReadyFab.setEnabled(false);
+                    } else {
+                        //Set order total price
+                        int price = 0;
+                        for (MenuItem menuItem : _menuItemList)
+                            price += menuItem.getPrice() * menuItem.getQuantity();
+
+                        totalPriceTv.setText(String.format(Locale.getDefault(),"Order total price: %d", price));
                     }
                 }
             }
@@ -178,7 +187,7 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
     @Override
     public void onEditClick(View v, final int position) {
         final Dialog dialog = new Dialog(this, R.style.MyThemeDialogCustom);
-        dialog.setContentView(R.layout.popup_edit_order);
+        dialog.setContentView(R.layout.dialog_edit_order);
 
         TextView itemName = dialog.findViewById(R.id.orderPopup_name_tv);
         final TextView itemQuantity = dialog.findViewById(R.id.orderPopup_quantity_tv);
@@ -254,8 +263,8 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
 
                     .setNegativeButton(android.R.string.no, null)
                     .show();
-        }else{
-        super.onBackPressed();
+        } else {
+            super.onBackPressed();
         }
     }
 }
