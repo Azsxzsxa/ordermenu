@@ -40,6 +40,8 @@
     <string name="table_not_free">The table is not free, make sure you have selected the correct order to restore or clear the table</string>
     <string name="exit_discrd_order">New items have been selected but order has not been submitted. Continue and discard the new selected items?</string>
     <string name="warning">Warning</string>
+    <string name="dialog_yes">yes</string>
+    <string name="dialog_no">No</string>
 
 
 </resources>

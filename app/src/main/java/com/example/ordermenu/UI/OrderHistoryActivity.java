@@ -1,12 +1,14 @@
 package com.example.ordermenu.UI;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,6 +23,7 @@ import com.example.ordermenu.R;
 import com.example.ordermenu.Utils.Database;
 import com.example.ordermenu.Utils.OrderUtil;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -87,72 +90,91 @@ public class OrderHistoryActivity extends AppCompatActivity implements RVOrderHi
     public void onRestoreClick(View view, final int position) {
         final String sectionId = _orderItemList.get(position).getSectionId();
         final String tableId = _orderItemList.get(position).getTableId();
-        new AlertDialog.Builder(OrderHistoryActivity.this)
-                .setMessage(R.string.question_restore_order)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        Database.getInstance().restRef.document(Database.getInstance().getRestaurantId())
-                                .collection(DB_CURRENT).document(sectionId)
-                                .collection(DB_TABLES).document(tableId)
-                                .get()
-                                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                        Table table = documentSnapshot.toObject(Table.class);
-                                        assert table != null;
-                                        if (table.getOccupied().equals(DB_TABLE_STATUS_FREE)) {
-                                            //add the items to the restored order
-                                            WriteBatch batch = Database.getInstance().getDb().batch();
-                                            for (MenuItem menuItem : _orderItemList.get(position).getMenuItems()) {
-                                                DocumentReference documentReference = Database.getInstance().restRef.document(Database.getInstance().getRestaurantId())
-                                                        .collection(DB_CURRENT).document(sectionId)
-                                                        .collection(DB_TABLES).document(tableId)
-                                                        .collection(DB_ORDER)
-                                                        .document(menuItem.getDocument_id());
-                                                batch.set(documentReference, menuItem);
-                                            }
 
-                                            //update table status
-                                            batch.update(Database.getInstance().restRef.document(Database.getInstance().getRestaurantId())
-                                                    .collection(DB_CURRENT).document(sectionId)
-                                                    .collection(DB_TABLES).document(tableId), "occupied", DB_TABLE_STATUS_BUSY);
+        //Display dialog
+        final Dialog dialog = new Dialog(this, R.style.MyThemeDialogCustom);
+        dialog.setContentView(R.layout.dialog_yes_no);
 
-                                            //delete order from history
-                                            DocumentReference deleteFromHistory = Database.getInstance().restRef.document(Database.getInstance()
-                                                    .getRestaurantId()).collection(DB_HISTORY).document(_orderItemList.get(position).getDocumentId());
-                                            batch.delete(deleteFromHistory);
-                                            batch.commit().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                @Override
-                                                public void onSuccess(Void aVoid) {
-                                                    _orderHistoryAdapter.notifyItemRemoved(position);
-                                                }
-                                            });
-                                        } else {
-                                            new AlertDialog.Builder(OrderHistoryActivity.this)
-                                                    .setTitle("Action incompleted")
-                                                    .setMessage(R.string.table_not_free)
+        TextView textView = dialog.findViewById(R.id.dialog_yesNo_text);
+        MaterialButton yesBtn = dialog.findViewById(R.id.dialog_yesNo_yes_btn);
+        MaterialButton noBtn = dialog.findViewById(R.id.dialog_yesNo_No_btn);
 
-                                                    // Specifying a listener allows you to take an action before dismissing the dialog.
-                                                    // The dialog is automatically dismissed when a dialog button is clicked.
-//                                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-//                                                        public void onClick(DialogInterface dialog, int which) {
-//                                                            // Continue with delete operation
-//                                                        }
-//                                                    })
+        textView.setText(R.string.question_restore_order);
 
-                                                    // A null listener allows the button to dismiss the dialog and take no further action.
-                                                    .show();
-                                        }
+        yesBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Database.getInstance().restRef.document(Database.getInstance().getRestaurantId())
+                        .collection(DB_CURRENT).document(sectionId)
+                        .collection(DB_TABLES).document(tableId)
+                        .get()
+                        .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                            @Override
+                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                Table table = documentSnapshot.toObject(Table.class);
+                                assert table != null;
+                                if (table.getOccupied().equals(DB_TABLE_STATUS_FREE)) {
+                                    //add the items to the restored order
+                                    WriteBatch batch = Database.getInstance().getDb().batch();
+                                    for (MenuItem menuItem : _orderItemList.get(position).getMenuItems()) {
+                                        DocumentReference documentReference = Database.getInstance().restRef.document(Database.getInstance().getRestaurantId())
+                                                .collection(DB_CURRENT).document(sectionId)
+                                                .collection(DB_TABLES).document(tableId)
+                                                .collection(DB_ORDER)
+                                                .document(menuItem.getDocument_id());
+                                        batch.set(documentReference, menuItem);
                                     }
-                                });
 
+                                    //update table status
+                                    batch.update(Database.getInstance().restRef.document(Database.getInstance().getRestaurantId())
+                                            .collection(DB_CURRENT).document(sectionId)
+                                            .collection(DB_TABLES).document(tableId), "occupied", DB_TABLE_STATUS_BUSY);
 
-//                        Intent intent = new Intent(getApplication(), TablesActivity.class);
-//                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                        startActivity(intent);
-                    }
-                })
-                .setNegativeButton(android.R.string.no, null)
-                .show();
+                                    //delete order from history
+                                    DocumentReference deleteFromHistory = Database.getInstance().restRef.document(Database.getInstance()
+                                            .getRestaurantId()).collection(DB_HISTORY).document(_orderItemList.get(position).getDocumentId());
+                                    batch.delete(deleteFromHistory);
+                                    batch.commit().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            _orderHistoryAdapter.notifyItemRemoved(position);
+                                            dialog.cancel();
+                                        }
+                                    });
+                                } else {
+                                    dialog.cancel();
+
+                                    //Display dialog
+                                    final Dialog innerDialog = new Dialog(OrderHistoryActivity.this, R.style.MyThemeDialogCustom);
+                                    innerDialog.setContentView(R.layout.dialog_info_warning);
+
+                                    TextView textView = innerDialog.findViewById(R.id.dialog_infoWarning_text);
+                                    MaterialButton okBtn = innerDialog.findViewById(R.id.dialog_infoWarning_ok_btn);
+
+                                    textView.setText(R.string.table_not_free);
+
+                                    okBtn.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            innerDialog.cancel();
+                                        }
+                                    });
+
+                                    innerDialog.setCancelable(true);
+                                    innerDialog.show();
+                                }
+                            }
+                        });
+
+            }
+        });
+
+        noBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+            }
+        });
+        dialog.show();
     }
 }
