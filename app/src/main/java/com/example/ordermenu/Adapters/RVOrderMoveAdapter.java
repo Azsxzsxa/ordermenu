@@ -1,80 +1,85 @@
 package com.example.ordermenu.Adapters;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
+import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.ordermenu.Models.Table;
-import com.example.ordermenu.R;
-import com.google.android.material.card.MaterialCardView;
-
-import java.util.List;
-
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class RVTableAdapter extends RecyclerView.Adapter<RVTableAdapter.ViewHolder> {
-    private static final String TAG = "RVTableAdapter";
+import com.example.ordermenu.Models.Order;
+import com.example.ordermenu.Models.Section;
+import com.example.ordermenu.Models.Table;
+import com.example.ordermenu.R;
+import com.example.ordermenu.Utils.Settings;
 
-    private List<Table> mTableList;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+public class RVOrderMoveAdapter extends RecyclerView.Adapter<RVOrderMoveAdapter.ViewHolder> {
+    private List<Section> mData;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
+    private Context context;
 
     // data is passed into the constructor
-    public RVTableAdapter(Context context, List<Table> tableList) {
+    public RVOrderMoveAdapter(Context context, List<Section> data) {
         this.mInflater = LayoutInflater.from(context);
-        this.mTableList = tableList;
+        this.mData = data;
+        this.context = context;
     }
 
     // inflates the row layout from xml when needed
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.rv_tables_item, parent, false);
+        View view = mInflater.inflate(R.layout.rv_ordermove_item, parent, false);
         return new ViewHolder(view);
     }
 
     // binds the data to the TextView in each row
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        String line = mTableList.get(position).getNumber() + "";
-        holder.myTextView.setText(line);
+        String sectionName = mData.get(position).getName();
+        holder.sectionName.setText(sectionName);
 
-        if (mTableList.get(position).getOccupied() == null) {
-            holder.relativeLayout.setBackgroundResource(R.drawable.table_free_background);
-        } else {
-            if (mTableList.get(position).getOccupied().equals("busy")) {
-                holder.relativeLayout.setBackgroundResource(R.drawable.table_occupied_background);
-            } else if (mTableList.get(position).getOccupied().equals("free")) {
-                holder.relativeLayout.setBackgroundResource(R.drawable.table_free_background);
-            } else {
-                holder.relativeLayout.setBackgroundResource(R.drawable.table_ready_background);
-            }
+
+        ArrayList<Table> tables = new ArrayList<>();
+        for (int tableNumber = 1; tableNumber < mData.get(position).getTableCount(); tableNumber++) {
+            Table table = new Table(tableNumber,null,null,null);
+            tables.add(table);
         }
+        if (!tables.isEmpty()) {
+            RVTableAdapter tableAdapter;
+            holder.sectionRV.setLayoutManager(new GridLayoutManager(context,4));
+            tableAdapter = new RVTableAdapter(context, tables);
+            holder.sectionRV.setAdapter(tableAdapter);
+        }
+
     }
 
     // total number of rows
     @Override
     public int getItemCount() {
-        return mTableList.size();
+        return mData.size();
     }
 
 
     // stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView myTextView;
-        RelativeLayout relativeLayout;
+        TextView sectionName;
+        RecyclerView sectionRV;
 
         ViewHolder(View itemView) {
             super(itemView);
-            myTextView = itemView.findViewById(R.id.tables_number_tv);
-            relativeLayout = itemView.findViewById(R.id.tables_relativeLayout);
-            itemView.setOnClickListener(this);
+            sectionName = itemView.findViewById(R.id.ordermove_item_title_tv);
+            sectionRV = itemView.findViewById(R.id.ordermove_item_rv);
         }
 
         @Override
@@ -84,8 +89,8 @@ public class RVTableAdapter extends RecyclerView.Adapter<RVTableAdapter.ViewHold
     }
 
     // convenience method for getting data at click position
-    String getItem(int id) {
-        return mTableList.get(id).getNumber() + "";
+    void getItem(int id) {
+//        return mData.get(id);
     }
 
     // allows clicks events to be caught

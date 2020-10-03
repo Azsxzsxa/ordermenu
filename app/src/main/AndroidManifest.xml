@@ -25,6 +25,9 @@
             android:name=".UI.OrderActivity"
             android:label="@string/order" />
         <activity
+            android:name=".UI.OrderMoveActivity"
+            android:label="@string/move_order" />
+        <activity
             android:name=".UI.MenuActivity"
             android:label="@string/menu" />
         <activity android:name=".UI.TablesActivity">

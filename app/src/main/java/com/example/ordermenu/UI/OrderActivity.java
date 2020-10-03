@@ -22,6 +22,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -45,6 +46,7 @@ import static com.example.ordermenu.Utils.StrUtil.DB_TABLE_STATUS_SERVED;
 
 public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.ItemClickListener {
 
+    private static final String TAG = "OrderActivity";
     ArrayList<MenuItem> _menuItemList = new ArrayList<>();
     RVOrderAdapter _rvOrderAdapter;
     FloatingActionButton clearTableFab;
@@ -194,7 +196,8 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
     }
 
     private void bottomNavMove() {
-
+        Intent intent = new Intent(getApplication(), OrderMoveActivity.class);
+        startActivity(intent);
     }
 
     private void bottomNavCancel() {
@@ -220,13 +223,24 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
         yesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Database.getInstance().getOrderRef().get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        Database.getInstance().getTableRef().update("occupied", DB_TABLE_STATUS_SERVED);
-                    }
-                });
-                dialog.cancel();
+                if (!OrderUtil.getInstance().getAlreadyOrderedList().isEmpty()) {
+                    Database.getInstance().getOrderRef().get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            Database.getInstance().getTableRef().update("occupied", DB_TABLE_STATUS_SERVED)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    dialog.cancel();
+                                    finish();
+                                }
+                            });
+                        }
+                    });
+                } else {
+                    dialog.cancel();
+                }
+
             }
         });
 

@@ -47,6 +47,7 @@
     <string name="add_order">Add order</string>
     <string name="cancel_order">Cancel order</string>
     <string name="move_order">Move order</string>
+    <string name="title_activity_order_move">Move to</string>
 
 
 </resources>
