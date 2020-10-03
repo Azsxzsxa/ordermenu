@@ -12,9 +12,11 @@ import com.example.ordermenu.Models.Order;
 import com.example.ordermenu.Utils.Database;
 import com.example.ordermenu.Utils.OrderUtil;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -56,123 +58,36 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
 
         totalPriceTv = findViewById(R.id.order_total_price_textView);
 
-        FloatingActionButton toMenuFab = findViewById(R.id.order_toMenu_fab);
-        toMenuFab.setOnClickListener(new View.OnClickListener() {
+        BottomNavigationView bottomNavigationView = findViewById(R.id.order_bottomnavigation);
+        bottomNavigationView.setSelectedItemId(R.id.order_bottomnav_add);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplication(), MenuActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
+            public boolean onNavigationItemSelected(@NonNull android.view.MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.order_bottomnav_clear:
+                        bottomNavClear();
+                        return false;
+                    case R.id.order_bottomnav_served:
+                        bottomNavServed();
+                        return false;
+                    case R.id.order_bottomnav_add:
+                        bottomNavAdd();
+                        return false;
+                    case R.id.order_bottomnav_cancel:
+                        bottomNavCancel();
+                        return false;
+                    case R.id.order_bottomnav_move:
+                        bottomNavMove();
+                        return false;
+                    default:
+                        return false;
 
-        markReadyFab = findViewById(R.id.order_ready_fab);
-        markReadyFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                //Display dialog
-                final Dialog dialog = new Dialog(OrderActivity.this, R.style.MyThemeDialogCustom);
-                dialog.setContentView(R.layout.dialog_yes_no);
-
-                TextView textView = dialog.findViewById(R.id.dialog_yesNo_text);
-                MaterialButton yesBtn = dialog.findViewById(R.id.dialog_yesNo_yes_btn);
-                MaterialButton noBtn = dialog.findViewById(R.id.dialog_yesNo_No_btn);
-
-                textView.setText(R.string.question_order_ready);
-
-                yesBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Database.getInstance().getOrderRef().get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                            @Override
-                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                Database.getInstance().getTableRef().update("occupied", DB_TABLE_STATUS_SERVED);
-                            }
-                        });
-                        dialog.cancel();
-                    }
-                });
-
-                noBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.cancel();
-                    }
-                });
-                dialog.show();
-
-            }
-        });
-
-        clearTableFab = findViewById(R.id.order_clear_fab);
-        clearTableFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                //Display dialog
-                final Dialog dialog = new Dialog(OrderActivity.this, R.style.MyThemeDialogCustom);
-                dialog.setContentView(R.layout.dialog_yes_no);
-
-                TextView textView = dialog.findViewById(R.id.dialog_yesNo_text);
-                MaterialButton yesBtn = dialog.findViewById(R.id.dialog_yesNo_yes_btn);
-                MaterialButton noBtn = dialog.findViewById(R.id.dialog_yesNo_No_btn);
-
-                textView.setText(R.string.question_clear_table);
-
-                yesBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Database.getInstance().getOrderRef().get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                            @Override
-                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                if (!queryDocumentSnapshots.isEmpty()) {
-                                    WriteBatch resetOrderBatch = Database.getInstance().getDb().batch();
-                                    resetOrderBatch.update(Database.getInstance().getTableRef(), "occupied", DB_TABLE_STATUS_FREE);
-                                    List<MenuItem> menuItems = new ArrayList<>();
-                                    for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                                        menuItems.add(documentSnapshot.toObject(MenuItem.class));
-                                        resetOrderBatch.delete(documentSnapshot.getReference());
-                                    }
-                                    DocumentReference ref = Database.getInstance().restRef
-                                            .document(Database.getInstance().getRestaurantId())
-                                            .collection("History").document();
-                                    Order order = new Order(FirebaseAuth.getInstance().getUid(),
-                                            OrderUtil.getInstance().getTableNumber(),
-                                            OrderUtil.getInstance().getSectionName(),
-                                            OrderUtil.getInstance().getStartOrderDate(),
-                                            new Date(),
-                                            ref.getId(),
-                                            menuItems,
-                                            OrderUtil.getInstance().getTableDocID(),
-                                            OrderUtil.getInstance().getSectionDocID()
-                                    );
-                                    resetOrderBatch.set(Database.getInstance().restRef.document(Database.getInstance().getRestaurantId())
-                                            .collection("History").document(ref.getId()), order);
-                                    resetOrderBatch.commit();
-                                }
-                            }
-                        });
-
-                        //Update table to be free
-                        dialog.cancel();
-                        Intent intent = new Intent(getApplication(), TablesActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
-                    }
-                });
-
-                noBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.cancel();
-                    }
-                });
-                dialog.show();
+                }
             }
         });
         getOrder();
     }
+
 
     private void getOrder() {
         Database.getInstance().getOrderRef().addSnapshotListener(OrderActivity.this, new EventListener<QuerySnapshot>() {
@@ -189,11 +104,7 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
                     }
                     OrderUtil.getInstance().setAlreadyOrderedList(_menuItemList);
                     initOrderRV();
-                    if (_menuItemList.isEmpty()) {
-                        clearTableFab.setEnabled(false);
-                        markReadyFab.setEnabled(false);
-                    } else {
-                        //Set order total price
+                    if (!_menuItemList.isEmpty()) {
                         int price = 0;
                         for (MenuItem menuItem : _menuItemList)
                             price += menuItem.getPrice() * menuItem.getQuantity();
@@ -277,6 +188,113 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
                                 }
                             });
                 }
+            }
+        });
+        dialog.show();
+    }
+
+    private void bottomNavMove() {
+
+    }
+
+    private void bottomNavCancel() {
+
+    }
+
+    private void bottomNavAdd() {
+        Intent intent = new Intent(getApplication(), MenuActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private void bottomNavServed() {
+        final Dialog dialog = new Dialog(OrderActivity.this, R.style.MyThemeDialogCustom);
+        dialog.setContentView(R.layout.dialog_yes_no);
+
+        TextView textView = dialog.findViewById(R.id.dialog_yesNo_text);
+        MaterialButton yesBtn = dialog.findViewById(R.id.dialog_yesNo_yes_btn);
+        MaterialButton noBtn = dialog.findViewById(R.id.dialog_yesNo_No_btn);
+
+        textView.setText(R.string.question_order_ready);
+
+        yesBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Database.getInstance().getOrderRef().get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        Database.getInstance().getTableRef().update("occupied", DB_TABLE_STATUS_SERVED);
+                    }
+                });
+                dialog.cancel();
+            }
+        });
+
+        noBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+            }
+        });
+        dialog.show();
+    }
+
+    private void bottomNavClear() {
+        final Dialog dialog = new Dialog(OrderActivity.this, R.style.MyThemeDialogCustom);
+        dialog.setContentView(R.layout.dialog_yes_no);
+
+        TextView textView = dialog.findViewById(R.id.dialog_yesNo_text);
+        MaterialButton yesBtn = dialog.findViewById(R.id.dialog_yesNo_yes_btn);
+        MaterialButton noBtn = dialog.findViewById(R.id.dialog_yesNo_No_btn);
+
+        textView.setText(R.string.question_clear_table);
+
+        yesBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Database.getInstance().getOrderRef().get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        if (!queryDocumentSnapshots.isEmpty()) {
+                            WriteBatch resetOrderBatch = Database.getInstance().getDb().batch();
+                            resetOrderBatch.update(Database.getInstance().getTableRef(), "occupied", DB_TABLE_STATUS_FREE);
+                            List<MenuItem> menuItems = new ArrayList<>();
+                            for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                menuItems.add(documentSnapshot.toObject(MenuItem.class));
+                                resetOrderBatch.delete(documentSnapshot.getReference());
+                            }
+                            DocumentReference ref = Database.getInstance().restRef
+                                    .document(Database.getInstance().getRestaurantId())
+                                    .collection("History").document();
+                            Order order = new Order(FirebaseAuth.getInstance().getUid(),
+                                    OrderUtil.getInstance().getTableNumber(),
+                                    OrderUtil.getInstance().getSectionName(),
+                                    OrderUtil.getInstance().getStartOrderDate(),
+                                    new Date(),
+                                    ref.getId(),
+                                    menuItems,
+                                    OrderUtil.getInstance().getTableDocID(),
+                                    OrderUtil.getInstance().getSectionDocID()
+                            );
+                            resetOrderBatch.set(Database.getInstance().restRef.document(Database.getInstance().getRestaurantId())
+                                    .collection("History").document(ref.getId()), order);
+                            resetOrderBatch.commit();
+                        }
+                    }
+                });
+
+                //Update table to be free
+                dialog.cancel();
+                Intent intent = new Intent(getApplication(), TablesActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            }
+        });
+
+        noBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
             }
         });
         dialog.show();

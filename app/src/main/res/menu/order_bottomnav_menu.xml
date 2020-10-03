@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/order_bottomnav_clear"
+        android:enabled="true"
+        android:icon="@drawable/ic_outline_delete_sweep_24"
+        android:title="@string/clear_table"/>
+    <item
+        android:id="@+id/order_bottomnav_served"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_fastfood_24"
+        android:title="@string/served_table"/>
+
+    <item
+        android:id="@+id/order_bottomnav_add"
+        android:enabled="true"
+        android:icon="@drawable/ic_outline_add_24"
+        android:title="@string/add_order"/>
+
+    <item
+        android:id="@+id/order_bottomnav_cancel"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_cancel_presentation_24"
+        android:title="@string/cancel_order"/>
+
+    <item
+        android:id="@+id/order_bottomnav_move"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_edit_location_24"
+        android:title="@string/move_order"/>
+</menu>

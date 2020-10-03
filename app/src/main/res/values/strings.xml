@@ -42,6 +42,11 @@
     <string name="warning">Warning</string>
     <string name="dialog_yes">yes</string>
     <string name="dialog_no">No</string>
+    <string name="clear_table">Clear table</string>
+    <string name="served_table">Served order</string>
+    <string name="add_order">Add order</string>
+    <string name="cancel_order">Cancel order</string>
+    <string name="move_order">Move order</string>
 
 
 </resources>

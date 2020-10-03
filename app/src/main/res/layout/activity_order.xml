@@ -54,34 +54,12 @@
         android:gravity="center_horizontal"
         tools:text="total price : 10" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/order_toMenu_fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
+    <com.google.android.material.bottomnavigation.BottomNavigationView
         android:layout_alignParentBottom="true"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@drawable/ic_outline_add_24"
-        tools:ignore="RelativeOverlap" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/order_ready_fab"
-        android:layout_width="wrap_content"
+        android:id="@+id/order_bottomnavigation"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@drawable/ic_baseline_fastfood_24"
-        tools:enabled="false" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/order_clear_fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@drawable/ic_outline_delete_sweep_24"
-        tools:enabled="false" />
+        app:labelVisibilityMode="labeled"
+        app:menu="@menu/order_bottomnav_menu" />
 
 </RelativeLayout>
