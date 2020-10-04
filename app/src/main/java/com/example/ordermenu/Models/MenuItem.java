@@ -1,5 +1,7 @@
 package com.example.ordermenu.Models;
 
+import androidx.annotation.NonNull;
+
 import java.util.Objects;
 
 public class MenuItem {
@@ -9,14 +11,16 @@ public class MenuItem {
     private int price;
     private int quantity;
     private Boolean available;
+    private String status;
 
-    public MenuItem(String document_id, String category, String name, int price, int quantity, Boolean available) {
+    public MenuItem(String document_id, String category, String name, int price, int quantity, Boolean available, String status) {
         this.document_id = document_id;
         this.category = category;
         this.name = name;
         this.price = price;
         this.quantity = quantity;
         this.available = available;
+        this.status = status;
     }
 
     public String getDocument_id() {
@@ -70,6 +74,15 @@ public class MenuItem {
         this.available = available;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    @NonNull
     @Override
     public String toString() {
         return "MenuItem{" +

@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static com.example.ordermenu.Utils.StrUtil.DB_MENUITEM_STATUS_ORDERED;
 import static com.example.ordermenu.Utils.StrUtil.DB_TABLE_STATUS_BUSY;
 
 public class MenuReviewFragment extends Fragment implements RVMenuItemAdapter.ItemClickListener {
@@ -91,6 +92,7 @@ public class MenuReviewFragment extends Fragment implements RVMenuItemAdapter.It
                 if (orderedList.contains(menuItem)) {
                     menuItem.setQuantity(menuItem.getQuantity() + orderedList.get(orderedList.indexOf(menuItem)).getQuantity());
                 }
+                menuItem.setStatus(DB_MENUITEM_STATUS_ORDERED);
                 Database.getInstance().getOrderRef().document(menuItem.getDocument_id())
                         .set(menuItem).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override

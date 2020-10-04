@@ -24,5 +24,9 @@ public final class StrUtil {
     public final static String DB_TABLE_STATUS_FREE = "free";
     public final static String DB_TABLE_STATUS_BUSY = "busy";
     public final static String DB_TABLE_STATUS_SERVED = "served";
+    public final static String DB_MENUITEM_STATUS_ORDERED = "ordered";
+    public final static String DB_MENUITEM_STATUS_CANCELED = "canceled";
+    public final static String DB_MENUITEM_STATUS_MODIFIED = "modified";
+    public final static String DB_MENUITEM_STATUS_DEFAULT = "default";
 
 }

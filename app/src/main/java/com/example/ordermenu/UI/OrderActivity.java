@@ -11,6 +11,7 @@ import com.example.ordermenu.Models.MenuItem;
 import com.example.ordermenu.Models.Order;
 import com.example.ordermenu.Utils.Database;
 import com.example.ordermenu.Utils.OrderUtil;
+import com.google.android.gms.common.api.Batch;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
@@ -41,6 +42,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import static com.example.ordermenu.Utils.StrUtil.DB_MENUITEM_STATUS_CANCELED;
+import static com.example.ordermenu.Utils.StrUtil.DB_MENUITEM_STATUS_MODIFIED;
 import static com.example.ordermenu.Utils.StrUtil.DB_TABLE_STATUS_FREE;
 import static com.example.ordermenu.Utils.StrUtil.DB_TABLE_STATUS_SERVED;
 
@@ -106,8 +109,9 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
                     for (DocumentSnapshot doc : value) {
                         MenuItem menuItem = doc.toObject(MenuItem.class);
                         if (menuItem != null) {
-//                            menuItem.setDocument_id(doc.getId());
-                            _menuItemList.add(menuItem);
+                            if (menuItem.getQuantity() > 0) {
+                                _menuItemList.add(menuItem);
+                            }
                         }
                     }
                     OrderUtil.getInstance().setAlreadyOrderedList(_menuItemList);
@@ -176,26 +180,19 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
             @Override
             public void onClick(View view) {
                 _menuItemList.get(position).setQuantity(Integer.parseInt(itemQuantity.getText().toString()));
+                _menuItemList.get(position).setStatus(DB_MENUITEM_STATUS_MODIFIED);
                 if (_menuItemList.get(position).getQuantity() == 0) {
-                    Database.getInstance().getOrderRef()
-                            .document(_menuItemList.get(position).getDocument_id())
-                            .delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            dialog.cancel();
-                        }
-                    });
-                } else {
-                    Database.getInstance().getOrderRef()
-                            .document(_menuItemList.get(position).getDocument_id())
-                            .set(_menuItemList.get(position)).
-                            addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    dialog.cancel();
-                                }
-                            });
+                    _menuItemList.get(position).setStatus(DB_MENUITEM_STATUS_CANCELED);
                 }
+                Database.getInstance().getOrderRef()
+                        .document(_menuItemList.get(position).getDocument_id())
+                        .set(_menuItemList.get(position)).
+                        addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                dialog.cancel();
+                            }
+                        });
             }
         });
         dialog.show();
@@ -207,7 +204,40 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
     }
 
     private void bottomNavCancel() {
+        final Dialog dialog = new Dialog(OrderActivity.this, R.style.MyThemeDialogCustom);
+        dialog.setContentView(R.layout.dialog_yes_no);
 
+        TextView textView = dialog.findViewById(R.id.dialog_yesNo_text);
+        MaterialButton yesBtn = dialog.findViewById(R.id.dialog_yesNo_yes_btn);
+        MaterialButton noBtn = dialog.findViewById(R.id.dialog_yesNo_No_btn);
+
+        textView.setText(R.string.question_clear_table);
+
+        yesBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                WriteBatch batch = Database.getInstance().getDb().batch();
+                for (MenuItem menuItem : OrderUtil.getInstance().getAlreadyOrderedList()) {
+                    menuItem.setQuantity(0);
+                    menuItem.setStatus(DB_MENUITEM_STATUS_CANCELED);
+                    batch.set(Database.getInstance().getOrderRef().document(menuItem.getDocument_id()), menuItem);
+                }
+                batch.commit().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        dialog.cancel();
+                    }
+                });
+            }
+        });
+
+        noBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+            }
+        });
+        dialog.show();
     }
 
     private void bottomNavAdd() {
@@ -235,12 +265,12 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
                         public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                             Database.getInstance().getTableRef().update("occupied", DB_TABLE_STATUS_SERVED)
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    dialog.cancel();
-                                    finish();
-                                }
-                            });
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            dialog.cancel();
+                                            finish();
+                                        }
+                                    });
                         }
                     });
                 } else {

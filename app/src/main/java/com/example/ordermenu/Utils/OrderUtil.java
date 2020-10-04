@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static com.example.ordermenu.Utils.StrUtil.DB_MENUITEM_STATUS_DEFAULT;
+
 public class OrderUtil {
     private static OrderUtil INSTANCE;
     private List<MenuItem> currentOrderList = new ArrayList<>();
@@ -148,9 +150,9 @@ public class OrderUtil {
         for (MenuItem menuItem : allMenuItemsList) {
 
             searchMenuItemsList.add(new MenuItem(menuItem.getDocument_id(), menuItem.getCategory(), menuItem.getName(),
-                    menuItem.getPrice(), menuItem.getQuantity(), menuItem.getAvailable()));
+                    menuItem.getPrice(), menuItem.getQuantity(), menuItem.getAvailable(),DB_MENUITEM_STATUS_DEFAULT));
             this.allMenuItemsList.add(new MenuItem(menuItem.getDocument_id(), menuItem.getCategory(), menuItem.getName(),
-                    menuItem.getPrice(), menuItem.getQuantity(), menuItem.getAvailable()));
+                    menuItem.getPrice(), menuItem.getQuantity(), menuItem.getAvailable(),DB_MENUITEM_STATUS_DEFAULT));
         }
 //        setSearchMenuItemsList(allMenuItemsList);
         updateSearchItemList();
@@ -192,7 +194,7 @@ public class OrderUtil {
 //        searchMenuItemsList.addAll(allMenuItemsList);
         for (MenuItem menuItem : allMenuItemsList) {
             searchMenuItemsList.add(new MenuItem(menuItem.getDocument_id(), menuItem.getCategory(), menuItem.getName(),
-                    menuItem.getPrice(), menuItem.getQuantity(), menuItem.getAvailable()));
+                    menuItem.getPrice(), menuItem.getQuantity(), menuItem.getAvailable(),DB_MENUITEM_STATUS_DEFAULT));
         }
     }
 }
