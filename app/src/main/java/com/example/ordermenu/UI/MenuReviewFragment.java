@@ -27,7 +27,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static com.example.ordermenu.Utils.StrUtil.DB_MENUITEM_STATUS_MODIFIED;
 import static com.example.ordermenu.Utils.StrUtil.DB_MENUITEM_STATUS_ORDERED;
+import static com.example.ordermenu.Utils.StrUtil.DB_MENUITEM_STATUS_SERVED;
 import static com.example.ordermenu.Utils.StrUtil.DB_TABLE_STATUS_BUSY;
 
 public class MenuReviewFragment extends Fragment implements RVMenuItemAdapter.ItemClickListener {
@@ -86,41 +88,51 @@ public class MenuReviewFragment extends Fragment implements RVMenuItemAdapter.It
         counter = 0;
         List<MenuItem> orderedList = OrderUtil.getInstance().getAlreadyOrderedList();
         for (MenuItem menuItem : _menuItemList) {
-            if (menuItem.getDocument_id() == null) {
-                Log.d(TAG, "sendOrderToDB: " + menuItem.getName() + " doc id null");
-            } else {
-                if (orderedList.contains(menuItem)) {
-                    menuItem.setQuantity(menuItem.getQuantity() + orderedList.get(orderedList.indexOf(menuItem)).getQuantity());
+            int selectedQuantity = menuItem.getQuantity();
+            if (orderedList.contains(menuItem)) {
+                menuItem.setQuantity(menuItem.getQuantity() + orderedList.get(orderedList.indexOf(menuItem)).getQuantity());
+                switch (orderedList.get(orderedList.indexOf(menuItem)).getStatus()) {
+                    case DB_MENUITEM_STATUS_ORDERED:
+                    case DB_MENUITEM_STATUS_MODIFIED:
+                        menuItem.setStatus(DB_MENUITEM_STATUS_MODIFIED);
+                        menuItem.setKitchenQuantity(menuItem.getQuantity());
+                        break;
+                    case DB_MENUITEM_STATUS_SERVED:
+                        menuItem.setStatus(DB_MENUITEM_STATUS_ORDERED);
+                        menuItem.setKitchenQuantity(selectedQuantity);
+                        break;
                 }
+            } else {
                 menuItem.setStatus(DB_MENUITEM_STATUS_ORDERED);
-                Database.getInstance().getOrderRef().document(menuItem.getDocument_id())
-                        .set(menuItem).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        counter++;
-                        if (counter == _menuItemList.size()) {
-                            OrderUtil.getInstance().clearMenuItemList();
-
-                            //Update table to be occupied
-                            WriteBatch batch = Database.getInstance().getDb().batch();
-                            batch.update(Database.getInstance().getTableRef(), "occupied", DB_TABLE_STATUS_BUSY);
-
-                            if (OrderUtil.getInstance().getAlreadyOrderedList().size() == 0) {
-                                batch.update(Database.getInstance().getTableRef(), "startOrderDate", new Date());
-                                OrderUtil.getInstance().setStartOrderDate(new Date());
-                            }
-
-                            batch.commit().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    if (getActivity() != null)
-                                        getActivity().finish();
-                                }
-                            });
-                        }
-                    }
-                });
+                menuItem.setKitchenQuantity(selectedQuantity);
             }
+            Database.getInstance().getOrderRef().document(menuItem.getDocument_id())
+                    .set(menuItem).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    counter++;
+                    if (counter == _menuItemList.size()) {
+                        OrderUtil.getInstance().clearMenuItemList();
+
+                        //Update table to be occupied
+                        WriteBatch batch = Database.getInstance().getDb().batch();
+                        batch.update(Database.getInstance().getTableRef(), "occupied", DB_TABLE_STATUS_BUSY);
+
+                        if (OrderUtil.getInstance().getAlreadyOrderedList().size() == 0) {
+                            batch.update(Database.getInstance().getTableRef(), "startOrderDate", new Date());
+                            OrderUtil.getInstance().setStartOrderDate(new Date());
+                        }
+
+                        batch.commit().addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                if (getActivity() != null)
+                                    getActivity().finish();
+                            }
+                        });
+                    }
+                }
+            });
         }
     }
 

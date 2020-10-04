@@ -44,6 +44,8 @@ import java.util.Locale;
 
 import static com.example.ordermenu.Utils.StrUtil.DB_MENUITEM_STATUS_CANCELED;
 import static com.example.ordermenu.Utils.StrUtil.DB_MENUITEM_STATUS_MODIFIED;
+import static com.example.ordermenu.Utils.StrUtil.DB_MENUITEM_STATUS_ORDERED;
+import static com.example.ordermenu.Utils.StrUtil.DB_MENUITEM_STATUS_SERVED;
 import static com.example.ordermenu.Utils.StrUtil.DB_TABLE_STATUS_FREE;
 import static com.example.ordermenu.Utils.StrUtil.DB_TABLE_STATUS_SERVED;
 
@@ -179,8 +181,31 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                _menuItemList.get(position).setQuantity(Integer.parseInt(itemQuantity.getText().toString()));
+
                 _menuItemList.get(position).setStatus(DB_MENUITEM_STATUS_MODIFIED);
+                switch (_menuItemList.get(position).getStatus()) {
+                    case DB_MENUITEM_STATUS_ORDERED:
+                        _menuItemList.get(position).setStatus(DB_MENUITEM_STATUS_MODIFIED);
+                        _menuItemList.get(position).setQuantity(Integer.parseInt(itemQuantity.getText().toString()));
+                        _menuItemList.get(position).setKitchenQuantity(Integer.parseInt(itemQuantity.getText().toString()));
+                        break;
+                    case DB_MENUITEM_STATUS_MODIFIED:
+                        _menuItemList.get(position).setQuantity(Integer.parseInt(itemQuantity.getText().toString()));
+                        _menuItemList.get(position).setKitchenQuantity(Integer.parseInt(itemQuantity.getText().toString()));
+                        break;
+                    case DB_MENUITEM_STATUS_SERVED:
+                        _menuItemList.get(position).setStatus(DB_MENUITEM_STATUS_ORDERED);
+                        _menuItemList.get(position).setQuantity(Integer.parseInt(itemQuantity.getText().toString()));
+                        int kitchenQuantity = (Integer.parseInt(itemQuantity.getText().toString())) - _menuItemList.get(position).getQuantity();
+                        _menuItemList.get(position).setKitchenQuantity(kitchenQuantity);
+                        break;
+                    case DB_MENUITEM_STATUS_CANCELED:
+                        _menuItemList.get(position).setStatus(DB_MENUITEM_STATUS_ORDERED);
+                        _menuItemList.get(position).setQuantity(Integer.parseInt(itemQuantity.getText().toString()));
+                        _menuItemList.get(position).setKitchenQuantity(Integer.parseInt(itemQuantity.getText().toString()));
+                        break;
+
+                }
                 if (_menuItemList.get(position).getQuantity() == 0) {
                     _menuItemList.get(position).setStatus(DB_MENUITEM_STATUS_CANCELED);
                 }
@@ -222,6 +247,7 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
                     menuItem.setStatus(DB_MENUITEM_STATUS_CANCELED);
                     batch.set(Database.getInstance().getOrderRef().document(menuItem.getDocument_id()), menuItem);
                 }
+                batch.update(Database.getInstance().getTableRef(),"occupied",DB_TABLE_STATUS_FREE);
                 batch.commit().addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -263,14 +289,22 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
                     Database.getInstance().getOrderRef().get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                         @Override
                         public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                            Database.getInstance().getTableRef().update("occupied", DB_TABLE_STATUS_SERVED)
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            dialog.cancel();
-                                            finish();
-                                        }
-                                    });
+                            WriteBatch batch = Database.getInstance().getDb().batch();
+                            for(MenuItem menuItem:OrderUtil.getInstance().getAlreadyOrderedList()){
+//                                if(menuItem.getStatus().equals(DB_MENUITEM_STATUS_MODIFIED)){
+                                    menuItem.setStatus(DB_MENUITEM_STATUS_SERVED);
+                                    batch.update(Database.getInstance().getOrderRef()
+                                            .document(menuItem.getDocument_id()),"status",DB_MENUITEM_STATUS_SERVED);
+//                                }
+                            }
+                            batch.update(Database.getInstance().getTableRef(),"occupied",DB_TABLE_STATUS_SERVED);
+                            batch.commit().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    dialog.cancel();
+                                    finish();
+                                }
+                            });
                         }
                     });
                 } else {
