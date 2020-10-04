@@ -54,6 +54,15 @@
         android:gravity="center_horizontal"
         tools:text="total price : 10" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/order_add_fab"
+        android:layout_above="@id/order_bottomnavigation"
+        android:src="@drawable/ic_outline_add_24"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="@dimen/size_medium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:layout_alignParentBottom="true"
         android:id="@+id/order_bottomnavigation"

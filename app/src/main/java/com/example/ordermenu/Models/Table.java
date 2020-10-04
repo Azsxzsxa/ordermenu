@@ -9,6 +9,7 @@ public class Table {
     private String occupied;
     private Date startOrderDate;
     private Date endOrderDate;
+    private Integer section;
 
     public Table(Integer number, String occupied, Date startOrderDate, Date endOrderDate) {
         this.number = number;
@@ -58,6 +59,14 @@ public class Table {
 
     public void setEndOrderDate(Date endOrderDate) {
         this.endOrderDate = endOrderDate;
+    }
+
+    public Integer getSection() {
+        return section;
+    }
+
+    public void setSection(Integer section) {
+        this.section = section;
     }
 
     @Override

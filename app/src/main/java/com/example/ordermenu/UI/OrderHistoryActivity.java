@@ -65,8 +65,9 @@ public class OrderHistoryActivity extends AppCompatActivity implements RVOrderHi
                 .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                if (progressBar.getVisibility() == View.VISIBLE)
+                if (progressBar.getVisibility() == View.VISIBLE){
                     progressBar.setVisibility(View.GONE);
+                }
 
                 _orderItemList = new ArrayList<>();
                 for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {

@@ -118,14 +118,15 @@ public class TablesSectionFragment extends Fragment implements RVTableAdapter.It
     }
 
     @Override
-    public void onTableClick(View view, int position) {
+    public void onTableClick(View view, int position, Table table) {
         Intent mIntent = new Intent(getActivity(), OrderActivity.class);
 
         OrderUtil.getInstance().setTableSwitched(_section_doc_id,
                 _tableList.get(position).getDocumentID()
                 , _tableList.get(position).getNumber(), _sectionName,
                 _tableList.get(position).getStartOrderDate(),
-                _tableList.get(position).getEndOrderDate());
+                _tableList.get(position).getEndOrderDate(),
+                _tableList.get(position).getOccupied());
 
         startActivity(mIntent);
     }

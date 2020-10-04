@@ -1,9 +1,12 @@
 package com.example.ordermenu.Models;
 
+import java.util.List;
+
 public class Section {
     private String documentID;
     private String name;
     private int tableCount;
+    private List<Table> tableList;
 
     public Section(String name, int tableCount) {
         this.name = name;
@@ -35,5 +38,13 @@ public class Section {
 
     public void setTableCount(int tableCount) {
         this.tableCount = tableCount;
+    }
+
+    public List<Table> getTableList() {
+        return tableList;
+    }
+
+    public void setTableList(List<Table> tableList) {
+        this.tableList = tableList;
     }
 }

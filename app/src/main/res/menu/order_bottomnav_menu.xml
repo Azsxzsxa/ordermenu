@@ -11,11 +11,11 @@
         android:icon="@drawable/ic_baseline_fastfood_24"
         android:title="@string/served_table"/>
 
-    <item
-        android:id="@+id/order_bottomnav_add"
-        android:enabled="true"
-        android:icon="@drawable/ic_outline_add_24"
-        android:title="@string/add_order"/>
+<!--    <item-->
+<!--        android:id="@+id/order_bottomnav_add"-->
+<!--        android:enabled="true"-->
+<!--        android:icon="@drawable/ic_outline_add_24"-->
+<!--        android:title="@string/add_order"/>-->
 
     <item
         android:id="@+id/order_bottomnav_cancel"

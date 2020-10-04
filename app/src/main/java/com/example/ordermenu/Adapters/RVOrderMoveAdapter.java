@@ -1,31 +1,37 @@
 package com.example.ordermenu.Adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.ordermenu.Models.Order;
 import com.example.ordermenu.Models.Section;
 import com.example.ordermenu.Models.Table;
 import com.example.ordermenu.R;
-import com.example.ordermenu.Utils.Settings;
+import com.example.ordermenu.Utils.Database;
+import com.example.ordermenu.Utils.OrderUtil;
+import com.example.ordermenu.Utils.StrUtil;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-public class RVOrderMoveAdapter extends RecyclerView.Adapter<RVOrderMoveAdapter.ViewHolder> {
+import static com.example.ordermenu.Utils.StrUtil.DB_TABLES;
+
+public class RVOrderMoveAdapter extends RecyclerView.Adapter<RVOrderMoveAdapter.ViewHolder> implements RVTableAdapter.ItemClickListener {
+    private static final String TAG = "OrderMoveActivity";
     private List<Section> mData;
     private LayoutInflater mInflater;
-    private ItemClickListener mClickListener;
+    private TableClick tableClickListener;
     private Context context;
 
     // data is passed into the constructor
@@ -45,29 +51,43 @@ public class RVOrderMoveAdapter extends RecyclerView.Adapter<RVOrderMoveAdapter.
 
     // binds the data to the TextView in each row
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         String sectionName = mData.get(position).getName();
         holder.sectionName.setText(sectionName);
 
-
-        ArrayList<Table> tables = new ArrayList<>();
-        for (int tableNumber = 1; tableNumber < mData.get(position).getTableCount(); tableNumber++) {
-            Table table = new Table(tableNumber,null,null,null);
-            tables.add(table);
-        }
-        if (!tables.isEmpty()) {
-            RVTableAdapter tableAdapter;
-            holder.sectionRV.setLayoutManager(new GridLayoutManager(context,4));
-            tableAdapter = new RVTableAdapter(context, tables);
-            holder.sectionRV.setAdapter(tableAdapter);
-        }
-
+        final ArrayList<Table> tables = new ArrayList<>();
+        Database.getInstance().restRef.document(Database.getInstance().getRestaurantId()).collection(StrUtil.DB_CURRENT).document(mData.get(position).getDocumentID())
+                .collection(DB_TABLES).orderBy("number", Query.Direction.ASCENDING).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                    Table table = doc.toObject(Table.class);
+                    table.setDocumentID(doc.getId());
+                    table.setSection(position);
+                    tables.add(table);
+                }
+                if (!tables.isEmpty()) {
+                    mData.get(position).setTableList(tables);
+                    RVTableAdapter tableAdapter;
+                    holder.sectionRV.setLayoutManager(new GridLayoutManager(context, 4));
+                    tableAdapter = new RVTableAdapter(context, tables);
+                    tableAdapter.setClickListener(RVOrderMoveAdapter.this);
+                    holder.sectionRV.setAdapter(tableAdapter);
+                }
+            }
+        });
     }
 
     // total number of rows
     @Override
     public int getItemCount() {
         return mData.size();
+    }
+
+    @Override
+    public void onTableClick(View view, int position, Table table) {
+        Log.d(TAG, "onTableClick: " + position);
+        tableClickListener.onMoveTableClick(view, position, table.getSection());
     }
 
 
@@ -84,22 +104,17 @@ public class RVOrderMoveAdapter extends RecyclerView.Adapter<RVOrderMoveAdapter.
 
         @Override
         public void onClick(View view) {
-            if (mClickListener != null) mClickListener.onTableClick(view, getAdapterPosition());
+//            if (mClickListener != null) mClickListener.onTableClick(view, getAdapterPosition());
         }
     }
 
-    // convenience method for getting data at click position
-    void getItem(int id) {
-//        return mData.get(id);
-    }
-
     // allows clicks events to be caught
-    public void setClickListener(ItemClickListener itemClickListener) {
-        this.mClickListener = itemClickListener;
+    public void setClickListener(TableClick tableClickListener) {
+        this.tableClickListener = tableClickListener;
     }
 
     // parent activity will implement this method to respond to click events
-    public interface ItemClickListener {
-        void onTableClick(View view, int position);
+    public interface TableClick {
+        void onMoveTableClick(View view, int tablePosition, int sectionPosition);
     }
 }

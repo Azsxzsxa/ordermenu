@@ -59,9 +59,15 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
         setContentView(R.layout.activity_order);
 
         totalPriceTv = findViewById(R.id.order_total_price_textView);
-
+        FloatingActionButton fabAdd = findViewById(R.id.order_add_fab);
+        fabAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bottomNavAdd();
+            }
+        });
         BottomNavigationView bottomNavigationView = findViewById(R.id.order_bottomnavigation);
-        bottomNavigationView.setSelectedItemId(R.id.order_bottomnav_add);
+        bottomNavigationView.getMenu().setGroupCheckable(0, false, true);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull android.view.MenuItem item) {
@@ -72,9 +78,9 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
                     case R.id.order_bottomnav_served:
                         bottomNavServed();
                         return false;
-                    case R.id.order_bottomnav_add:
-                        bottomNavAdd();
-                        return false;
+//                    case R.id.order_bottomnav_add:
+//                        bottomNavAdd();
+//                        return false;
                     case R.id.order_bottomnav_cancel:
                         bottomNavCancel();
                         return false;

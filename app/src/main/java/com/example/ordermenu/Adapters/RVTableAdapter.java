@@ -79,7 +79,7 @@ public class RVTableAdapter extends RecyclerView.Adapter<RVTableAdapter.ViewHold
 
         @Override
         public void onClick(View view) {
-            if (mClickListener != null) mClickListener.onTableClick(view, getAdapterPosition());
+            if (mClickListener != null) mClickListener.onTableClick(view, getAdapterPosition(), mTableList.get(getAdapterPosition()));
         }
     }
 
@@ -95,6 +95,6 @@ public class RVTableAdapter extends RecyclerView.Adapter<RVTableAdapter.ViewHold
 
     // parent activity will implement this method to respond to click events
     public interface ItemClickListener {
-        void onTableClick(View view, int position);
+        void onTableClick(View view, int position, Table table);
     }
 }

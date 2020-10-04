@@ -48,6 +48,9 @@
     <string name="cancel_order">Cancel order</string>
     <string name="move_order">Move order</string>
     <string name="title_activity_order_move">Move to</string>
+    <string name="move_to">Move to</string>
+    <string name="table_move">\n table:&#160;</string>
+    <string name="from_move">\n from:&#160;</string>
 
 
 </resources>

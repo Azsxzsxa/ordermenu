@@ -20,6 +20,7 @@ public class OrderUtil {
     private String sectionName;
     private Date startOrderDate;
     private Date endOrderDate;
+    private String tableStatus;
 
     private OrderUtil() {
     }
@@ -98,6 +99,14 @@ public class OrderUtil {
         this.currentOrderList = currentOrderList;
     }
 
+    public String getTableStatus() {
+        return tableStatus;
+    }
+
+    public void setTableStatus(String tableStatus) {
+        this.tableStatus = tableStatus;
+    }
+
     public int getTableNumber() {
         return tableNumber;
     }
@@ -166,13 +175,14 @@ public class OrderUtil {
     }
 
     public void setTableSwitched(String sectionDocID, String tableDocID, int tableNumber,
-                                 String sectionName, Date startOrderDate, Date endOrderDate) {
+                                 String sectionName, Date startOrderDate, Date endOrderDate, String tableStatus) {
         setSectionDocID(sectionDocID);
         setTableDocID(tableDocID);
         setTableNumber(tableNumber);
         setSectionName(sectionName);
         setStartOrderDate(startOrderDate);
         setEndOrderDate(endOrderDate);
+        setTableStatus(tableStatus);
         resetSearchMenuItemList();
         clearMenuItemList();
     }
