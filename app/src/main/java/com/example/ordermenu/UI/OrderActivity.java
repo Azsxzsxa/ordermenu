@@ -46,6 +46,7 @@ import static com.example.ordermenu.Utils.StrUtil.DB_MENUITEM_STATUS_CANCELED;
 import static com.example.ordermenu.Utils.StrUtil.DB_MENUITEM_STATUS_MODIFIED;
 import static com.example.ordermenu.Utils.StrUtil.DB_MENUITEM_STATUS_ORDERED;
 import static com.example.ordermenu.Utils.StrUtil.DB_MENUITEM_STATUS_SERVED;
+import static com.example.ordermenu.Utils.StrUtil.DB_TABLE_STATUS_BUSY;
 import static com.example.ordermenu.Utils.StrUtil.DB_TABLE_STATUS_FREE;
 import static com.example.ordermenu.Utils.StrUtil.DB_TABLE_STATUS_SERVED;
 
@@ -161,7 +162,11 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
         minusBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (Integer.parseInt(itemQuantity.getText().toString()) > 0) {
+                int lowLimit=0;
+                if (_menuItemList.get(position).getStatus().equals(DB_MENUITEM_STATUS_SERVED)) {
+                    lowLimit = _menuItemList.get(position).getQuantity();
+                }
+                if (Integer.parseInt(itemQuantity.getText().toString()) > lowLimit) {
                     itemQuantity.setText(String.valueOf(Integer.parseInt(itemQuantity.getText().toString()) - 1));
                 }
             }
@@ -181,34 +186,39 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                _menuItemList.get(position).setStatus(DB_MENUITEM_STATUS_MODIFIED);
+                int kitchenQuantity;
                 switch (_menuItemList.get(position).getStatus()) {
                     case DB_MENUITEM_STATUS_ORDERED:
                         _menuItemList.get(position).setStatus(DB_MENUITEM_STATUS_MODIFIED);
                         _menuItemList.get(position).setQuantity(Integer.parseInt(itemQuantity.getText().toString()));
                         _menuItemList.get(position).setKitchenQuantity(Integer.parseInt(itemQuantity.getText().toString()));
+                        Log.d(TAG, "onClick: orderd");
                         break;
                     case DB_MENUITEM_STATUS_MODIFIED:
+                        kitchenQuantity = Math.abs(_menuItemList.get(position).getQuantity() - Integer.parseInt(itemQuantity.getText().toString()));
                         _menuItemList.get(position).setQuantity(Integer.parseInt(itemQuantity.getText().toString()));
-                        _menuItemList.get(position).setKitchenQuantity(Integer.parseInt(itemQuantity.getText().toString()));
+                        _menuItemList.get(position).setKitchenQuantity(kitchenQuantity);
+                        Log.d(TAG, "onClick: modif");
                         break;
                     case DB_MENUITEM_STATUS_SERVED:
                         _menuItemList.get(position).setStatus(DB_MENUITEM_STATUS_ORDERED);
+                        kitchenQuantity = Math.abs(_menuItemList.get(position).getQuantity() - Integer.parseInt(itemQuantity.getText().toString()));
+                        Log.d(TAG, "onClick: " + kitchenQuantity);
                         _menuItemList.get(position).setQuantity(Integer.parseInt(itemQuantity.getText().toString()));
-                        int kitchenQuantity = (Integer.parseInt(itemQuantity.getText().toString())) - _menuItemList.get(position).getQuantity();
                         _menuItemList.get(position).setKitchenQuantity(kitchenQuantity);
                         break;
                     case DB_MENUITEM_STATUS_CANCELED:
                         _menuItemList.get(position).setStatus(DB_MENUITEM_STATUS_ORDERED);
                         _menuItemList.get(position).setQuantity(Integer.parseInt(itemQuantity.getText().toString()));
                         _menuItemList.get(position).setKitchenQuantity(Integer.parseInt(itemQuantity.getText().toString()));
+                        Log.d(TAG, "onClick: cancel");
                         break;
 
                 }
                 if (_menuItemList.get(position).getQuantity() == 0) {
                     _menuItemList.get(position).setStatus(DB_MENUITEM_STATUS_CANCELED);
                 }
+                Database.getInstance().getTableRef().update("occupied",DB_TABLE_STATUS_BUSY);
                 Database.getInstance().getOrderRef()
                         .document(_menuItemList.get(position).getDocument_id())
                         .set(_menuItemList.get(position)).
@@ -243,11 +253,13 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
             public void onClick(View v) {
                 WriteBatch batch = Database.getInstance().getDb().batch();
                 for (MenuItem menuItem : OrderUtil.getInstance().getAlreadyOrderedList()) {
-                    menuItem.setQuantity(0);
-                    menuItem.setStatus(DB_MENUITEM_STATUS_CANCELED);
-                    batch.set(Database.getInstance().getOrderRef().document(menuItem.getDocument_id()), menuItem);
+                    if (menuItem.getStatus().equals(DB_MENUITEM_STATUS_MODIFIED) || menuItem.getStatus().equals(DB_MENUITEM_STATUS_ORDERED)) {
+                        menuItem.setQuantity(0);
+                        menuItem.setStatus(DB_MENUITEM_STATUS_CANCELED);
+                        batch.set(Database.getInstance().getOrderRef().document(menuItem.getDocument_id()), menuItem);
+                    }
                 }
-                batch.update(Database.getInstance().getTableRef(),"occupied",DB_TABLE_STATUS_FREE);
+                batch.update(Database.getInstance().getTableRef(), "occupied", DB_TABLE_STATUS_FREE);
                 batch.commit().addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -290,14 +302,14 @@ public class OrderActivity extends AppCompatActivity implements RVOrderAdapter.I
                         @Override
                         public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                             WriteBatch batch = Database.getInstance().getDb().batch();
-                            for(MenuItem menuItem:OrderUtil.getInstance().getAlreadyOrderedList()){
+                            for (MenuItem menuItem : OrderUtil.getInstance().getAlreadyOrderedList()) {
 //                                if(menuItem.getStatus().equals(DB_MENUITEM_STATUS_MODIFIED)){
-                                    menuItem.setStatus(DB_MENUITEM_STATUS_SERVED);
-                                    batch.update(Database.getInstance().getOrderRef()
-                                            .document(menuItem.getDocument_id()),"status",DB_MENUITEM_STATUS_SERVED);
+                                menuItem.setStatus(DB_MENUITEM_STATUS_SERVED);
+                                batch.update(Database.getInstance().getOrderRef()
+                                        .document(menuItem.getDocument_id()), "status", DB_MENUITEM_STATUS_SERVED);
 //                                }
                             }
-                            batch.update(Database.getInstance().getTableRef(),"occupied",DB_TABLE_STATUS_SERVED);
+                            batch.update(Database.getInstance().getTableRef(), "occupied", DB_TABLE_STATUS_SERVED);
                             batch.commit().addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
