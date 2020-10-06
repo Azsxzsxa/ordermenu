@@ -10,30 +10,29 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:elevation="0dp">
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/tables_toolbar"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/toolbar_color">
+            android:layout_height="wrap_content">
 
-            <RelativeLayout
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/menu_toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/toolbar_color" />
 
-                <TextView
-                    style="@style/TextAppearance.MaterialComponents.Headline6"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_centerVertical="true"
-                    android:text="@string/title_activity_menu"
-                    android:textColor="@color/toolbar_text_color"
-                    android:textSize="18sp" />
-            </RelativeLayout>
+            <TextView
+                style="@style/TextAppearance.MaterialComponents.Headline6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/title_activity_menu"
+                android:textColor="@color/toolbar_text_color"
+                android:textSize="@dimen/toolbar_text_size" />
 
-        </com.google.android.material.appbar.MaterialToolbar>
+        </RelativeLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
 

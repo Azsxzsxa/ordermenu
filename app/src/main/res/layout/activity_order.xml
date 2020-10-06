@@ -10,31 +10,29 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:elevation="0dp">
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/orders_toolbar"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/toolbar_color">
+            android:layout_height="wrap_content">
 
-            <RelativeLayout
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/orders_toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/toolbar_color" />
 
-                <TextView
-                    style="@style/TextAppearance.MaterialComponents.Headline6"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_centerVertical="true"
-                    android:text="@string/title_activity_menu_order"
-                    android:textColor="@color/toolbar_text_color"
-                    android:textSize="18sp" />
+            <TextView
+                style="@style/TextAppearance.MaterialComponents.Headline6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/order"
+                android:textColor="@color/toolbar_text_color"
+                android:textSize="@dimen/toolbar_text_size" />
 
-            </RelativeLayout>
-
-        </com.google.android.material.appbar.MaterialToolbar>
+        </RelativeLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -42,7 +40,9 @@
         android:id="@+id/order_items_rv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/appBarLayout" />
+        android:layout_below="@id/appBarLayout"
+        android:layout_above="@+id/order_bottomnavigation"
+        android:layout_margin="@dimen/size_small"/>
 
     <TextView
         android:id="@+id/order_total_price_textView"

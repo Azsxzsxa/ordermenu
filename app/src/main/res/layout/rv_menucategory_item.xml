@@ -17,7 +17,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/size_small"
-            android:textSize="16sp"
+            android:layout_centerInParent="true"
+            android:textSize="@dimen/menu_category_text_size"
             tools:text="Title here" />
 
     </RelativeLayout>

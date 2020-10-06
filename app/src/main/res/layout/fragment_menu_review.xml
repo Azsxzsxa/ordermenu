@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
-        android:padding="@dimen/size_medium">
+        android:padding="@dimen/size_small">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/menuReview_order_rv"
@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:text="Add to table" />
+            android:text="@string/add_order" />
     </RelativeLayout>
 
 </RelativeLayout>

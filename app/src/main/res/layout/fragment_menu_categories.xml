@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
-        android:padding="@dimen/size_medium">
+        android:padding="@dimen/size_small">
 
         <SearchView
             android:id="@+id/menuCategory_search_sv"

@@ -10,6 +10,10 @@
     <dimen name="button_height">45dp</dimen>
     <dimen name="button_corner_radius">8dp</dimen>
     <dimen name="tables_corner_radius">16dp</dimen>
+    <dimen name="toolbar_text_size">25sp</dimen>
+    <dimen name="table_text_size">27sp</dimen>
+    <dimen name="menu_category_text_size">23sp</dimen>
+    <dimen name="menu_item_text_size">22sp</dimen>
     <!--
     Because the window insets on round devices are larger than 15dp, this padding only applies
     to square screens.

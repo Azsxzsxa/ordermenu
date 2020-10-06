@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="4dp"
+    android:layout_margin="@dimen/size_extrasmall"
     android:elevation="2dp"
     app:cardCornerRadius="@dimen/card_corner_radius">
 
@@ -12,7 +12,9 @@
         android:id="@+id/top_RL"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/size_medium">
+        android:padding="@dimen/size_small"
+        android:layout_marginStart="@dimen/size_small"
+        android:layout_marginEnd="@dimen/size_small">
 
         <TextView
             android:id="@+id/order_name_tv"
@@ -22,7 +24,7 @@
             android:layout_centerVertical="true"
             android:layout_marginEnd="4dp"
             android:layout_toStartOf="@id/buttonLayout"
-            android:textSize="18sp"
+            android:textSize="@dimen/menu_item_text_size"
             tools:text="item name" />
 
         <LinearLayout
@@ -37,7 +39,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/size_medium"
-                android:textSize="18sp"
+                android:textSize="@dimen/menu_item_text_size"
                 tools:text="0" />
 
         </LinearLayout>

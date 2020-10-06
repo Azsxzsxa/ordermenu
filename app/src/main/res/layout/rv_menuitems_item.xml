@@ -11,7 +11,9 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="@dimen/size_medium">
+        android:padding="@dimen/size_small"
+        android:layout_marginStart="@dimen/size_small"
+        android:layout_marginEnd="@dimen/size_small">
 
         <TextView
             android:id="@+id/menuItems_name_tv"
@@ -22,7 +24,7 @@
             android:layout_marginEnd="4dp"
             android:layout_toStartOf="@id/buttonLayout"
             tools:hint="item name"
-            android:textSize="18sp" />
+            android:textSize="@dimen/menu_item_text_size" />
 
         <LinearLayout
             android:id="@+id/buttonLayout"
@@ -33,9 +35,11 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/menuItems_minus_btn"
+                style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="40sp"
                 android:layout_height="wrap_content"
                 android:text="-"
+                android:textSize="15sp"
                 tools:ignore="HardcodedText" />
 
             <TextView
@@ -44,11 +48,13 @@
                 android:layout_height="wrap_content"
                 tools:hint="0"
                 android:padding="@dimen/size_medium"
-                android:textSize="18sp" />
+                android:textSize="@dimen/menu_item_text_size" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/menuItems_plus_btn"
+                style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="40sp"
+                android:textSize="15sp"
                 android:layout_height="wrap_content"
                 android:text="+"
                 tools:ignore="HardcodedText" />
