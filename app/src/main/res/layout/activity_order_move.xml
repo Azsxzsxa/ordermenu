@@ -26,7 +26,6 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="@string/title_activity_order_move"
-                android:textColor="@color/toolbar_text_color"
                 android:textSize="@dimen/toolbar_text_size" />
 
         </RelativeLayout>

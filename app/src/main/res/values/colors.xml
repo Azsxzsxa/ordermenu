@@ -8,7 +8,7 @@
     <color name="fragment_background_color">#f6f6f6</color>
 
     <color name="toolbar_color">#f6f6f6</color>
-    <color name="toolbar_text_color">#1f1f1f</color>
+<!--    <color name="toolbar_text_color">#1f1f1f</color>-->
 
     <color name="searchBar_input_card_color">#e5e5e5</color>
     <color name="searchBar_input_card_stroke_color">#fafafa</color>
