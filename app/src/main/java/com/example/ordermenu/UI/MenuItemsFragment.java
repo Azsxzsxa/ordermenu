@@ -3,6 +3,7 @@ package com.example.ordermenu.UI;
 import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
@@ -40,15 +41,14 @@ public class MenuItemsFragment extends Fragment implements RVMenuItemAdapter.Ite
     private List<MenuItem> _menuItemList = new ArrayList<>();
     private RVMenuItemAdapter _rvMenuItemAdapter;
     private View view;
-    private ExtendedFloatingActionButton fab_review;
+    private ExtendedFloatingActionButton reviewFAB;
     private ListenerRegistration menuItemListener;
-    private SearchView searchView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_menu_items, container, false);
-        fab_review = view.findViewById(R.id.menuItems_review_fab);
+        reviewFAB = view.findViewById(R.id.menuItems_review_fab);
 
         if (getArguments() != null) {
             MenuItemsFragmentArgs menuItemsFragmentArgs = MenuItemsFragmentArgs.fromBundle(getArguments());
@@ -67,7 +67,7 @@ public class MenuItemsFragment extends Fragment implements RVMenuItemAdapter.Ite
             }
         });
 
-        fab_review.setOnClickListener(new View.OnClickListener() {
+        reviewFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Navigation.findNavController(view).navigate(MenuItemsFragmentDirections.actionMenuItemsFragmentToMenuReviewFragment());
@@ -83,6 +83,18 @@ public class MenuItemsFragment extends Fragment implements RVMenuItemAdapter.Ite
         _rvMenuItemAdapter = new RVMenuItemAdapter(getContext(), _menuItemList);
         _rvMenuItemAdapter.setClickListener(this);
         recyclerView.setAdapter(_rvMenuItemAdapter);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                if(dy > 0){
+                    reviewFAB.hide();
+                } else{
+                    reviewFAB.show();
+                }
+
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
     }
 
     private void getMenuItemsFromDb() {

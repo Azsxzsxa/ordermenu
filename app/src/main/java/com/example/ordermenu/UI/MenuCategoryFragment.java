@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -37,7 +38,7 @@ public class MenuCategoryFragment extends Fragment implements RVMenuCategoryAdap
     View view;
     RVMenuCategoryAdapter _rvMenuAdapter;
     RVMenuItemAdapter _rvMenuItemAdapter;
-    ExtendedFloatingActionButton fab_review;
+    ExtendedFloatingActionButton reviewFAB;
     private RecyclerView categoryRecyclerView;
     private RecyclerView searchRecyclerView;
     SearchView searchView;
@@ -46,7 +47,7 @@ public class MenuCategoryFragment extends Fragment implements RVMenuCategoryAdap
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_menu_categories, container, false);
-        fab_review = view.findViewById(R.id.menuCategory_review_fab);
+        reviewFAB = view.findViewById(R.id.menuCategory_review_fab);
         initRV();
         getCategories();
 
@@ -66,7 +67,7 @@ public class MenuCategoryFragment extends Fragment implements RVMenuCategoryAdap
             }
         });
 
-        fab_review.setOnClickListener(new View.OnClickListener() {
+        reviewFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Navigation.findNavController(view).navigate(MenuCategoryFragmentDirections.actionMenuCategoriesFragmentToMenuReviewFragment());
@@ -136,6 +137,18 @@ public class MenuCategoryFragment extends Fragment implements RVMenuCategoryAdap
         _rvMenuAdapter = new RVMenuCategoryAdapter(getContext(), _menuCategories);
         _rvMenuAdapter.setClickListener(this);
         categoryRecyclerView.setAdapter(_rvMenuAdapter);
+        categoryRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                if(dy > 0){
+                    reviewFAB.hide();
+                } else{
+                    reviewFAB.show();
+                }
+
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
 
 
         OrderUtil.getInstance().updateSearchItemList();
@@ -146,6 +159,18 @@ public class MenuCategoryFragment extends Fragment implements RVMenuCategoryAdap
         _rvMenuItemAdapter = new RVMenuItemAdapter(getContext(), OrderUtil.getInstance().getSearchMenuItemsList());
         _rvMenuItemAdapter.setClickListener(this);
         searchRecyclerView.setAdapter(_rvMenuItemAdapter);
+        searchRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                if(dy > 0){
+                    reviewFAB.hide();
+                } else{
+                    reviewFAB.show();
+                }
+
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
 
     }
 
