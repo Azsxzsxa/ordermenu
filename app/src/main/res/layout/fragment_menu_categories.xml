@@ -5,48 +5,45 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/fragment_background_color"
+    android:clipToPadding="false"
     tools:context=".UI.MenuCategoryFragment">
 
-    <RelativeLayout
+
+    <SearchView
+        android:id="@+id/menuCategory_search_sv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/size_medium"
+        android:layout_marginEnd="@dimen/size_medium"
+        android:layout_marginBottom="@dimen/size_medium"
+        android:background="@drawable/search_bar_background"
+        android:imeOptions="actionDone"
+        android:inputType="textCapWords"
+        app:iconifiedByDefault="false"
+        app:queryHint="@string/search"
+        app:searchHintIcon="@drawable/ic_outline_search_24"
+        app:searchIcon="@drawable/ic_outline_search_24" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/menuCategory_items_rv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:padding="@dimen/size_small">
+        android:layout_below="@+id/menuCategory_search_sv" />
 
-        <SearchView
-            android:id="@+id/menuCategory_search_sv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/search_bar_background"
-            android:imeOptions="actionDone"
-            android:inputType="textCapWords"
-            android:padding="4dp"
-            app:iconifiedByDefault="false"
-            app:queryHint="@string/search"
-            app:searchHintIcon="@drawable/ic_outline_search_24"
-            app:searchIcon="@drawable/ic_outline_search_24" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/menuCategory_search_rv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/menuCategory_search_sv" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/menuCategory_items_rv"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/menuCategory_search_sv"
-            android:layout_marginTop="@dimen/size_small" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/menuCategory_search_rv"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/menuCategory_search_sv" />
-
-        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-            android:id="@+id/menuCategory_review_fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:text="@string/review_order" />
-    </RelativeLayout>
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/menuCategory_review_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="@dimen/size_medium"
+        android:text="@string/review_order" />
 
 
 </RelativeLayout>

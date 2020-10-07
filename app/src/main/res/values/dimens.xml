@@ -15,6 +15,11 @@
     <dimen name="table_text_size">24sp</dimen>
     <dimen name="menu_category_text_size">20sp</dimen>
     <dimen name="menu_item_text_size">19sp</dimen>
+
+
+    <dimen name="order_history_text_size">17sp</dimen>
+
+
     <!--
     Because the window insets on round devices are larger than 15dp, this padding only applies
     to square screens.

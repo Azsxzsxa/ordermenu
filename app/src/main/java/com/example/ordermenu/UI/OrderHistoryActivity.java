@@ -151,7 +151,7 @@ public class OrderHistoryActivity extends AppCompatActivity implements RVOrderHi
 
                                     TextView textView = innerDialog.findViewById(R.id.dialog_infoWarning_text);
                                     MaterialButton okBtn = innerDialog.findViewById(R.id.dialog_infoWarning_ok_btn);
-
+                                    okBtn.setText(R.string.ok);
                                     textView.setText(R.string.table_not_free);
 
                                     okBtn.setOnClickListener(new View.OnClickListener() {

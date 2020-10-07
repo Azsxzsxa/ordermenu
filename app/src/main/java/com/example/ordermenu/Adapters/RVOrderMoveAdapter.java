@@ -62,14 +62,16 @@ public class RVOrderMoveAdapter extends RecyclerView.Adapter<RVOrderMoveAdapter.
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 for (DocumentSnapshot doc : queryDocumentSnapshots) {
                     Table table = doc.toObject(Table.class);
-                    table.setDocumentID(doc.getId());
-                    table.setSection(position);
-                    tables.add(table);
+                    if (table != null) {
+                        table.setDocumentID(doc.getId());
+                        table.setSection(position);
+                        tables.add(table);
+                    }
                 }
                 if (!tables.isEmpty()) {
                     mData.get(position).setTableList(tables);
                     RVTableAdapter tableAdapter;
-                    holder.sectionRV.setLayoutManager(new GridLayoutManager(context, 4));
+                    holder.sectionRV.setLayoutManager(new GridLayoutManager(context, 3));
                     tableAdapter = new RVTableAdapter(context, tables);
                     tableAdapter.setClickListener(RVOrderMoveAdapter.this);
                     holder.sectionRV.setAdapter(tableAdapter);

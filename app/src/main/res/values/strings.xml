@@ -39,6 +39,7 @@
     <string name="restore">restore</string>
     <string name="table_not_free">The table is not free, make sure you have selected the correct order to restore or clear the table</string>
     <string name="exit_discrd_order">New items have been selected but order has not been submitted. Continue and discard the new selected items?</string>
+    <string name="order_move_info">The table is not free, make sure you have selected the correct table</string>
     <string name="warning">Warning</string>
     <string name="dialog_yes">yes</string>
     <string name="dialog_no">No</string>
@@ -51,6 +52,7 @@
     <string name="move_to">Move to</string>
     <string name="table_move">\n table:&#160;</string>
     <string name="from_move">\n from:&#160;</string>
+    <string name="ok">OK</string>
 
 
 </resources>

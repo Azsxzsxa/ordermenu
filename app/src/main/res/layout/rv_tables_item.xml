@@ -6,7 +6,7 @@
     android:layout_height="100dp"
     android:layout_margin="@dimen/size_medium"
     android:background="@drawable/table_free_background"
-    android:padding="@dimen/size_small">
+    >
 
     <TextView
         android:id="@+id/tables_number_tv"

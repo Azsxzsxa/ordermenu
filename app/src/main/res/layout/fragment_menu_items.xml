@@ -4,30 +4,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/fragment_background_color"
+    android:clipToPadding="false"
     tools:context=".UI.MenuItemsFragment">
 
-
-    <RelativeLayout
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/menuItems_items_rv"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:padding="@dimen/size_small">
+        android:layout_height="match_parent" />
 
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/menuItems_items_rv"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-             />
-
-        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-            android:id="@+id/menuItems_review_fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:text="@string/review_order" />
-    </RelativeLayout>
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/menuItems_review_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/size_medium"
+        android:text="@string/review_order" />
 
 
 </RelativeLayout>

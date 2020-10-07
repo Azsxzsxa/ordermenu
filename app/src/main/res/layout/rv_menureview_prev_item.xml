@@ -11,15 +11,17 @@
         android:id="@+id/menuReview_prev_quantity_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/size_small"
+        android:layout_margin="@dimen/size_extrasmall"
         android:layout_toEndOf="@+id/menuReview_prev_name_tv"
+        android:textSize="18sp"
         tools:text="1223" />
 
     <TextView
         android:id="@+id/menuReview_prev_name_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/size_small"
-        tools:text="PIZAAAAAAAAAAAAAA" />
+        android:textSize="18sp"
+        android:layout_margin="@dimen/size_extrasmall"
+        tools:text="pizza prociuto" />
 
 </RelativeLayout>

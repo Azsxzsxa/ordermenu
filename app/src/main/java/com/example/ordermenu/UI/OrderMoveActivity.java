@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -43,7 +44,6 @@ import static com.example.ordermenu.Utils.StrUtil.DB_TABLE_STATUS_SERVED;
 public class OrderMoveActivity extends AppCompatActivity implements RVOrderMoveAdapter.TableClick {
     private static final String TAG = "OrderMoveActivity";
     ArrayList<Section> sections = new ArrayList<>();
-    private RVOrderMoveAdapter _orderMoveAdapter;
     private ProgressBar progressBar;
 
     @Override
@@ -62,8 +62,10 @@ public class OrderMoveActivity extends AppCompatActivity implements RVOrderMoveA
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 for (DocumentSnapshot doc : queryDocumentSnapshots) {
                     Section section = doc.toObject(Section.class);
-                    section.setDocumentID(doc.getId());
-                    sections.add(section);
+                    if (section != null) {
+                        section.setDocumentID(doc.getId());
+                        sections.add(section);
+                    }
                 }
                 if (!sections.isEmpty()) {
                     initRV();
@@ -79,7 +81,7 @@ public class OrderMoveActivity extends AppCompatActivity implements RVOrderMoveA
     private void initRV() {
         RecyclerView recyclerView = findViewById(R.id.ordermove_rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(OrderMoveActivity.this));
-        _orderMoveAdapter = new RVOrderMoveAdapter(this, sections);
+        RVOrderMoveAdapter _orderMoveAdapter = new RVOrderMoveAdapter(this, sections);
         _orderMoveAdapter.setClickListener(this);
         recyclerView.setAdapter(_orderMoveAdapter);
 
@@ -106,31 +108,58 @@ public class OrderMoveActivity extends AppCompatActivity implements RVOrderMoveA
             public void onClick(View v) {
                 Log.d(TAG, "onClick: ");
 
-                CollectionReference oldOrderRef = Database.getInstance().getOrderRef();
-                DocumentReference newTableRef = Database.getInstance().restRef.document(Database.getInstance().getRestaurantId())
+                final CollectionReference oldOrderRef = Database.getInstance().getOrderRef();
+                final DocumentReference newTableRef = Database.getInstance().restRef.document(Database.getInstance().getRestaurantId())
                         .collection(StrUtil.DB_CURRENT).document(sections.get(sectionPosition).getDocumentID())
                         .collection(DB_TABLES).document(tableDocId);
 
-                WriteBatch batch = Database.getInstance().getDb().batch();
-                for (MenuItem menuItem : OrderUtil.getInstance().getAlreadyOrderedList()) {
-                    Log.d(TAG, "onClick: " + menuItem.getName());
-                    batch.set(newTableRef.collection(DB_ORDER).document(menuItem.getDocument_id()), menuItem);
-                    batch.delete(oldOrderRef.document(menuItem.getDocument_id()));
-                }
-                batch.update(Database.getInstance().getTableRef(),"occupied",DB_TABLE_STATUS_FREE);
-                batch.update(newTableRef,"occupied",tableStatus);
-
-                batch.commit().addOnSuccessListener(new OnSuccessListener<Void>() {
+                newTableRef.collection(DB_ORDER).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "onSuccess: ");
-                        dialog.cancel();
-                        Intent intent = new Intent(getApplication(), TablesActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
-                        finish();
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        if(queryDocumentSnapshots.isEmpty()){
+                            WriteBatch batch = Database.getInstance().getDb().batch();
+                            for (MenuItem menuItem : OrderUtil.getInstance().getAlreadyOrderedList()) {
+                                Log.d(TAG, "onClick: " + menuItem.getName());
+                                batch.set(newTableRef.collection(DB_ORDER).document(menuItem.getDocument_id()), menuItem);
+                                batch.delete(oldOrderRef.document(menuItem.getDocument_id()));
+                            }
+                            batch.update(Database.getInstance().getTableRef(),"occupied",DB_TABLE_STATUS_FREE);
+                            batch.update(newTableRef,"occupied",tableStatus);
+
+                            batch.commit().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Log.d(TAG, "onSuccess: ");
+                                    dialog.cancel();
+                                    Intent intent = new Intent(getApplication(), TablesActivity.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    startActivity(intent);
+                                    finish();
+                                }
+                            });
+                        }else{
+                            dialog.cancel();
+                            final Dialog innerDialog = new Dialog(OrderMoveActivity.this, R.style.MyThemeDialogCustom);
+                            innerDialog.setContentView(R.layout.dialog_info_warning);
+
+                            TextView textView = innerDialog.findViewById(R.id.dialog_infoWarning_text);
+                            MaterialButton okBtn = innerDialog.findViewById(R.id.dialog_infoWarning_ok_btn);
+                            okBtn.setText(R.string.ok);
+                            textView.setText(R.string.order_move_info);
+
+                            okBtn.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    innerDialog.cancel();
+                                }
+                            });
+
+                            innerDialog.setCancelable(true);
+                            innerDialog.show();
+                        }
                     }
                 });
+
             }
         });
 
