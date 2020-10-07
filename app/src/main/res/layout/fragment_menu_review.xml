@@ -18,13 +18,15 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/menuReview_order_rv"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/menuReview_prev_rv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/menuReview_order_rv" />
+                android:layout_below="@+id/menuReview_order_rv"
+                android:nestedScrollingEnabled="false" />
 
         </RelativeLayout>
 
