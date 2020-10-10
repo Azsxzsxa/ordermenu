@@ -1,10 +1,5 @@
 package com.example.ordermenu.Utils;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-
 public final class StrUtil {
     public final static String DB_RESTAURANTS = "Restaurants";
     public final static String DB_CURRENT = "Current";
@@ -18,16 +13,15 @@ public final class StrUtil {
     public final static String MENU_CATEGORY = "menu category";
     public final static String DB_MENU = "Menu";
     public final static String DB_TABLES = "Tables";
-    public final static String DB_ORDER = "Order";
+    public final static String DB_TABLE_STATUS_BUSY = "Busy";
+    public final static String DB_TABLE_STATUS_FREE = "Free";
+    public final static String DB_TABLE_STATUS_SERVED = "Served";
+    public final static String DB_ORDER_INPROGRESS = "In Progress";
+    public final static String DB_ORDER_SERVED = "Served";
     public final static String DB_CATEGORY = "category";
     public final static String DB_HISTORY = "History";
-    public final static String DB_TABLE_STATUS_FREE = "free";
-    public final static String DB_TABLE_STATUS_BUSY = "busy";
-    public final static String DB_TABLE_STATUS_SERVED = "served";
-    public final static String DB_MENUITEM_STATUS_ORDERED = "ordered";
-    public final static String DB_MENUITEM_STATUS_CANCELED = "canceled";
-    public final static String DB_MENUITEM_STATUS_MODIFIED = "modified";
-    public final static String DB_MENUITEM_STATUS_DEFAULT = "default";
-    public final static String DB_MENUITEM_STATUS_SERVED = "served";
+    public final static String DB_MENUITEM_STATUS_MODIFIED = "Modified";
+    public final static String DB_MENUITEM_STATUS_DEFAULT = "Default";
+    public final static String DB_MENUITEM_STATUS_CANCELED = "Canceled";
 
 }

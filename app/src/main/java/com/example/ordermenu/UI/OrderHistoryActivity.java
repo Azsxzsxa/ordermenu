@@ -1,11 +1,7 @@
 package com.example.ordermenu.UI;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -14,17 +10,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.ordermenu.Adapters.RVMenuAvailableAdapter;
 import com.example.ordermenu.Adapters.RVOrderHistoryAdapter;
 import com.example.ordermenu.Models.MenuItem;
 import com.example.ordermenu.Models.Order;
 import com.example.ordermenu.Models.Table;
 import com.example.ordermenu.R;
 import com.example.ordermenu.Utils.Database;
-import com.example.ordermenu.Utils.OrderUtil;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.button.MaterialButton;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Query;
@@ -32,16 +25,14 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static com.example.ordermenu.Utils.StrUtil.DB_CURRENT;
 import static com.example.ordermenu.Utils.StrUtil.DB_HISTORY;
-import static com.example.ordermenu.Utils.StrUtil.DB_MENU;
-import static com.example.ordermenu.Utils.StrUtil.DB_ORDER;
+import static com.example.ordermenu.Utils.StrUtil.DB_ORDER_SERVED;
 import static com.example.ordermenu.Utils.StrUtil.DB_TABLES;
-import static com.example.ordermenu.Utils.StrUtil.DB_TABLE_STATUS_BUSY;
 import static com.example.ordermenu.Utils.StrUtil.DB_TABLE_STATUS_FREE;
+import static com.example.ordermenu.Utils.StrUtil.DB_TABLE_STATUS_SERVED;
 
 public class OrderHistoryActivity extends AppCompatActivity implements RVOrderHistoryAdapter.ItemClickListener {
 
@@ -121,7 +112,7 @@ public class OrderHistoryActivity extends AppCompatActivity implements RVOrderHi
                                         DocumentReference documentReference = Database.getInstance().restRef.document(Database.getInstance().getRestaurantId())
                                                 .collection(DB_CURRENT).document(sectionId)
                                                 .collection(DB_TABLES).document(tableId)
-                                                .collection(DB_ORDER)
+                                                .collection(DB_ORDER_SERVED)
                                                 .document(menuItem.getDocument_id());
                                         batch.set(documentReference, menuItem);
                                     }
@@ -129,7 +120,7 @@ public class OrderHistoryActivity extends AppCompatActivity implements RVOrderHi
                                     //update table status
                                     batch.update(Database.getInstance().restRef.document(Database.getInstance().getRestaurantId())
                                             .collection(DB_CURRENT).document(sectionId)
-                                            .collection(DB_TABLES).document(tableId), "occupied", DB_TABLE_STATUS_BUSY);
+                                            .collection(DB_TABLES).document(tableId), "occupied", DB_TABLE_STATUS_SERVED);
 
                                     //delete order from history
                                     DocumentReference deleteFromHistory = Database.getInstance().restRef.document(Database.getInstance()

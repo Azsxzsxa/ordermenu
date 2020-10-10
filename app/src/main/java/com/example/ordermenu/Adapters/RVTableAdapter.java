@@ -1,22 +1,22 @@
 package com.example.ordermenu.Adapters;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.ordermenu.Models.Table;
 import com.example.ordermenu.R;
-import com.google.android.material.card.MaterialCardView;
 
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
+import static com.example.ordermenu.Utils.StrUtil.DB_TABLE_STATUS_BUSY;
+import static com.example.ordermenu.Utils.StrUtil.DB_TABLE_STATUS_FREE;
 
 public class RVTableAdapter extends RecyclerView.Adapter<RVTableAdapter.ViewHolder> {
     private static final String TAG = "RVTableAdapter";
@@ -48,9 +48,9 @@ public class RVTableAdapter extends RecyclerView.Adapter<RVTableAdapter.ViewHold
         if (mTableList.get(position).getOccupied() == null) {
             holder.relativeLayout.setBackgroundResource(R.drawable.table_free_background);
         } else {
-            if (mTableList.get(position).getOccupied().equals("busy")) {
+            if (mTableList.get(position).getOccupied().equals(DB_TABLE_STATUS_BUSY)) {
                 holder.relativeLayout.setBackgroundResource(R.drawable.table_occupied_background);
-            } else if (mTableList.get(position).getOccupied().equals("free")) {
+            } else if (mTableList.get(position).getOccupied().equals(DB_TABLE_STATUS_FREE)) {
                 holder.relativeLayout.setBackgroundResource(R.drawable.table_free_background);
             } else {
                 holder.relativeLayout.setBackgroundResource(R.drawable.table_ready_background);

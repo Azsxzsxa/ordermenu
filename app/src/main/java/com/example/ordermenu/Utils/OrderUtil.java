@@ -1,7 +1,5 @@
 package com.example.ordermenu.Utils;
 
-import android.util.Log;
-
 import com.example.ordermenu.Models.MenuItem;
 
 import java.util.ArrayList;
@@ -13,7 +11,8 @@ import static com.example.ordermenu.Utils.StrUtil.DB_MENUITEM_STATUS_DEFAULT;
 public class OrderUtil {
     private static OrderUtil INSTANCE;
     private List<MenuItem> currentOrderList = new ArrayList<>();
-    private List<MenuItem> alreadyOrderedList = new ArrayList<>();
+    private List<MenuItem> servedOrderedList = new ArrayList<>();
+    private List<MenuItem> inProgressOrderedList = new ArrayList<>();
     private List<MenuItem> allMenuItemsList = new ArrayList<>();
     private List<MenuItem> searchMenuItemsList = new ArrayList<>();
     private String tableDocID;
@@ -89,12 +88,12 @@ public class OrderUtil {
         this.sectionDocID = sectionDocID;
     }
 
-    public List<MenuItem> getAlreadyOrderedList() {
-        return alreadyOrderedList;
+    public List<MenuItem> getServedOrderedList() {
+        return servedOrderedList;
     }
 
-    public void setAlreadyOrderedList(List<MenuItem> alreadyOrderedList) {
-        this.alreadyOrderedList = alreadyOrderedList;
+    public void setServedOrderedList(List<MenuItem> servedOrderedList) {
+        this.servedOrderedList = servedOrderedList;
     }
 
     public void setCurrentOrderList(List<MenuItem> currentOrderList) {
@@ -145,14 +144,22 @@ public class OrderUtil {
         return allMenuItemsList;
     }
 
+    public List<MenuItem> getInProgressOrderedList() {
+        return inProgressOrderedList;
+    }
+
+    public void setInProgressOrderedList(List<MenuItem> inProgressOrderedList) {
+        this.inProgressOrderedList = inProgressOrderedList;
+    }
+
     public void setAllMenuItemsList(List<MenuItem> allMenuItemsList) {
 //        this.allMenuItemsList = allMenuItemsList;
         for (MenuItem menuItem : allMenuItemsList) {
 
             searchMenuItemsList.add(new MenuItem(menuItem.getDocument_id(), menuItem.getCategory(), menuItem.getName(),
-                    menuItem.getPrice(), menuItem.getQuantity(), menuItem.getAvailable(),DB_MENUITEM_STATUS_DEFAULT));
+                    menuItem.getPrice(), menuItem.getQuantity(), menuItem.getAvailable(), DB_MENUITEM_STATUS_DEFAULT));
             this.allMenuItemsList.add(new MenuItem(menuItem.getDocument_id(), menuItem.getCategory(), menuItem.getName(),
-                    menuItem.getPrice(), menuItem.getQuantity(), menuItem.getAvailable(),DB_MENUITEM_STATUS_DEFAULT));
+                    menuItem.getPrice(), menuItem.getQuantity(), menuItem.getAvailable(), DB_MENUITEM_STATUS_DEFAULT));
         }
 //        setSearchMenuItemsList(allMenuItemsList);
         updateSearchItemList();

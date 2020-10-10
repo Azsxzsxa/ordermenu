@@ -35,18 +35,37 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/order_items_rv"
+    <TextView
+        android:id="@+id/order_inProgress_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/appBarLayout"
-        android:layout_above="@+id/order_bottomnavigation" />
+        android:text="@string/order_in_progress" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/order_inProgress_items_rv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/order_inProgress_tv" />
+
+    <TextView
+        android:id="@+id/order_served_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/order_inProgress_items_rv"
+        android:text="@string/order_already_served" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/order_served_items_rv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/order_served_tv" />
 
     <TextView
         android:id="@+id/order_total_price_textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/order_items_rv"
+        android:layout_below="@id/order_served_items_rv"
         android:layout_centerHorizontal="true"
         android:layout_margin="@dimen/size_medium"
         android:gravity="center_horizontal"
@@ -54,18 +73,18 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/order_add_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_above="@id/order_bottomnavigation"
-        android:src="@drawable/ic_outline_add_24"
         android:layout_alignParentEnd="true"
         android:layout_margin="@dimen/size_medium"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:src="@drawable/ic_outline_add_24" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:layout_alignParentBottom="true"
         android:id="@+id/order_bottomnavigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         app:labelVisibilityMode="labeled"
         app:menu="@menu/order_bottomnav_menu" />
 

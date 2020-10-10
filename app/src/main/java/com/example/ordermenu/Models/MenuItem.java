@@ -10,10 +10,8 @@ public class MenuItem {
     private String name;
     private int price;
     private int quantity;
-    private int kitchenQuantity;
     private Boolean available;
     private String status;
-
 
     public MenuItem(String document_id, String category, String name, int price, int quantity, Boolean available, String status) {
         this.document_id = document_id;
@@ -82,14 +80,6 @@ public class MenuItem {
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public int getKitchenQuantity() {
-        return kitchenQuantity;
-    }
-
-    public void setKitchenQuantity(int kitchenQuantity) {
-        this.kitchenQuantity = kitchenQuantity;
     }
 
     @NonNull

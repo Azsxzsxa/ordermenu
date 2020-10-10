@@ -5,7 +5,10 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import static com.example.ordermenu.Utils.StrUtil.DB_ORDER;
+import java.util.Objects;
+
+import static com.example.ordermenu.Utils.StrUtil.DB_ORDER_INPROGRESS;
+import static com.example.ordermenu.Utils.StrUtil.DB_ORDER_SERVED;
 import static com.example.ordermenu.Utils.StrUtil.DB_TABLES;
 
 public class Database {
@@ -13,7 +16,7 @@ public class Database {
 
     private final  FirebaseFirestore db = FirebaseFirestore.getInstance();
     public final CollectionReference restRef = db.collection(StrUtil.DB_RESTAURANTS);
-    public final String userUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+    public final String userUid = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
 
     private String restaurantId;
 
@@ -39,12 +42,17 @@ public class Database {
         this.restaurantId = restaurantId;
     }
 
-    public CollectionReference getOrderRef(){
+    public CollectionReference getInProgressRef() {
         return restRef.document(restaurantId).collection(StrUtil.DB_CURRENT).document(OrderUtil.getInstance().getSectionDocID())
-                .collection(DB_TABLES).document(OrderUtil.getInstance().getTableDocID()).collection(DB_ORDER);
+                .collection(DB_TABLES).document(OrderUtil.getInstance().getTableDocID()).collection(DB_ORDER_INPROGRESS);
     }
 
-    public DocumentReference getTableRef(){
+    public CollectionReference getServedRef() {
+        return restRef.document(restaurantId).collection(StrUtil.DB_CURRENT).document(OrderUtil.getInstance().getSectionDocID())
+                .collection(DB_TABLES).document(OrderUtil.getInstance().getTableDocID()).collection(DB_ORDER_SERVED);
+    }
+
+    public DocumentReference getTableRef() {
         return restRef.document(restaurantId).collection(StrUtil.DB_CURRENT).document(OrderUtil.getInstance().getSectionDocID())
                 .collection(DB_TABLES).document(OrderUtil.getInstance().getTableDocID());
     }

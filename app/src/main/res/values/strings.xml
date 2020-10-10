@@ -53,6 +53,9 @@
     <string name="table_move">\n table:&#160;</string>
     <string name="from_move">\n from:&#160;</string>
     <string name="ok">OK</string>
+    <string name="order_in_progress">In Progress</string>
+    <string name="order_already_served">Already served</string>
+    <string name="order_clear_not_served">Order needs to be served or canceled in order to clear table</string>
 
 
 </resources>

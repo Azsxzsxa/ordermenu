@@ -3,8 +3,6 @@ package com.example.ordermenu.UI;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -12,11 +10,9 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.ordermenu.Adapters.RVOrderHistoryAdapter;
 import com.example.ordermenu.Adapters.RVOrderMoveAdapter;
 import com.example.ordermenu.Models.MenuItem;
 import com.example.ordermenu.Models.Section;
@@ -35,11 +31,10 @@ import com.google.firebase.firestore.WriteBatch;
 import java.util.ArrayList;
 
 import static com.example.ordermenu.Utils.StrUtil.DB_CURRENT;
-import static com.example.ordermenu.Utils.StrUtil.DB_ORDER;
+import static com.example.ordermenu.Utils.StrUtil.DB_ORDER_INPROGRESS;
+import static com.example.ordermenu.Utils.StrUtil.DB_ORDER_SERVED;
 import static com.example.ordermenu.Utils.StrUtil.DB_TABLES;
-import static com.example.ordermenu.Utils.StrUtil.DB_TABLE_STATUS_BUSY;
 import static com.example.ordermenu.Utils.StrUtil.DB_TABLE_STATUS_FREE;
-import static com.example.ordermenu.Utils.StrUtil.DB_TABLE_STATUS_SERVED;
 
 public class OrderMoveActivity extends AppCompatActivity implements RVOrderMoveAdapter.TableClick {
     private static final String TAG = "OrderMoveActivity";
@@ -108,23 +103,29 @@ public class OrderMoveActivity extends AppCompatActivity implements RVOrderMoveA
             public void onClick(View v) {
                 Log.d(TAG, "onClick: ");
 
-                final CollectionReference oldOrderRef = Database.getInstance().getOrderRef();
+                final CollectionReference oldInProgRef = Database.getInstance().getInProgressRef();
+                final CollectionReference oldServedRef = Database.getInstance().getServedRef();
                 final DocumentReference newTableRef = Database.getInstance().restRef.document(Database.getInstance().getRestaurantId())
                         .collection(StrUtil.DB_CURRENT).document(sections.get(sectionPosition).getDocumentID())
                         .collection(DB_TABLES).document(tableDocId);
 
-                newTableRef.collection(DB_ORDER).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                newTableRef.collection(DB_ORDER_INPROGRESS).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        if(queryDocumentSnapshots.isEmpty()){
+                        if (queryDocumentSnapshots.isEmpty()) {
                             WriteBatch batch = Database.getInstance().getDb().batch();
-                            for (MenuItem menuItem : OrderUtil.getInstance().getAlreadyOrderedList()) {
+                            for (MenuItem menuItem : OrderUtil.getInstance().getServedOrderedList()) {
                                 Log.d(TAG, "onClick: " + menuItem.getName());
-                                batch.set(newTableRef.collection(DB_ORDER).document(menuItem.getDocument_id()), menuItem);
-                                batch.delete(oldOrderRef.document(menuItem.getDocument_id()));
+                                batch.set(newTableRef.collection(DB_ORDER_SERVED).document(menuItem.getDocument_id()), menuItem);
+                                batch.delete(oldServedRef.document(menuItem.getDocument_id()));
                             }
-                            batch.update(Database.getInstance().getTableRef(),"occupied",DB_TABLE_STATUS_FREE);
-                            batch.update(newTableRef,"occupied",tableStatus);
+                            for (MenuItem menuItem : OrderUtil.getInstance().getInProgressOrderedList()) {
+                                Log.d(TAG, "onClick: " + menuItem.getName());
+                                batch.set(newTableRef.collection(DB_ORDER_INPROGRESS).document(menuItem.getDocument_id()), menuItem);
+                                batch.delete(oldInProgRef.document(menuItem.getDocument_id()));
+                            }
+                            batch.update(Database.getInstance().getTableRef(), "occupied", DB_TABLE_STATUS_FREE);
+                            batch.update(newTableRef, "occupied", tableStatus);
 
                             batch.commit().addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
