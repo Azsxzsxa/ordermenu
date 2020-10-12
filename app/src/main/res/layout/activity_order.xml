@@ -35,41 +35,53 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <TextView
-        android:id="@+id/order_inProgress_tv"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/appBarLayout"
-        android:text="@string/order_in_progress" />
+        android:layout_height="match_parent"
+        android:layout_above="@id/order_bottomnavigation"
+        android:layout_below="@id/appBarLayout">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/order_inProgress_items_rv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/order_inProgress_tv" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/order_served_tv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/order_inProgress_items_rv"
-        android:text="@string/order_already_served" />
+            <TextView
+                android:id="@+id/order_inProgress_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/order_in_progress" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/order_served_items_rv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/order_served_tv" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/order_inProgress_items_rv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/order_inProgress_tv" />
 
-    <TextView
-        android:id="@+id/order_total_price_textView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/order_served_items_rv"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="@dimen/size_medium"
-        android:gravity="center_horizontal"
-        tools:text="total price : 10" />
+            <TextView
+                android:id="@+id/order_served_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/order_inProgress_items_rv"
+                android:text="@string/order_already_served" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/order_served_items_rv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/order_served_tv" />
+
+            <TextView
+                android:id="@+id/order_total_price_textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/order_served_items_rv"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="@dimen/size_medium"
+                android:gravity="center_horizontal"
+                tools:text="total price : 10" />
+        </RelativeLayout>
+    </androidx.core.widget.NestedScrollView>
+
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/order_add_fab"
